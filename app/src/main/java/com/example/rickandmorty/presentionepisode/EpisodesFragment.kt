@@ -1,0 +1,38 @@
+package com.example.rickandmorty.presentionepisode
+
+import android.content.Context
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
+import com.example.rickandmorty.R
+import com.example.rickandmorty.databinding.FragmentEpisodesBinding
+import com.example.rickandmorty.databinding.FragmentLocationsBinding
+
+class EpisodesFragment: Fragment(R.layout.fragment_episodes) {
+
+    private var _binding: FragmentEpisodesBinding? = null
+    private val binding get() = _binding!!
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        _binding = FragmentEpisodesBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.recyclerViewEpisode.layoutManager = GridLayoutManager(requireActivity(),2)
+    }
+
+    companion object{
+        const val TAG_EPISODES_FRAGMENT = "TAG_EPISODES_FRAGMENT"
+
+        fun newInstance() = EpisodesFragment()
+    }
+}

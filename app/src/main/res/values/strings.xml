@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Rick and Morty</string>
+    <string name="nav_characters">Персонажи</string>
+    <string name="nav_location">Докации</string>
+    <string name="nav_episodes">Эпизоты</string>
+    <string name="name_character">Имя персонажа</string>
+    <string name="species_character">Вид персонажа</string>
+    <string name="gender_character">Пол персонажа</string>
+    <string name="status_character">Статус персонажа</string>
+    <string name="name_location">Название локации</string>
+    <string name="type_location">Тип локации</string>
+    <string name="dimension_location">Измерения</string>
+    <string name="name_episode">Название эпизода</string>
+    <string name="number_episode">Номер Эпизода</string>
+    <string name="air_data_episode">Дата релиза</string>
+</resources>
