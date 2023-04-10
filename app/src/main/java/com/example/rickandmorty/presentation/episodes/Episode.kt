@@ -1,4 +1,4 @@
-package com.example.rickandmorty.presentionepisode
+package com.example.rickandmorty.presentation.episodes
 
 data class Episode(
     val id: Int,

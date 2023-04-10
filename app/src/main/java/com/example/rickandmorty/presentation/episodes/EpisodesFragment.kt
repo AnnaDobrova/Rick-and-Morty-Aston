@@ -1,4 +1,4 @@
-package com.example.rickandmorty.presentionepisode
+package com.example.rickandmorty.presentation.episodes
 
 import android.content.Context
 import android.os.Bundle
@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.rickandmorty.R
 import com.example.rickandmorty.databinding.FragmentEpisodesBinding
-import com.example.rickandmorty.databinding.FragmentLocationsBinding
 
 class EpisodesFragment: Fragment(R.layout.fragment_episodes) {
 

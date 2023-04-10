@@ -1,20 +1,18 @@
 package com.example.rickandmorty
 
-import android.os.Binder
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.example.rickandmorty.databinding.ActivityMainBinding
-import com.example.rickandmorty.presentioncharacters.CharactersFragment
-import com.example.rickandmorty.presentioncharacters.CharactersFragment.Companion.TAG_CHARACTERS_FRAGMENT
-import com.example.rickandmorty.presentionepisode.EpisodesFragment
-import com.example.rickandmorty.presentionepisode.EpisodesFragment.Companion.TAG_EPISODES_FRAGMENT
-import com.example.rickandmorty.presentionlocation.LocationsFragment
-import com.example.rickandmorty.presentionlocation.LocationsFragment.Companion.TAG_LOCATIONS_FRAGMENT
+import com.example.rickandmorty.presentation.characters.CharactersFragment
+import com.example.rickandmorty.presentation.characters.CharactersFragment.Companion.TAG_CHARACTERS_FRAGMENT
+import com.example.rickandmorty.presentation.episodes.EpisodesFragment
+import com.example.rickandmorty.presentation.episodes.EpisodesFragment.Companion.TAG_EPISODES_FRAGMENT
+import com.example.rickandmorty.presentation.locations.LocationsFragment
+import com.example.rickandmorty.presentation.locations.LocationsFragment.Companion.TAG_LOCATIONS_FRAGMENT
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : FragmentActivity(R.layout.activity_main) {
+
     private var bottomNavigation: BottomNavigationView? = null
     private lateinit var binder: ActivityMainBinding
 
@@ -22,7 +20,6 @@ class MainActivity : FragmentActivity(R.layout.activity_main) {
         super.onCreate(savedInstanceState)
         binder = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binder.root)
-
         bottomNavigation = findViewById(R.id.bottom_navigation)
         navListener()
 
@@ -65,10 +62,11 @@ class MainActivity : FragmentActivity(R.layout.activity_main) {
                     }
                     true
                 }
-                else -> {false}
+                else -> {
+                    false
+                }
             }
         }
-
 
     }
 }

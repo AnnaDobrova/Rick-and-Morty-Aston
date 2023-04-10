@@ -1,4 +1,4 @@
-package com.example.rickandmorty.presentionlocation
+package com.example.rickandmorty.presentation.locations
 
 
 data class Location(

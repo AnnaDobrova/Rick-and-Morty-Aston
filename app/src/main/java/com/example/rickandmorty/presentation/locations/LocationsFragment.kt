@@ -1,14 +1,12 @@
-package com.example.rickandmorty.presentionlocation
+package com.example.rickandmorty.presentation.locations
 
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.GridLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.example.rickandmorty.R
 import com.example.rickandmorty.databinding.FragmentLocationsBinding
 
