@@ -1,13 +1,11 @@
 package com.example.rickandmorty.presentation.characters
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.rickandmorty.CallBackForFragments
 import com.example.rickandmorty.R
 import com.example.rickandmorty.data.characters.CharactersRepository
 import com.example.rickandmorty.data.characters.model.CharactersData
@@ -19,7 +17,6 @@ class CharactersFragment : Fragment(R.layout.fragment_characters), CharactersLis
 
     private var _binding: FragmentCharactersBinding? = null
     private val binding get() = _binding!!
-    private var callBackForFragments: CallBackForFragments? = null
 
     private val characterAdapter: CharacterAdapter by lazy {
         CharacterAdapter()
@@ -29,11 +26,6 @@ class CharactersFragment : Fragment(R.layout.fragment_characters), CharactersLis
     }
     private val mapper: CharacterDataToCharacterMapper by lazy {
         CharacterDataToCharacterMapper()
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        callBackForFragments = requireActivity() as CallBackForFragments
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -53,22 +45,18 @@ class CharactersFragment : Fragment(R.layout.fragment_characters), CharactersLis
      * для отображения или обновления списка
      */
     override fun getAllCharacters(characters: List<CharactersData.SingleCharacterData>) {
-        characterAdapter.updateListCharacters(mapper.map(characters))
+        characterAdapter.updateList(mapper.map(characters))
     }
 
     // 1 шаг регистрация листенера(колбэка) и требование начать загрузку всех персонажей
     private fun initAllCharacters() {
-        with(charactersRepository){
-            registerListener(this@CharactersFragment)
-            loadAllCharacters()
-        }
+        charactersRepository.registerListener(this@CharactersFragment)
+        charactersRepository.loadAllCharacters()
     }
 
     private fun initRecycler() {
-        with(binding.recyclerViewCharacters){
-            layoutManager = GridLayoutManager(requireActivity(), 2)
-            adapter = characterAdapter
-        }
+        binding.recyclerViewCharacters.layoutManager = GridLayoutManager(requireActivity(), 2)
+        binding.recyclerViewCharacters.adapter = characterAdapter
     }
 
     companion object {
