@@ -17,6 +17,7 @@ class CharacterViewHolder(
         character: Character
     ) {
         with(binding) {
+            idCharacter.text = character.id.toString()
             nameCharacter.text = character.name
             speciesCharacter.text = character.species
             genderCharacter.text = character.gender

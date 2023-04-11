@@ -29,7 +29,7 @@ class CharacterAdapter : RecyclerView.Adapter<CharacterViewHolder>() {
         return characters.size
     }
 
-    fun updateList(newCharacters: List<Character>) {
+    fun updateListCharacters(newCharacters: List<Character>) {
         characters.clear()
         characters.addAll(newCharacters)
         notifyDataSetChanged()
