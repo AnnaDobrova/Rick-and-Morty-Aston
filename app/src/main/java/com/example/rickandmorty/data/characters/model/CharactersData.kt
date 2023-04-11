@@ -53,7 +53,7 @@ data class CharactersData(
         @Expose
         val created: String
     ) {
-        data class OriginData(
+         data class OriginData(
             @Expose
             val name: String,
             @Expose

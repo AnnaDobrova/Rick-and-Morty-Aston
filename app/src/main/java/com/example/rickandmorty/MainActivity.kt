@@ -11,7 +11,7 @@ import com.example.rickandmorty.presentation.locations.LocationsFragment
 import com.example.rickandmorty.presentation.locations.LocationsFragment.Companion.TAG_LOCATIONS_FRAGMENT
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class MainActivity : FragmentActivity(R.layout.activity_main) {
+class MainActivity : FragmentActivity(R.layout.activity_main), CallBackForFragments {
 
     private var bottomNavigation: BottomNavigationView? = null
     private lateinit var binder: ActivityMainBinding
@@ -68,5 +68,9 @@ class MainActivity : FragmentActivity(R.layout.activity_main) {
             }
         }
 
+    }
+
+    override fun back() {
+        onBackPressed()
     }
 }
