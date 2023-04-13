@@ -1,4 +1,4 @@
-package com.example.rickandmorty.domain.character
+package com.example.rickandmorty.domain.character.list
 
 data class Character(
     val id: Int,

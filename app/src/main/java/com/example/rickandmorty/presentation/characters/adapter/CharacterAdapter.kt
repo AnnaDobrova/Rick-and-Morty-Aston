@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.rickandmorty.R
-import com.example.rickandmorty.domain.character.Character
+import com.example.rickandmorty.domain.character.list.Character
 import com.example.rickandmorty.domain.character.CharactersDetailsListener
 
 class CharacterAdapter(private val charactersDetailsListener: CharactersDetailsListener) : RecyclerView.Adapter<CharacterViewHolder>() {

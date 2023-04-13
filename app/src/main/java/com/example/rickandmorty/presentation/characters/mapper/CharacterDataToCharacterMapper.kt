@@ -1,7 +1,7 @@
 package com.example.rickandmorty.presentation.characters.mapper
 
 import com.example.rickandmorty.data.characters.model.CharactersData
-import com.example.rickandmorty.domain.character.Character
+import com.example.rickandmorty.domain.character.list.Character
 
 /**
  * Преобразует данные из 1 вида датакласса в другой, необходимый нам

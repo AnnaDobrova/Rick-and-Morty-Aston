@@ -11,7 +11,7 @@ import com.example.rickandmorty.R
 import com.example.rickandmorty.data.characters.CharacterDetailsRepository
 import com.example.rickandmorty.data.characters.model.CharactersData
 import com.example.rickandmorty.databinding.FragmentCharacterDetailsBinding
-import com.example.rickandmorty.domain.character.Character
+import com.example.rickandmorty.domain.character.list.Character
 import com.example.rickandmorty.presentation.characters.CharacterDetailsListener
 import com.example.rickandmorty.presentation.characters.mapper.CharacterDetailsDataToCharacterMapper
 

@@ -1,11 +1,10 @@
 package com.example.rickandmorty
 
 import android.os.Bundle
-import android.view.View
 import android.view.View.GONE
 import androidx.fragment.app.FragmentActivity
 import com.example.rickandmorty.databinding.ActivityMainBinding
-import com.example.rickandmorty.domain.character.Character
+import com.example.rickandmorty.domain.character.list.Character
 import com.example.rickandmorty.domain.character.CharactersDetailsListener
 import com.example.rickandmorty.presentation.characters.CharacterListFragment
 import com.example.rickandmorty.presentation.characters.CharacterListFragment.Companion.TAG_CHARACTERS_FRAGMENT
