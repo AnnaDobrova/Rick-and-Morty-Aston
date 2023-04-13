@@ -1,9 +1,5 @@
-package com.example.rickandmorty.presentation.characters
+package com.example.rickandmorty.domain.character
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
-
-@Parcelize
 data class Character(
     val id: Int,
     val image: String,
@@ -11,4 +7,4 @@ data class Character(
     val species: String,
     val gender: String,
     val status: String
-) : Parcelable
+)

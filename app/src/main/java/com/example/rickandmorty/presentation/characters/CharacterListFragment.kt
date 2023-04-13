@@ -12,17 +12,18 @@ import com.example.rickandmorty.R
 import com.example.rickandmorty.data.characters.CharactersRepository
 import com.example.rickandmorty.data.characters.model.CharactersData
 import com.example.rickandmorty.databinding.FragmentCharactersBinding
+import com.example.rickandmorty.domain.character.CharactersDetailsListener
 import com.example.rickandmorty.presentation.characters.adapter.CharacterAdapter
 import com.example.rickandmorty.presentation.characters.mapper.CharacterDataToCharacterMapper
 
-class CharactersFragment : Fragment(R.layout.fragment_characters), CharactersListener {
+class CharacterListFragment : Fragment(R.layout.fragment_characters), CharactersListener {
 
     private var _binding: FragmentCharactersBinding? = null
     private val binding get() = _binding!!
     private var callBackForFragments: CallBackForFragments? = null
 
     private val characterAdapter: CharacterAdapter by lazy {
-        CharacterAdapter()
+        CharacterAdapter(requireActivity() as CharactersDetailsListener)
     }
     private val charactersRepository: CharactersRepository by lazy {
         CharactersRepository()
@@ -52,20 +53,20 @@ class CharactersFragment : Fragment(R.layout.fragment_characters), CharactersLis
      * полученный список данных, которые придут из charactersRepository, мы отправляем в charactersAdapter
      * для отображения или обновления списка
      */
-    override fun getAllCharacters(characters: List<CharactersData.SingleCharacterData>) {
+    override fun getAllCharacters(characters: List<CharactersData.CharacterDetailsData>) {
         characterAdapter.updateListCharacters(mapper.map(characters))
     }
 
     // 1 шаг регистрация листенера(колбэка) и требование начать загрузку всех персонажей
     private fun initAllCharacters() {
-        with(charactersRepository){
-            registerListener(this@CharactersFragment)
+        with(charactersRepository) {
+            registerListener(this@CharacterListFragment)
             loadAllCharacters()
         }
     }
 
     private fun initRecycler() {
-        with(binding.recyclerViewCharacters){
+        with(binding.recyclerViewCharacters) {
             layoutManager = GridLayoutManager(requireActivity(), 2)
             adapter = characterAdapter
         }
@@ -74,7 +75,9 @@ class CharactersFragment : Fragment(R.layout.fragment_characters), CharactersLis
     companion object {
         const val TAG_CHARACTERS_FRAGMENT = "TAG_CHARACTERS_FRAGMENT"
 
-        fun newInstance() = CharactersFragment()
+
+        fun newInstance() = CharacterListFragment()
+
     }
 
 }

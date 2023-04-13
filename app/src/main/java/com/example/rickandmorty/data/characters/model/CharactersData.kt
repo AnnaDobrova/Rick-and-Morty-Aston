@@ -12,7 +12,7 @@ data class CharactersData(
 
     @SerializedName("results")
     @Expose
-    val characters: List<SingleCharacterData>
+    val characters: List<CharacterDetailsData>
 ) {
     data class InfoData(
         @Expose
@@ -26,7 +26,7 @@ data class CharactersData(
         val previous: String
     )
 
-    data class SingleCharacterData(
+    data class CharacterDetailsData(
         @Expose
         val id: Long,
         @Expose

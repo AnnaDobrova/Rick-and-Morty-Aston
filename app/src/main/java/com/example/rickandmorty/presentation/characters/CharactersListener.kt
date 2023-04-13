@@ -7,5 +7,5 @@ import com.example.rickandmorty.data.characters.model.CharactersData
  * туда где он реализован
  */
 interface CharactersListener {
-    fun getAllCharacters(characters: List<CharactersData.SingleCharacterData>)
+    fun getAllCharacters(characters: List<CharactersData.CharacterDetailsData>)
 }

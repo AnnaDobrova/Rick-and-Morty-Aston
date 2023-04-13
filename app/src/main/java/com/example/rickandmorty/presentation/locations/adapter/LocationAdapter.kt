@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.rickandmorty.R
-import com.example.rickandmorty.presentation.locations.Location
+import com.example.rickandmorty.domain.location.Location
 
 class LocationAdapter : RecyclerView.Adapter<LocationViewHolder>() {
 

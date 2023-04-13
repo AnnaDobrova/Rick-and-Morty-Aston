@@ -4,11 +4,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.rickandmorty.R
-import com.example.rickandmorty.presentation.characters.Character
+import com.example.rickandmorty.domain.character.Character
+import com.example.rickandmorty.domain.character.CharactersDetailsListener
 
-class CharacterAdapter : RecyclerView.Adapter<CharacterViewHolder>() {
+class CharacterAdapter(private val charactersDetailsListener: CharactersDetailsListener) : RecyclerView.Adapter<CharacterViewHolder>() {
 
     private var characters = mutableListOf<Character>()
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterViewHolder {
         return CharacterViewHolder(
@@ -16,7 +18,8 @@ class CharacterAdapter : RecyclerView.Adapter<CharacterViewHolder>() {
                 R.layout.character,
                 parent,
                 false
-            )
+            ),
+            charactersDetailsListener
         )
     }
 
@@ -34,4 +37,5 @@ class CharacterAdapter : RecyclerView.Adapter<CharacterViewHolder>() {
         characters.addAll(newCharacters)
         notifyDataSetChanged()
     }
+
 }

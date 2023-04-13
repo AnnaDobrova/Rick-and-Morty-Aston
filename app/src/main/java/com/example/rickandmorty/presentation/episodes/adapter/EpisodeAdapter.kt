@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.rickandmorty.R
-import com.example.rickandmorty.presentation.episodes.Episode
+import com.example.rickandmorty.domain.episode.Episode
 
 class EpisodeAdapter : RecyclerView.Adapter<EpisodeViewHolder>() {
 
