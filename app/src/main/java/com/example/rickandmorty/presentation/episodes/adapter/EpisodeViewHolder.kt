@@ -3,13 +3,15 @@ package com.example.rickandmorty.presentation.episodes.adapter
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.example.rickandmorty.databinding.EpisodeBinding
-import com.example.rickandmorty.domain.episode.Episode
+import com.example.rickandmorty.domain.episode.list.Episode
+import com.example.rickandmorty.domain.episode.EpisodeListDetailsListener
 
 class EpisodeViewHolder(
-    episode: View
-) : RecyclerView.ViewHolder(episode) {
+    itemView: View,
+    private val episodeListDetailsListener: EpisodeListDetailsListener
+) : RecyclerView.ViewHolder(itemView) {
 
-    private val binding: EpisodeBinding = EpisodeBinding.bind(episode)
+    private val binding: EpisodeBinding = EpisodeBinding.bind(itemView)
 
     fun bindEpisode(
         episode: Episode
@@ -19,6 +21,9 @@ class EpisodeViewHolder(
             nameEpisode.text = episode.nameEpisode
             numberEpisode.text = episode.numberEpisode
             airDataEpisode.text = episode.airDataEpisode
+        }
+        itemView.setOnClickListener {
+            episodeListDetailsListener.goToDetailsEpisode(episode)
         }
     }
 }

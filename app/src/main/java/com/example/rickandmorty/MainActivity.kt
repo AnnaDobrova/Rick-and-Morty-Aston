@@ -6,12 +6,14 @@ import androidx.fragment.app.FragmentActivity
 import com.example.rickandmorty.databinding.ActivityMainBinding
 import com.example.rickandmorty.domain.character.list.Character
 import com.example.rickandmorty.domain.character.CharacterListDetailsListener
+import com.example.rickandmorty.domain.episode.EpisodeListDetailsListener
+import com.example.rickandmorty.domain.episode.list.Episode
 import com.example.rickandmorty.domain.location.LocationListDetailsListener
-import com.example.rickandmorty.domain.location.detail.LocationDetails
 import com.example.rickandmorty.domain.location.list.Location
 import com.example.rickandmorty.presentation.characters.CharacterListFragment
 import com.example.rickandmorty.presentation.characters.CharacterListFragment.Companion.TAG_CHARACTERS_FRAGMENT
 import com.example.rickandmorty.presentation.characters.details.CharacterDetailsFragment
+import com.example.rickandmorty.presentation.episodes.details.EpisodeDetailsFragment
 import com.example.rickandmorty.presentation.episodes.EpisodesFragment
 import com.example.rickandmorty.presentation.episodes.EpisodesFragment.Companion.TAG_EPISODES_FRAGMENT
 import com.example.rickandmorty.presentation.locations.LocationsFragment
@@ -19,7 +21,12 @@ import com.example.rickandmorty.presentation.locations.LocationsFragment.Compani
 import com.example.rickandmorty.presentation.locations.details.LocationDetailsFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class MainActivity : FragmentActivity(R.layout.activity_main), CallBackForFragments, CharacterListDetailsListener, LocationListDetailsListener {
+class MainActivity : FragmentActivity(R.layout.activity_main),
+    CallBackForFragments,
+    CharacterListDetailsListener,
+    LocationListDetailsListener,
+    EpisodeListDetailsListener
+{
 
     private var bottomNavigation: BottomNavigationView? = null
     private lateinit var binder: ActivityMainBinding
@@ -101,6 +108,20 @@ class MainActivity : FragmentActivity(R.layout.activity_main), CallBackForFragme
                 LocationDetailsFragment.TAG
             )
             addToBackStack(LocationDetailsFragment.TAG)
+            commit()
+        }
+        bottomNavigation?.visibility = GONE
+    }
+
+    override fun goToDetailsEpisode(episode: Episode) {
+        supportFragmentManager.beginTransaction().run {
+            setReorderingAllowed(true)
+            replace(
+                R.id.fragment_container,
+                EpisodeDetailsFragment.newInstance(episode),
+                EpisodeDetailsFragment.TAG
+            )
+            addToBackStack( EpisodeDetailsFragment.TAG)
             commit()
         }
         bottomNavigation?.visibility = GONE

@@ -14,5 +14,5 @@ class LocationDetailsDataToLocationDetailsMap {
         url = from.url,
         created = from.created
     )
-
 }
+

@@ -12,6 +12,7 @@ import com.example.rickandmorty.R
 import com.example.rickandmorty.data.episodes.EpisodesRepository
 import com.example.rickandmorty.data.episodes.model.EpisodesData
 import com.example.rickandmorty.databinding.FragmentEpisodesBinding
+import com.example.rickandmorty.domain.episode.EpisodeListDetailsListener
 import com.example.rickandmorty.presentation.episodes.adapter.EpisodeAdapter
 import com.example.rickandmorty.presentation.episodes.mapper.EpisodeDataToEpisodeMap
 
@@ -22,7 +23,7 @@ class EpisodesFragment : Fragment(R.layout.fragment_episodes), EpisodesListener 
     private var callBackForFragments: CallBackForFragments? = null
 
     private val episodeAdapter: EpisodeAdapter by lazy {
-        EpisodeAdapter()
+        EpisodeAdapter(requireActivity() as EpisodeListDetailsListener)
     }
 
     private val mapper: EpisodeDataToEpisodeMap by lazy {
@@ -53,7 +54,7 @@ class EpisodesFragment : Fragment(R.layout.fragment_episodes), EpisodesListener 
         episodeAdapter.updateEpisodes(mapper.map(episode))
     }
 
-    fun initAllEpisodes() {
+    private fun initAllEpisodes() {
         with(episodeRepository) {
             registerEpisode(this@EpisodesFragment)
             loadEpisodes()
