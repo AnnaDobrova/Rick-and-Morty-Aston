@@ -12,6 +12,7 @@ import com.example.rickandmorty.R
 import com.example.rickandmorty.data.locations.LocationsRepository
 import com.example.rickandmorty.data.locations.model.LocationsData
 import com.example.rickandmorty.databinding.FragmentLocationsBinding
+import com.example.rickandmorty.domain.location.LocationListDetailsListener
 import com.example.rickandmorty.presentation.locations.adapter.LocationAdapter
 import com.example.rickandmorty.presentation.locations.mapper.LocationDataToLocationMap
 
@@ -22,7 +23,7 @@ class LocationsFragment : Fragment(R.layout.fragment_locations), LocationsListen
     private var callBackForFragments: CallBackForFragments? = null
 
     private val locationAdapter: LocationAdapter by lazy {
-        LocationAdapter()
+        LocationAdapter(requireActivity() as LocationListDetailsListener)
     }
 
     private val locationRepository: LocationsRepository by lazy {

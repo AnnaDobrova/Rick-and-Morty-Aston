@@ -4,9 +4,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.rickandmorty.R
-import com.example.rickandmorty.domain.location.Location
+import com.example.rickandmorty.domain.location.LocationListDetailsListener
+import com.example.rickandmorty.domain.location.list.Location
 
-class LocationAdapter : RecyclerView.Adapter<LocationViewHolder>() {
+class LocationAdapter(private val locationListDetailsListener: LocationListDetailsListener) :
+    RecyclerView.Adapter<LocationViewHolder>() {
 
     private var locations = mutableListOf<Location>()
 
@@ -16,8 +18,10 @@ class LocationAdapter : RecyclerView.Adapter<LocationViewHolder>() {
                 R.layout.location,
                 parent,
                 false
-            )
+            ),
+            locationListDetailsListener
         )
+
     }
 
     override fun onBindViewHolder(holder: LocationViewHolder, position: Int) {

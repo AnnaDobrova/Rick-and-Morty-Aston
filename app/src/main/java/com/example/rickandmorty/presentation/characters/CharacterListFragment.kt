@@ -12,7 +12,7 @@ import com.example.rickandmorty.R
 import com.example.rickandmorty.data.characters.CharactersRepository
 import com.example.rickandmorty.data.characters.model.CharactersData
 import com.example.rickandmorty.databinding.FragmentCharactersBinding
-import com.example.rickandmorty.domain.character.CharactersDetailsListener
+import com.example.rickandmorty.domain.character.CharacterListDetailsListener
 import com.example.rickandmorty.presentation.characters.adapter.CharacterAdapter
 import com.example.rickandmorty.presentation.characters.mapper.CharacterDataToCharacterMapper
 
@@ -23,7 +23,7 @@ class CharacterListFragment : Fragment(R.layout.fragment_characters), Characters
     private var callBackForFragments: CallBackForFragments? = null
 
     private val characterAdapter: CharacterAdapter by lazy {
-        CharacterAdapter(requireActivity() as CharactersDetailsListener)
+        CharacterAdapter(requireActivity() as CharacterListDetailsListener)
     }
     private val charactersRepository: CharactersRepository by lazy {
         CharactersRepository()

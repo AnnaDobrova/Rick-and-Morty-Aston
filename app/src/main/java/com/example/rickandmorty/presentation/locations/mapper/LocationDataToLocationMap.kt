@@ -1,7 +1,7 @@
 package com.example.rickandmorty.presentation.locations.mapper
 
 import com.example.rickandmorty.data.locations.model.LocationsData
-import com.example.rickandmorty.domain.location.Location
+import com.example.rickandmorty.domain.location.list.Location
 
 class LocationDataToLocationMap {
 

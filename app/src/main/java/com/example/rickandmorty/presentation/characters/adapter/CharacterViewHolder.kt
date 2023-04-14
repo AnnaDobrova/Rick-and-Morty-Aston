@@ -6,17 +6,17 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.rickandmorty.databinding.CharacterBinding
 import com.example.rickandmorty.domain.character.list.Character
-import com.example.rickandmorty.domain.character.CharactersDetailsListener
+import com.example.rickandmorty.domain.character.CharacterListDetailsListener
 
 class CharacterViewHolder(
     itemView: View,
-   private val charactersDetailsListener: CharactersDetailsListener
+   private val characterListDetailsListener: CharacterListDetailsListener
 ) : RecyclerView.ViewHolder(itemView) {
 
     private val binding: CharacterBinding = CharacterBinding.bind(itemView)
 
     fun bindCharacter(
-        character: Character,
+        character: Character
     ) {
         with(binding) {
             idCharacter.text = character.id.toString()
@@ -27,7 +27,7 @@ class CharacterViewHolder(
         }
         loadImage(character)
         itemView.setOnClickListener{
-            charactersDetailsListener.goToDetails(character)
+            characterListDetailsListener.goToDetailsCharacter(character)
         }
     }
 

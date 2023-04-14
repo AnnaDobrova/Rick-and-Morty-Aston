@@ -5,9 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.rickandmorty.R
 import com.example.rickandmorty.domain.character.list.Character
-import com.example.rickandmorty.domain.character.CharactersDetailsListener
+import com.example.rickandmorty.domain.character.CharacterListDetailsListener
 
-class CharacterAdapter(private val charactersDetailsListener: CharactersDetailsListener) : RecyclerView.Adapter<CharacterViewHolder>() {
+class CharacterAdapter(private val characterListDetailsListener: CharacterListDetailsListener) : RecyclerView.Adapter<CharacterViewHolder>() {
 
     private var characters = mutableListOf<Character>()
 
@@ -19,7 +19,7 @@ class CharacterAdapter(private val charactersDetailsListener: CharactersDetailsL
                 parent,
                 false
             ),
-            charactersDetailsListener
+            characterListDetailsListener
         )
     }
 

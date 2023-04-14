@@ -2,7 +2,6 @@ package com.example.rickandmorty.presentation.characters.mapper
 
 import com.example.rickandmorty.data.characters.model.CharactersData
 import com.example.rickandmorty.domain.character.detail.CharacterDetail
-import com.example.rickandmorty.domain.character.list.Character
 
 class CharacterDetailsDataToCharacterMapper {
 

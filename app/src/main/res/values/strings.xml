@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Rick and Morty</string>
     <string name="nav_characters">Персонажи</string>
-    <string name="nav_location">Докации</string>
-    <string name="nav_episodes">Эпизоты</string>
+    <string name="nav_location">Локации</string>
+    <string name="nav_episodes">Эпизоды</string>
     <string name="name_character">Имя персонажа</string>
     <string name="species_character">Вид персонажа</string>
     <string name="gender_character">Пол персонажа</string>

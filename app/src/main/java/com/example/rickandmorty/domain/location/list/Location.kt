@@ -1,4 +1,4 @@
-package com.example.rickandmorty.domain.location
+package com.example.rickandmorty.domain.location.list
 
 
 data class Location(
