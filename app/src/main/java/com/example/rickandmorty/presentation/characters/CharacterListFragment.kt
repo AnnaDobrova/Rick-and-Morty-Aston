@@ -13,7 +13,7 @@ import com.example.rickandmorty.data.characters.CharactersRepository
 import com.example.rickandmorty.data.characters.model.CharactersData
 import com.example.rickandmorty.databinding.FragmentCharactersBinding
 import com.example.rickandmorty.domain.character.CharacterListDetailsListener
-import com.example.rickandmorty.presentation.characters.adapter.CharacterAdapter
+import com.example.rickandmorty.presentation.characters.adapter.list.CharacterAdapter
 import com.example.rickandmorty.presentation.characters.mapper.CharacterDataToCharacterMapper
 
 class CharacterListFragment : Fragment(R.layout.fragment_characters), CharactersListener {

@@ -1,4 +1,4 @@
-package com.example.rickandmorty.presentation.characters.adapter
+package com.example.rickandmorty.presentation.characters.adapter.list
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,10 +7,10 @@ import com.example.rickandmorty.R
 import com.example.rickandmorty.domain.character.list.Character
 import com.example.rickandmorty.domain.character.CharacterListDetailsListener
 
-class CharacterAdapter(private val characterListDetailsListener: CharacterListDetailsListener) : RecyclerView.Adapter<CharacterViewHolder>() {
+class CharacterAdapter(private val characterListDetailsListener: CharacterListDetailsListener) :
+    RecyclerView.Adapter<CharacterViewHolder>() {
 
     private var characters = mutableListOf<Character>()
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterViewHolder {
         return CharacterViewHolder(

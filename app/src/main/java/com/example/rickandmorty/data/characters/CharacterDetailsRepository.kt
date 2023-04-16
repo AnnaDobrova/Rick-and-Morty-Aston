@@ -12,7 +12,6 @@ class CharacterDetailsRepository {
 
     private var characterDetailsNetworkDataSource: CharacterDetailsNetworkDataSource? = null
     private var listener: CharacterDetailsListener? = null
-
     init {
         characterDetailsNetworkDataSource =
             RetrofitClient.fillRetrofit().create(CharacterDetailsNetworkDataSource::class.java)

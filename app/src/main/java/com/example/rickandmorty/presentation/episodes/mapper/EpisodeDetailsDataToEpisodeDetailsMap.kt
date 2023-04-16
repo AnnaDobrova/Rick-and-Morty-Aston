@@ -4,6 +4,7 @@ import com.example.rickandmorty.data.episodes.model.EpisodesData
 import com.example.rickandmorty.domain.episode.details.EpisodeDetails
 
 class EpisodeDetailsDataToEpisodeDetailsMap {
+
     fun map (from: EpisodesData.SingleEpisodeData) = EpisodeDetails(
         id = from.id,
         nameEpisode = from.name,

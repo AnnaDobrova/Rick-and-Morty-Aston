@@ -7,7 +7,7 @@ import com.example.rickandmorty.R
 import com.example.rickandmorty.domain.episode.EpisodeListDetailsListener
 import com.example.rickandmorty.domain.episode.list.Episode
 
-class EpisodeAdapter(private val episodeListDetailsListener: EpisodeListDetailsListener) : RecyclerView.Adapter<EpisodeViewHolder>() {
+class EpisodeAdapter(val episodeListDetailsListener: EpisodeListDetailsListener) : RecyclerView.Adapter<EpisodeViewHolder>() {
 
     private var episodes = mutableListOf<Episode>()
 
