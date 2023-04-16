@@ -1,7 +1,7 @@
 package com.example.rickandmorty.presentation.episodes.mapper
 
 import com.example.rickandmorty.data.episodes.model.EpisodesData
-import com.example.rickandmorty.domain.episode.details.EpisodeDetails
+import com.example.rickandmorty.domain.episode.details.model.EpisodeDetails
 
 class EpisodeDetailsDataToEpisodeDetailsMap {
 

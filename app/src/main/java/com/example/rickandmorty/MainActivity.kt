@@ -4,15 +4,15 @@ import android.os.Bundle
 import android.view.View.GONE
 import androidx.fragment.app.FragmentActivity
 import com.example.rickandmorty.databinding.ActivityMainBinding
-import com.example.rickandmorty.domain.character.list.Character
-import com.example.rickandmorty.domain.character.CharacterListDetailsListener
+import com.example.rickandmorty.presentation.characters.list.model.SingleCharacterUi
+import com.example.rickandmorty.presentation.characters.CharacterListDetailsListener
 import com.example.rickandmorty.domain.episode.EpisodeListDetailsListener
 import com.example.rickandmorty.domain.episode.list.Episode
 import com.example.rickandmorty.domain.location.LocationListDetailsListener
 import com.example.rickandmorty.domain.location.list.Location
-import com.example.rickandmorty.presentation.characters.CharacterListFragment
-import com.example.rickandmorty.presentation.characters.CharacterListFragment.Companion.TAG_CHARACTERS_FRAGMENT
-import com.example.rickandmorty.presentation.characters.details.CharacterDetailsFragment
+import com.example.rickandmorty.presentation.characters.list.CharacterListFragment
+import com.example.rickandmorty.presentation.characters.list.CharacterListFragment.Companion.TAG_CHARACTERS_FRAGMENT
+import com.example.rickandmorty.presentation.characters.detail.CharacterDetailsFragment
 import com.example.rickandmorty.presentation.episodes.details.EpisodeDetailsFragment
 import com.example.rickandmorty.presentation.episodes.EpisodesFragment
 import com.example.rickandmorty.presentation.episodes.EpisodesFragment.Companion.TAG_EPISODES_FRAGMENT
@@ -85,12 +85,12 @@ class MainActivity : FragmentActivity(R.layout.activity_main),
 
     }
 
-    override fun goToDetailsCharacter(character: Character) {
+    override fun goToDetailsCharacter(singleCharacterUi: SingleCharacterUi) {
         supportFragmentManager.beginTransaction().run {
             setReorderingAllowed(true)
             replace(
                 R.id.fragment_container,
-                CharacterDetailsFragment.newInstance(character),
+                CharacterDetailsFragment.newInstance(singleCharacterUi),
                 CharacterDetailsFragment.TAG
             )
             addToBackStack(CharacterDetailsFragment.TAG)
