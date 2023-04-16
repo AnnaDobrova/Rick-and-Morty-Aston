@@ -5,32 +5,34 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.rickandmorty.domain.character.list.CharactersUseCase
 import com.example.rickandmorty.domain.character.list.CharactersUseCaseImpl
+import com.example.rickandmorty.domain.character.list.model.SingleCharacterDomain
 import com.example.rickandmorty.presentation.characters.list.mapper.SingleCharacterDomainToSingleCharacterUiMapper
 import com.example.rickandmorty.presentation.characters.list.model.SingleCharacterUi
 
-class CharactersViewModel : ViewModel() {
+class CharactersViewModel : ViewModel(), CharacterListFromDomainToUiCallback {
 
-    private var _characters = MutableLiveData<List<SingleCharacterUi>>(emptyList())
+    private var characters = MutableLiveData<List<SingleCharacterUi>>(emptyList())
 
     private var charactersUseCase: CharactersUseCase? = null
     private val mapperFromDomainToUi by lazy {
         SingleCharacterDomainToSingleCharacterUiMapper()
     }
 
-    fun getAllCharacters(): LiveData<List<SingleCharacterUi>> = _characters
+    fun getAllCharacters(): LiveData<List<SingleCharacterUi>> = characters
 
     init {
         charactersUseCase = CharactersUseCaseImpl()
+        charactersUseCase?.registerFromDomainToUiCallback(this@CharactersViewModel)
         loadAllCharacters()
     }
 
     private fun loadAllCharacters() {
-        _characters.postValue(
-            charactersUseCase?.loadAllCharacters()?.let {
-                mapperFromDomainToUi.map(
-                    it
-                )
-            }
+        charactersUseCase?.loadAllCharacters()
+    }
+
+    override fun getAllCharacters(characterList: List<SingleCharacterDomain>) {
+        characters.postValue(
+            mapperFromDomainToUi.map(characterList)
         )
     }
 }

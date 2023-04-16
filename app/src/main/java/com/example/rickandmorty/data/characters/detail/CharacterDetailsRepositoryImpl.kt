@@ -18,19 +18,19 @@ class CharacterDetailsRepositoryImpl : CharacterDetailRepository {
     }
 
     override fun loadCharacterById(id: Int) {
-        characterDetailsNetworkDataSource?.getCharacterDetails(id)
-            ?.enqueue(object : Callback<SingleCharacterData> {
-                override fun onResponse(
-                    call: Call<SingleCharacterData>,
-                    response: Response<SingleCharacterData>
-                ) {
-                    response.body()?.let { listener?.getCharacterById(it) }
-                }
-
-                override fun onFailure(call: Call<SingleCharacterData>, t: Throwable) {
-                    TODO("Not yet implemented")
-                }
-            })
+//        characterDetailsNetworkDataSource?.getCharacterDetails(id)
+//            ?.enqueue(object : Callback<SingleCharacterData> {
+//                override fun onResponse(
+//                    call: Call<SingleCharacterData>,
+//                    response: Response<SingleCharacterData>
+//                ) {
+//                    response.body()?.let { listener?.getCharacterById(it) }
+//                }
+//
+//                override fun onFailure(call: Call<SingleCharacterData>, t: Throwable) {
+//                    TODO("Not yet implemented")
+//                }
+//            })
     }
 
 }

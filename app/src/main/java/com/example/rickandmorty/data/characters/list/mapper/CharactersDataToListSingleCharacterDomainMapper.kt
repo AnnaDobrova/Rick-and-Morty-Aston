@@ -1,6 +1,7 @@
 package com.example.rickandmorty.data.characters.list.mapper
 
 import com.example.rickandmorty.data.characters.list.model.CharactersData
+import com.example.rickandmorty.data.characters.list.model.SingleCharacterData
 import com.example.rickandmorty.data.characters.list.model.SingleCharacterLocationData
 import com.example.rickandmorty.data.characters.list.model.SingleCharacterOriginData
 import com.example.rickandmorty.data.locations.model.LocationsData
@@ -10,7 +11,7 @@ import com.example.rickandmorty.domain.character.list.model.SingleCharacterOrigi
 
 class CharactersDataToListSingleCharacterDomainMapper {
 
-    fun map(from: CharactersData) = from.characters.map {
+    fun map(from: List<SingleCharacterData>) = from.map {
         SingleCharacterDomain(
             id = it.id,
             name = it.name,
