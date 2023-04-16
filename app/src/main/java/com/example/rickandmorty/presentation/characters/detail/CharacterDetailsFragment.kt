@@ -54,44 +54,31 @@ class CharacterDetailsFragment : Fragment(R.layout.fragment_character_details),
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        initCharacterDetail()
         initRecycler()
     }
 
-    override fun getCharacterById(character: SingleCharacterData) {
-        val characterDetail = mapperCharacter.map(character)
-        with(binding) {
-            nameCharacterDetails.text = characterDetail.name
-            speciesCharacterDetails.text = characterDetail.species
-            genderCharacterDetails.text = characterDetail.gender
-            statusCharacterDetails.text = characterDetail.status
-        }
-        Glide.with(this@CharacterDetailsFragment)
-            .load(characterDetail.image)
-            .into(binding.imageCharacterDetails)
-        Log.w("TAG", "getCharacterById: 1", )
-        initEpisodeDetail()
-        characterDetail.episodeList.map { episode ->
-            Log.w("TAG", "getCharacterById: 2", )
-
-            episode.last().digitToIntOrNull()?.let { episodeDetailsRepository.loadEpisodeById(it) }
-        }
-    }
+//    fun getCharacterById(character: SingleCharacterData) {
+//        val characterDetail = mapperCharacter.map(character)
+//        with(binding) {
+//            nameCharacterDetails.text = characterDetail.name
+//            speciesCharacterDetails.text = characterDetail.species
+//            genderCharacterDetails.text = characterDetail.gender
+//            statusCharacterDetails.text = characterDetail.status
+//        }
+//        Glide.with(this@CharacterDetailsFragment)
+//            .load(characterDetail.image)
+//            .into(binding.imageCharacterDetails)
+//        Log.w("TAG", "getCharacterById: 1")
+//        initEpisodeDetail()
+//        characterDetail.episodeList.map { episode ->
+//            Log.w("TAG", "getCharacterById: 2")
+//
+//            episode.last().digitToIntOrNull()?.let { episodeDetailsRepository.loadEpisodeById(it) }
+//        }
+//    }
 
     override fun getEpisodeById(episode: EpisodesData.SingleEpisodeData) {
         episodeListAdapter.addEpisode(mapperEpisode.map(episode))
-    }
-
-    private fun initCharacterDetail() {
-        val id = requireArguments().getInt(CHARACTER_ID)
-        with(characterDetailsRepository) {
-            registerListener(this@CharacterDetailsFragment)
-            loadCharacterById(id)
-        }
-    }
-
-    private fun initEpisodeDetail() {
-        episodeDetailsRepository.registerListener(this@CharacterDetailsFragment)
     }
 
     private fun initRecycler() {

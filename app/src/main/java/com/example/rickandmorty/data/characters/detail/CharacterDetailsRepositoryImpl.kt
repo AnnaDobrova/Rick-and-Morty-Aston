@@ -11,7 +11,6 @@ import retrofit2.Response
 class CharacterDetailsRepositoryImpl : CharacterDetailRepository {
 
     private var characterDetailsNetworkDataSource: CharacterDetailsNetworkDataSource? = null
-    private var listener: CharacterDetailsListener? = null
 
     init {
         characterDetailsNetworkDataSource =
@@ -34,7 +33,4 @@ class CharacterDetailsRepositoryImpl : CharacterDetailRepository {
             })
     }
 
-    fun registerListener(listener: CharacterDetailsListener) {
-        this.listener = listener
-    }
 }

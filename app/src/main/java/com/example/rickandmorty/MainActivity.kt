@@ -2,6 +2,8 @@ package com.example.rickandmorty
 
 import android.os.Bundle
 import android.view.View.GONE
+import android.view.View.VISIBLE
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.example.rickandmorty.databinding.ActivityMainBinding
 import com.example.rickandmorty.presentation.characters.list.model.SingleCharacterUi
@@ -25,8 +27,7 @@ class MainActivity : FragmentActivity(R.layout.activity_main),
     CallBackForFragments,
     CharacterListDetailsListener,
     LocationListDetailsListener,
-    EpisodeListDetailsListener
-{
+    EpisodeListDetailsListener {
 
     private var bottomNavigation: BottomNavigationView? = null
     private lateinit var binder: ActivityMainBinding
@@ -121,7 +122,7 @@ class MainActivity : FragmentActivity(R.layout.activity_main),
                 EpisodeDetailsFragment.newInstance(episode),
                 EpisodeDetailsFragment.TAG
             )
-            addToBackStack( EpisodeDetailsFragment.TAG)
+            addToBackStack(EpisodeDetailsFragment.TAG)
             commit()
         }
         bottomNavigation?.visibility = GONE
@@ -129,5 +130,15 @@ class MainActivity : FragmentActivity(R.layout.activity_main),
 
     override fun back() {
         onBackPressed()
+        val episodesFragment: Fragment? = supportFragmentManager.findFragmentByTag(TAG_EPISODES_FRAGMENT)
+        val charactersFragment: Fragment? = supportFragmentManager.findFragmentByTag(TAG_CHARACTERS_FRAGMENT)
+        val locationsFragment: Fragment? = supportFragmentManager.findFragmentByTag(TAG_LOCATIONS_FRAGMENT)
+
+        if (episodesFragment?.isVisible == true ||
+            charactersFragment?.isVisible == true ||
+            locationsFragment?.isVisible == true
+        ) {
+            bottomNavigation?.visibility = VISIBLE
+        }
     }
 }
