@@ -38,7 +38,6 @@ class MainActivity : FragmentActivity(R.layout.activity_main),
         setContentView(binder.root)
         bottomNavigation = findViewById(R.id.bottom_navigation)
         navListener()
-
     }
 
     private fun navListener() {
@@ -52,6 +51,8 @@ class MainActivity : FragmentActivity(R.layout.activity_main),
         bottomNavigation?.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.nav_characters -> {
+                    bottomNavigation?.visibility = VISIBLE
+
                     supportFragmentManager.beginTransaction().run {
                         setReorderingAllowed(true)
                         replace(R.id.fragment_container, CharacterListFragment.newInstance(), TAG_CHARACTERS_FRAGMENT)
@@ -61,6 +62,8 @@ class MainActivity : FragmentActivity(R.layout.activity_main),
                     true
                 }
                 R.id.nav_location -> {
+                    bottomNavigation?.visibility = VISIBLE
+
                     supportFragmentManager.beginTransaction().run {
                         setReorderingAllowed(true)
                         replace(R.id.fragment_container, LocationsFragment.newInstance(), TAG_LOCATIONS_FRAGMENT)
@@ -70,6 +73,8 @@ class MainActivity : FragmentActivity(R.layout.activity_main),
                     true
                 }
                 R.id.nav_episodes -> {
+                    bottomNavigation?.visibility = VISIBLE
+
                     supportFragmentManager.beginTransaction().run {
                         setReorderingAllowed(true)
                         replace(R.id.fragment_container, EpisodesFragment.newInstance(), TAG_EPISODES_FRAGMENT)
@@ -130,15 +135,5 @@ class MainActivity : FragmentActivity(R.layout.activity_main),
 
     override fun back() {
         onBackPressed()
-        val episodesFragment: Fragment? = supportFragmentManager.findFragmentByTag(TAG_EPISODES_FRAGMENT)
-        val charactersFragment: Fragment? = supportFragmentManager.findFragmentByTag(TAG_CHARACTERS_FRAGMENT)
-        val locationsFragment: Fragment? = supportFragmentManager.findFragmentByTag(TAG_LOCATIONS_FRAGMENT)
-
-        if (episodesFragment?.isVisible == true ||
-            charactersFragment?.isVisible == true ||
-            locationsFragment?.isVisible == true
-        ) {
-            bottomNavigation?.visibility = VISIBLE
-        }
     }
 }

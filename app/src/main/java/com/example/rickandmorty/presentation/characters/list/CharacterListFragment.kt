@@ -25,12 +25,6 @@ class CharacterListFragment : Fragment(R.layout.fragment_characters) {
     private val charactersAdapter: CharactersAdapter by lazy {
         CharactersAdapter(requireActivity() as CharacterListDetailsListener)
     }
-    private val charactersRepository: CharactersRepositoryImpl by lazy {
-        CharactersRepositoryImpl()
-    }
-    private val mapper: SingleCharacterDomainToSingleCharacterUiMapper by lazy {
-        SingleCharacterDomainToSingleCharacterUiMapper()
-    }
 
     private val viewModel: CharactersViewModel by lazy {
         CharactersViewModel()
@@ -65,7 +59,6 @@ class CharacterListFragment : Fragment(R.layout.fragment_characters) {
 //     */
 
     // 1 шаг регистрация листенера(колбэка) и требование начать загрузку всех персонажей
-
 
     private fun initRecycler() {
         with(binding.recyclerViewCharacters) {

@@ -1,5 +1,6 @@
 package com.example.rickandmorty.presentation.characters.detail
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,6 +10,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.example.rickandmorty.CallBackForFragments
 import com.example.rickandmorty.R
 import com.example.rickandmorty.data.characters.detail.CharacterDetailsRepositoryImpl
 import com.example.rickandmorty.data.characters.list.model.SingleCharacterData
@@ -28,6 +30,7 @@ class CharacterDetailsFragment : Fragment(R.layout.fragment_character_details),
 
     private var _binding: FragmentCharacterDetailsBinding? = null
     private val binding get() = _binding!!
+    private var callBackForFragments: CallBackForFragments? = null
 
     private val episodeListAdapter: EpisodeListAdapter by lazy {
         EpisodeListAdapter(requireActivity() as EpisodeListDetailsListener)
@@ -39,6 +42,11 @@ class CharacterDetailsFragment : Fragment(R.layout.fragment_character_details),
 
     private val mapperEpisode: EpisodeDataToEpisodeMapper by lazy {
         EpisodeDataToEpisodeMapper()
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        callBackForFragments = requireActivity() as CallBackForFragments
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -54,7 +62,6 @@ class CharacterDetailsFragment : Fragment(R.layout.fragment_character_details),
     }
 
     private fun observeVM() {
-
         viewModel.getCharacter().observe(viewLifecycleOwner) { characterDetail ->
             fillCharacterDetail(characterDetail)
         }
