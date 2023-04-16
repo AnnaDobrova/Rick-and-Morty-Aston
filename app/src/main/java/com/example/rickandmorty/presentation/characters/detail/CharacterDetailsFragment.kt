@@ -20,6 +20,7 @@ import com.example.rickandmorty.domain.episode.EpisodeListDetailsListener
 import com.example.rickandmorty.presentation.characters.detail.adapter.EpisodeDataToEpisodeMapper
 import com.example.rickandmorty.presentation.characters.detail.adapter.EpisodeListAdapter
 import com.example.rickandmorty.presentation.characters.detail.mapper.CharacterDetailDomainToCharacterDetailUiMapper
+import com.example.rickandmorty.presentation.characters.detail.model.CharacterDetailUi
 import com.example.rickandmorty.presentation.episodes.EpisodeDetailsListener
 
 class CharacterDetailsFragment : Fragment(R.layout.fragment_character_details),
@@ -32,16 +33,8 @@ class CharacterDetailsFragment : Fragment(R.layout.fragment_character_details),
         EpisodeListAdapter(requireActivity() as EpisodeListDetailsListener)
     }
 
-    private val characterDetailsRepository: CharacterDetailsRepositoryImpl by lazy {
-        CharacterDetailsRepositoryImpl()
-    }
-
-    private val episodeDetailsRepository: EpisodeDetailsRepository by lazy {
-        EpisodeDetailsRepository()
-    }
-
-    private val mapperCharacter: CharacterDetailDomainToCharacterDetailUiMapper by lazy {
-        CharacterDetailDomainToCharacterDetailUiMapper()
+    private val viewModel by lazy {
+        CharactersDetailViewModel()
     }
 
     private val mapperEpisode: EpisodeDataToEpisodeMapper by lazy {
@@ -54,28 +47,33 @@ class CharacterDetailsFragment : Fragment(R.layout.fragment_character_details),
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val characterId = requireArguments().getInt(CHARACTER_ID)
+        viewModel.loadCharacterById(characterId)
+        observeVM()
         initRecycler()
     }
 
-//    fun getCharacterById(character: SingleCharacterData) {
-//        val characterDetail = mapperCharacter.map(character)
-//        with(binding) {
-//            nameCharacterDetails.text = characterDetail.name
-//            speciesCharacterDetails.text = characterDetail.species
-//            genderCharacterDetails.text = characterDetail.gender
-//            statusCharacterDetails.text = characterDetail.status
-//        }
-//        Glide.with(this@CharacterDetailsFragment)
-//            .load(characterDetail.image)
-//            .into(binding.imageCharacterDetails)
-//        Log.w("TAG", "getCharacterById: 1")
-//        initEpisodeDetail()
+    private fun observeVM() {
+
+        viewModel.getCharacter().observe(viewLifecycleOwner) { characterDetail ->
+            fillCharacterDetail(characterDetail)
+        }
+    }
+
+    private fun fillCharacterDetail(characterDetail: CharacterDetailUi) {
+        with(binding) {
+            nameCharacterDetails.text = characterDetail.name
+            speciesCharacterDetails.text = characterDetail.species
+            genderCharacterDetails.text = characterDetail.gender
+            statusCharacterDetails.text = characterDetail.status
+        }
+        Glide.with(this@CharacterDetailsFragment)
+            .load(characterDetail.image)
+            .into(binding.imageCharacterDetails)
 //        characterDetail.episodeList.map { episode ->
-//            Log.w("TAG", "getCharacterById: 2")
-//
 //            episode.last().digitToIntOrNull()?.let { episodeDetailsRepository.loadEpisodeById(it) }
 //        }
-//    }
+    }
 
     override fun getEpisodeById(episode: EpisodesData.SingleEpisodeData) {
         episodeListAdapter.addEpisode(mapperEpisode.map(episode))

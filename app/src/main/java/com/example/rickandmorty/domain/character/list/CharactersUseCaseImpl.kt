@@ -6,12 +6,13 @@ import com.example.rickandmorty.presentation.characters.list.CharacterListFromDo
 
 class CharactersUseCaseImpl : CharactersUseCase, CharacterListFromDataToDomainCallback {
 
-    private var charactersRepository: CharactersRepository? = null
+    private val charactersRepository: CharactersRepository by lazy {
+        CharactersRepositoryImpl()
+    }
     private var callbackFromDomainToUi: CharacterListFromDomainToUiCallback? = null
 
     init {
-        charactersRepository = CharactersRepositoryImpl()
-        charactersRepository?.registerFromDataToDomainCallback(this@CharactersUseCaseImpl)
+        charactersRepository.registerFromDataToDomainCallback(this@CharactersUseCaseImpl)
     }
 
     override fun registerFromDomainToUiCallback(callback: CharacterListFromDomainToUiCallback) {
@@ -19,7 +20,7 @@ class CharactersUseCaseImpl : CharactersUseCase, CharacterListFromDataToDomainCa
     }
 
     override fun loadAllCharacters() {
-        charactersRepository?.loadAllCharacters()
+        charactersRepository.loadAllCharacters()
     }
 
     override fun getAllCharacters(charactersList: List<SingleCharacterDomain>) {

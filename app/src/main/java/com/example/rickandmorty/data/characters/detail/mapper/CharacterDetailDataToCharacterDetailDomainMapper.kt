@@ -1,0 +1,43 @@
+package com.example.rickandmorty.data.characters.detail.mapper
+
+import com.example.rickandmorty.data.characters.detail.model.CharacterDetailData
+import com.example.rickandmorty.data.characters.detail.model.CharacterDetailLocationData
+import com.example.rickandmorty.data.characters.detail.model.CharacterDetailOriginData
+import com.example.rickandmorty.data.characters.list.model.SingleCharacterData
+import com.example.rickandmorty.data.characters.list.model.SingleCharacterLocationData
+import com.example.rickandmorty.data.characters.list.model.SingleCharacterOriginData
+import com.example.rickandmorty.domain.character.detail.model.CharacterDetailDomain
+import com.example.rickandmorty.domain.character.detail.model.CharacterDetailLocationDomain
+import com.example.rickandmorty.domain.character.detail.model.CharacterDetailOriginDomain
+import com.example.rickandmorty.domain.character.list.model.SingleCharacterDomain
+import com.example.rickandmorty.domain.character.list.model.SingleCharacterLocationDomain
+import com.example.rickandmorty.domain.character.list.model.SingleCharacterOriginDomain
+
+class CharacterDetailDataToCharacterDetailDomainMapper {
+
+    fun map(from: CharacterDetailData) =
+        CharacterDetailDomain(
+            id = from.id,
+            name = from.name,
+            status = from.status,
+            species = from.species,
+            type = from.type,
+            gender = from.gender,
+            origin = mapOrigin(from.origin),
+            location = mapLocation(from.location),
+            image = from.image,
+            episodes = from.episodes,
+            url = from.url,
+            created = from.created,
+        )
+
+    private fun mapOrigin(from: CharacterDetailOriginData) = CharacterDetailOriginDomain(
+        url = from.url,
+        name = from.name
+    )
+
+    private fun mapLocation(from: CharacterDetailLocationData) = CharacterDetailLocationDomain(
+        url = from.url,
+        name = from.name
+    )
+}
