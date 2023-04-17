@@ -4,5 +4,5 @@ import com.example.rickandmorty.presentation.characters.list.CharacterListFromDo
 
 interface CharactersUseCase {
     fun registerFromDomainToUiCallback(callback: CharacterListFromDomainToUiCallback)
-    fun loadAllCharacters(): Unit
+    fun loadAllCharacters()
 }

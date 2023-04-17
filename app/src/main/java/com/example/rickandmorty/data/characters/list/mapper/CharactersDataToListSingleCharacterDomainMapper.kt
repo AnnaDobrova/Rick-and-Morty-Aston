@@ -11,6 +11,9 @@ import com.example.rickandmorty.domain.character.list.model.SingleCharacterOrigi
 
 class CharactersDataToListSingleCharacterDomainMapper {
 
+    /**
+     * 8 шаг нам нужно смаппить данные из Дата в Домейн
+     */
     fun map(from: List<SingleCharacterData>) = from.map {
         SingleCharacterDomain(
             id = it.id,

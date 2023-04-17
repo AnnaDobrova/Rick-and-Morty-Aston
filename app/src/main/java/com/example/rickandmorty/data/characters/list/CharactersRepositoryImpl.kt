@@ -29,19 +29,27 @@ class CharactersRepositoryImpl : CharactersRepository {
         charactersNetworkDataSource = RetrofitClient.fillRetrofit().create(CharactersNetworkDataSource::class.java)
     }
 
+    /**
+     * 3 шаг
+     * реалиация регистрации коллбэка
+     */
     override fun registerFromDataToDomainCallback(callback: CharacterListFromDataToDomainCallback) {
         this.callbackFromDataToDomain = callback
     }
 
     /**
-     * Метод отвечает за получение данных о всех персонажах. Варианты ответа, onResponse - удачное получение данных
+     *  7 шаг
+     *  Метод отвечает за получение данных о всех персонажах. Варианты ответа, onResponse - удачное получение данных
      * onFailure - какая то ошибка
      */
 
     override fun loadAllCharacters() {
         charactersNetworkDataSource?.getAllCharacters()?.enqueue(object : Callback<CharactersData> {
             override fun onResponse(call: Call<CharactersData>, response: Response<CharactersData>) {
-                callbackFromDataToDomain?.getAllCharacters(
+                /**
+                 * 9 шаг, данные смаппились и мы их приняли в наш коллбэк
+                 */
+                callbackFromDataToDomain?.getAllCharactersFromDataToDomain(
                     mapperFromDataToDomain.map(
                         response.body()?.characters ?: emptyList()
                     )

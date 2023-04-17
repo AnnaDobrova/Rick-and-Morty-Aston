@@ -8,6 +8,9 @@ import com.example.rickandmorty.presentation.characters.list.model.SingleCharact
  */
 class SingleCharacterDomainToSingleCharacterUiMapper {
 
+    /**
+     * 12 шаг маппинг данных из Домейна в UI
+     */
     fun map(from: List<SingleCharacterDomain>): List<SingleCharacterUi> {
         return from.map {
             SingleCharacterUi(
