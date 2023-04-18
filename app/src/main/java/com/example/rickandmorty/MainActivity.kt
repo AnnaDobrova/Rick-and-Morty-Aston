@@ -3,21 +3,21 @@ package com.example.rickandmorty
 import android.os.Bundle
 import android.view.View.GONE
 import android.view.View.VISIBLE
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.example.rickandmorty.databinding.ActivityMainBinding
 import com.example.rickandmorty.presentation.characters.list.model.SingleCharacterUi
 import com.example.rickandmorty.presentation.characters.CharacterListDetailsListener
 import com.example.rickandmorty.domain.episode.EpisodeListDetailsListener
-import com.example.rickandmorty.domain.episode.list.Episode
+import com.example.rickandmorty.domain.episode.list.model.Episode
 import com.example.rickandmorty.domain.location.LocationListDetailsListener
 import com.example.rickandmorty.domain.location.list.Location
 import com.example.rickandmorty.presentation.characters.list.CharacterListFragment
 import com.example.rickandmorty.presentation.characters.list.CharacterListFragment.Companion.TAG_CHARACTERS_FRAGMENT
 import com.example.rickandmorty.presentation.characters.detail.CharacterDetailsFragment
 import com.example.rickandmorty.presentation.episodes.details.EpisodeDetailsFragment
-import com.example.rickandmorty.presentation.episodes.EpisodesFragment
-import com.example.rickandmorty.presentation.episodes.EpisodesFragment.Companion.TAG_EPISODES_FRAGMENT
+import com.example.rickandmorty.presentation.episodes.list.EpisodeListFragment
+import com.example.rickandmorty.presentation.episodes.list.EpisodeListFragment.Companion.TAG_EPISODES_FRAGMENT
+import com.example.rickandmorty.presentation.episodes.list.model.SingleEpisodeUI
 import com.example.rickandmorty.presentation.locations.LocationsFragment
 import com.example.rickandmorty.presentation.locations.LocationsFragment.Companion.TAG_LOCATIONS_FRAGMENT
 import com.example.rickandmorty.presentation.locations.details.LocationDetailsFragment
@@ -77,7 +77,7 @@ class MainActivity : FragmentActivity(R.layout.activity_main),
 
                     supportFragmentManager.beginTransaction().run {
                         setReorderingAllowed(true)
-                        replace(R.id.fragment_container, EpisodesFragment.newInstance(), TAG_EPISODES_FRAGMENT)
+                        replace(R.id.fragment_container, EpisodeListFragment.newInstance(), TAG_EPISODES_FRAGMENT)
                         addToBackStack(TAG_EPISODES_FRAGMENT)
                         commit()
                     }
@@ -119,7 +119,7 @@ class MainActivity : FragmentActivity(R.layout.activity_main),
         bottomNavigation?.visibility = GONE
     }
 
-    override fun goToDetailsEpisode(episode: Episode) {
+    override fun goToDetailsEpisode(episode: SingleEpisodeUI) {
         supportFragmentManager.beginTransaction().run {
             setReorderingAllowed(true)
             replace(

@@ -10,11 +10,11 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.rickandmorty.CallBackForFragments
 import com.example.rickandmorty.R
 import com.example.rickandmorty.data.locations.LocationsRepository
-import com.example.rickandmorty.data.locations.model.LocationsData
+import com.example.rickandmorty.data.locations.list.model.SingleLocationData
 import com.example.rickandmorty.databinding.FragmentLocationsBinding
 import com.example.rickandmorty.domain.location.LocationListDetailsListener
 import com.example.rickandmorty.presentation.locations.adapter.LocationAdapter
-import com.example.rickandmorty.presentation.locations.mapper.LocationDataToLocationMap
+import com.example.rickandmorty.presentation.locations.mapper.LocationDataToLocationMapper
 
 class LocationsFragment : Fragment(R.layout.fragment_locations), LocationsListener {
 
@@ -30,8 +30,8 @@ class LocationsFragment : Fragment(R.layout.fragment_locations), LocationsListen
         LocationsRepository()
     }
 
-    private val mapper: LocationDataToLocationMap by lazy {
-        LocationDataToLocationMap()
+    private val mapper: LocationDataToLocationMapper by lazy {
+        LocationDataToLocationMapper()
     }
 
     override fun onAttach(context: Context) {
@@ -50,7 +50,7 @@ class LocationsFragment : Fragment(R.layout.fragment_locations), LocationsListen
         initRecycler()
     }
 
-    override fun getAllLocations(locations: List<LocationsData.SingleLocationData>) {
+    override fun getAllLocations(locations: List<SingleLocationData>) {
         locationAdapter.updateLocations(mapper.map(locations))
     }
 

@@ -8,7 +8,8 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import com.example.rickandmorty.R
 import com.example.rickandmorty.data.locations.LocationDetailsRepository
-import com.example.rickandmorty.data.locations.model.LocationsData
+import com.example.rickandmorty.data.locations.detail.model.LocationDetailData
+import com.example.rickandmorty.data.locations.list.model.LocationsData
 import com.example.rickandmorty.databinding.FragmentLocetionDetailsBinding
 import com.example.rickandmorty.domain.location.list.Location
 import com.example.rickandmorty.presentation.locations.LocationDetailsListener
@@ -36,7 +37,7 @@ class LocationDetailsFragment : Fragment(R.layout.fragment_locetion_details), Lo
         initLocationDetails()
     }
 
-    override fun getLocationById(location: LocationsData.SingleLocationData) {
+    override fun getLocationById(location: LocationDetailData) {
         val locationDetails = mapper.map(location)
         with(binding){
             nameLocationDetails.text = locationDetails.nameLocation

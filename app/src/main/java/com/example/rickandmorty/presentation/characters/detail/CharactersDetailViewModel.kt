@@ -6,13 +6,8 @@ import androidx.lifecycle.ViewModel
 import com.example.rickandmorty.domain.character.detail.CharacterDetailUseCase
 import com.example.rickandmorty.domain.character.detail.CharacterDetailUseCaseImpl
 import com.example.rickandmorty.domain.character.detail.model.CharacterDetailDomain
-import com.example.rickandmorty.domain.character.list.CharactersUseCase
-import com.example.rickandmorty.domain.character.list.CharactersUseCaseImpl
-import com.example.rickandmorty.domain.character.list.model.SingleCharacterDomain
 import com.example.rickandmorty.presentation.characters.detail.mapper.CharacterDetailDomainToCharacterDetailUiMapper
 import com.example.rickandmorty.presentation.characters.detail.model.CharacterDetailUi
-import com.example.rickandmorty.presentation.characters.list.mapper.SingleCharacterDomainToSingleCharacterUiMapper
-import com.example.rickandmorty.presentation.characters.list.model.SingleCharacterUi
 
 class CharactersDetailViewModel : ViewModel(), CharacterDetailFromDomainToUiCallback {
 
@@ -35,5 +30,6 @@ class CharactersDetailViewModel : ViewModel(), CharacterDetailFromDomainToUiCall
     fun loadCharacterById(id: Int) {
         characterDetailUseCase?.loadCharacterById(id)
     }
+
     fun getCharacter(): LiveData<CharacterDetailUi> = character
 }

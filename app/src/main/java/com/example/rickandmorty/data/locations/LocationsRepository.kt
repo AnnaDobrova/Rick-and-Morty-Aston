@@ -1,8 +1,8 @@
 package com.example.rickandmorty.data.locations
 
 import com.example.rickandmorty.data.RetrofitClient
-import com.example.rickandmorty.data.locations.api.LocationNetworkDataSours
-import com.example.rickandmorty.data.locations.model.LocationsData
+import com.example.rickandmorty.data.locations.list.api.LocationNetworkDataSours
+import com.example.rickandmorty.data.locations.list.model.LocationsData
 import com.example.rickandmorty.presentation.locations.LocationsListener
 import retrofit2.Call
 import retrofit2.Callback

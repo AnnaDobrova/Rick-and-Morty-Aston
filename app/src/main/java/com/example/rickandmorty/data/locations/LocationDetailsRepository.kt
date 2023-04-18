@@ -1,8 +1,8 @@
 package com.example.rickandmorty.data.locations
 
 import com.example.rickandmorty.data.RetrofitClient
-import com.example.rickandmorty.data.locations.api.LocationDetailsNetworkDataSours
-import com.example.rickandmorty.data.locations.model.LocationsData
+import com.example.rickandmorty.data.locations.detail.api.LocationDetailsNetworkDataSours
+import com.example.rickandmorty.data.locations.detail.model.LocationDetailData
 import com.example.rickandmorty.presentation.locations.LocationDetailsListener
 import retrofit2.Call
 import retrofit2.Callback
@@ -24,15 +24,15 @@ class LocationDetailsRepository {
 
     fun loadLocationById(id: Int) {
         locationDetailsNetworkDataSource?.getLocationDetails(id)
-            ?.enqueue(object : Callback<LocationsData.SingleLocationData>{
+            ?.enqueue(object : Callback<LocationDetailData>{
                 override fun onResponse(
-                    call: Call<LocationsData.SingleLocationData>,
-                    response: Response<LocationsData.SingleLocationData>
+                    call: Call<LocationDetailData>,
+                    response: Response<LocationDetailData>
                 ) {
                     response.body()?.let { listener?.getLocationById(it) }
                 }
 
-                override fun onFailure(call: Call<LocationsData.SingleLocationData>, t: Throwable) {
+                override fun onFailure(call: Call<LocationDetailData>, t: Throwable) {
                     TODO("Not yet implemented")
                 }
 

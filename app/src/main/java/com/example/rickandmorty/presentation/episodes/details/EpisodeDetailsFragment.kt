@@ -7,24 +7,28 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import com.example.rickandmorty.R
-import com.example.rickandmorty.data.episodes.EpisodeDetailsRepository
-import com.example.rickandmorty.data.episodes.model.EpisodesData
+import com.example.rickandmorty.data.episodes.detail.EpisodeDetailsRepositoryImpl
+import com.example.rickandmorty.data.episodes.detail.model.SingleEpisodeDetailData
+import com.example.rickandmorty.data.episodes.list.model.EpisodeListData
 import com.example.rickandmorty.databinding.FragmentEpisodeDetailsBinding
-import com.example.rickandmorty.domain.episode.list.Episode
+import com.example.rickandmorty.domain.episode.list.model.Episode
 import com.example.rickandmorty.presentation.episodes.EpisodeDetailsListener
-import com.example.rickandmorty.presentation.episodes.mapper.EpisodeDetailsDataToEpisodeDetailsMap
+import com.example.rickandmorty.presentation.episodes.details.model.EpisodeDetailUi
+import com.example.rickandmorty.presentation.episodes.list.EpisodesViewModel
+import com.example.rickandmorty.presentation.episodes.list.mapper.SingleEpisodeDomainToSingleEpisodeUiMapper
+import com.example.rickandmorty.presentation.episodes.list.model.SingleEpisodeUI
 
-class EpisodeDetailsFragment : Fragment(R.layout.fragment_episode_details), EpisodeDetailsListener {
+class EpisodeDetailsFragment : Fragment(R.layout.fragment_episode_details) {
 
     private var _binding: FragmentEpisodeDetailsBinding? = null
     private val binding get() = _binding!!
 
-    private val mapper: EpisodeDetailsDataToEpisodeDetailsMap by lazy {
-        EpisodeDetailsDataToEpisodeDetailsMap()
+    private val viewModel by lazy {
+        EpisodeDetailViewModel()
     }
 
-    private val episodeDetailsRepository: EpisodeDetailsRepository by lazy {
-        EpisodeDetailsRepository()
+    private val episodeDetailsRepositoryImpl: EpisodeDetailsRepositoryImpl by lazy {
+        EpisodeDetailsRepositoryImpl()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -33,23 +37,20 @@ class EpisodeDetailsFragment : Fragment(R.layout.fragment_episode_details), Epis
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        initEpisodeDetails()
+        observeVM()
     }
 
-    fun initEpisodeDetails() {
-        val id = requireArguments().getInt(EPISODE_ID)
-        with(episodeDetailsRepository) {
-            registerListener(this@EpisodeDetailsFragment)
-            loadEpisodeById(id)
+    private fun observeVM() {
+        viewModel.getEpisode().observe(viewLifecycleOwner) { episodeDetail ->
+            fillEpisodeDetail(episodeDetail)
         }
     }
 
-    override fun getEpisodeById(episode: EpisodesData.SingleEpisodeData) {
-        val episodeDetails = mapper.map(episode)
+    private fun fillEpisodeDetail(episodeDetail: EpisodeDetailUi) {
         with(binding) {
-            nameEpisodeDetails.text = episodeDetails.nameEpisode
-            numberEpisodeDetails.text = episodeDetails.numberEpisode
-            airDataEpisodeDetails.text = episodeDetails.airDataEpisode
+            nameEpisodeDetails.text = episodeDetail.nameEpisode
+            numberEpisodeDetails.text = episodeDetail.numberEpisode
+            airDataEpisodeDetails.text = episodeDetail.airDataEpisode
         }
     }
 
@@ -57,7 +58,7 @@ class EpisodeDetailsFragment : Fragment(R.layout.fragment_episode_details), Epis
         const val TAG = "EpisodeDetailsFragment"
         private const val EPISODE_ID = "ID"
 
-        fun newInstance(episode: Episode) = EpisodeDetailsFragment().also {
+        fun newInstance(episode: SingleEpisodeUI) = EpisodeDetailsFragment().also {
             it.arguments = bundleOf(
                 EPISODE_ID to episode.id
             )

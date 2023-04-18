@@ -1,7 +1,7 @@
 package com.example.rickandmorty.domain.character.detail
 
 import com.example.rickandmorty.data.characters.detail.CharacterDetailsRepositoryImpl
-import com.example.rickandmorty.data.episodes.EpisodeDetailsRepository
+import com.example.rickandmorty.data.episodes.detail.EpisodeDetailsRepositoryImpl
 import com.example.rickandmorty.domain.character.detail.model.CharacterDetailDomain
 import com.example.rickandmorty.presentation.characters.detail.CharacterDetailFromDomainToUiCallback
 
@@ -12,8 +12,8 @@ class CharacterDetailUseCaseImpl : CharacterDetailUseCase, CharacterDetailFromDa
         CharacterDetailsRepositoryImpl()
     }
 
-    private val episodeDetailsRepository: EpisodeDetailsRepository by lazy {
-        EpisodeDetailsRepository()
+    private val episodeDetailsRepositoryImpl: EpisodeDetailsRepositoryImpl by lazy {
+        EpisodeDetailsRepositoryImpl()
     }
 
     init {

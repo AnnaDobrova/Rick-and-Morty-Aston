@@ -1,9 +1,9 @@
 package com.example.rickandmorty.data.characters.list
 
-import com.example.rickandmorty.data.characters.list.api.CharactersNetworkDataSource
-import com.example.rickandmorty.data.characters.list.model.CharactersData
 import com.example.rickandmorty.data.RetrofitClient
+import com.example.rickandmorty.data.characters.list.api.CharactersNetworkDataSource
 import com.example.rickandmorty.data.characters.list.mapper.CharactersDataToListSingleCharacterDomainMapper
+import com.example.rickandmorty.data.characters.list.model.CharactersData
 import com.example.rickandmorty.domain.character.list.CharacterListFromDataToDomainCallback
 import com.example.rickandmorty.domain.character.list.CharactersRepository
 import retrofit2.Call

@@ -3,15 +3,9 @@ package com.example.rickandmorty.data.characters.detail.mapper
 import com.example.rickandmorty.data.characters.detail.model.CharacterDetailData
 import com.example.rickandmorty.data.characters.detail.model.CharacterDetailLocationData
 import com.example.rickandmorty.data.characters.detail.model.CharacterDetailOriginData
-import com.example.rickandmorty.data.characters.list.model.SingleCharacterData
-import com.example.rickandmorty.data.characters.list.model.SingleCharacterLocationData
-import com.example.rickandmorty.data.characters.list.model.SingleCharacterOriginData
 import com.example.rickandmorty.domain.character.detail.model.CharacterDetailDomain
 import com.example.rickandmorty.domain.character.detail.model.CharacterDetailLocationDomain
 import com.example.rickandmorty.domain.character.detail.model.CharacterDetailOriginDomain
-import com.example.rickandmorty.domain.character.list.model.SingleCharacterDomain
-import com.example.rickandmorty.domain.character.list.model.SingleCharacterLocationDomain
-import com.example.rickandmorty.domain.character.list.model.SingleCharacterOriginDomain
 
 class CharacterDetailDataToCharacterDetailDomainMapper {
 

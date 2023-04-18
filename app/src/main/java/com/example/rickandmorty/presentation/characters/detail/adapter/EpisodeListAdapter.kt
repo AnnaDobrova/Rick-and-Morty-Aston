@@ -5,12 +5,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.rickandmorty.R
 import com.example.rickandmorty.domain.episode.EpisodeListDetailsListener
-import com.example.rickandmorty.domain.episode.list.Episode
+import com.example.rickandmorty.domain.episode.list.model.Episode
+import com.example.rickandmorty.presentation.episodes.list.model.SingleEpisodeUI
 
 class EpisodeListAdapter(private val episodeListDetailsListener: EpisodeListDetailsListener) :
     RecyclerView.Adapter<CharacterDetailsEpisodeViewHolder>() {
 
-    private val episodeList = mutableListOf<Episode>()
+    private val episodeList = mutableListOf<SingleEpisodeUI>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterDetailsEpisodeViewHolder {
         return CharacterDetailsEpisodeViewHolder(
@@ -32,13 +33,13 @@ class EpisodeListAdapter(private val episodeListDetailsListener: EpisodeListDeta
         return episodeList.size
     }
 
-    fun updateEpisodeList (newEpisodeList: List<Episode>){
+    fun updateEpisodeList(newEpisodeList: List<SingleEpisodeUI>) {
         episodeList.clear()
         episodeList.addAll(newEpisodeList)
         notifyDataSetChanged()
     }
 
-    fun addEpisode(episode: Episode) {
+    fun addEpisode(episode: SingleEpisodeUI) {
         episodeList.add(episode)
         notifyDataSetChanged()
     }

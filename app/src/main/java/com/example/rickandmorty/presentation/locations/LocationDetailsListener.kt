@@ -1,8 +1,8 @@
 package com.example.rickandmorty.presentation.locations
 
-import com.example.rickandmorty.data.locations.model.LocationsData
+import com.example.rickandmorty.data.locations.detail.model.LocationDetailData
 
 interface LocationDetailsListener {
 
-    fun getLocationById(location: LocationsData.SingleLocationData)
+    fun getLocationById(location: LocationDetailData)
 }

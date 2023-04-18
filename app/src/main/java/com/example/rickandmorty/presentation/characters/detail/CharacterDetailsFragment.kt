@@ -12,21 +12,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.rickandmorty.CallBackForFragments
 import com.example.rickandmorty.R
-import com.example.rickandmorty.data.characters.detail.CharacterDetailsRepositoryImpl
-import com.example.rickandmorty.data.characters.list.model.SingleCharacterData
-import com.example.rickandmorty.data.episodes.EpisodeDetailsRepository
-import com.example.rickandmorty.data.episodes.model.EpisodesData
+import com.example.rickandmorty.data.episodes.detail.model.SingleEpisodeDetailData
+import com.example.rickandmorty.data.episodes.list.model.EpisodeListData
+import com.example.rickandmorty.data.episodes.list.model.SingleEpisodeListData
 import com.example.rickandmorty.databinding.FragmentCharacterDetailsBinding
 import com.example.rickandmorty.presentation.characters.list.model.SingleCharacterUi
 import com.example.rickandmorty.domain.episode.EpisodeListDetailsListener
 import com.example.rickandmorty.presentation.characters.detail.adapter.EpisodeDataToEpisodeMapper
 import com.example.rickandmorty.presentation.characters.detail.adapter.EpisodeListAdapter
-import com.example.rickandmorty.presentation.characters.detail.mapper.CharacterDetailDomainToCharacterDetailUiMapper
 import com.example.rickandmorty.presentation.characters.detail.model.CharacterDetailUi
 import com.example.rickandmorty.presentation.episodes.EpisodeDetailsListener
 
-class CharacterDetailsFragment : Fragment(R.layout.fragment_character_details),
-    EpisodeDetailsListener {
+class CharacterDetailsFragment : Fragment(R.layout.fragment_character_details){
 
     private var _binding: FragmentCharacterDetailsBinding? = null
     private val binding get() = _binding!!
@@ -82,9 +79,9 @@ class CharacterDetailsFragment : Fragment(R.layout.fragment_character_details),
 //        }
     }
 
-    override fun getEpisodeById(episode: EpisodesData.SingleEpisodeData) {
-        episodeListAdapter.addEpisode(mapperEpisode.map(episode))
-    }
+//    override fun getEpisodeById(episode:SingleEpisodeDetailData) {
+//        episodeListAdapter.addEpisode(mapperEpisode.map(episode))
+//    }
 
     private fun initRecycler() {
         Log.d("TAG", "initRecycler in CharacterDetailsFragment ")

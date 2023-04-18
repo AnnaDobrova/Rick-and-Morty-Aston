@@ -9,7 +9,6 @@ import com.example.rickandmorty.domain.character.list.model.SingleCharacterDomai
 import com.example.rickandmorty.presentation.characters.list.mapper.SingleCharacterDomainToSingleCharacterUiMapper
 import com.example.rickandmorty.presentation.characters.list.model.SingleCharacterUi
 
-
 class CharactersViewModel : ViewModel(), CharacterListFromDomainToUiCallback {
 
     private var characters = MutableLiveData<List<SingleCharacterUi>>(emptyList())
