@@ -1,11 +1,13 @@
 package com.example.rickandmorty.presentation.episodes.details
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import com.example.rickandmorty.CallBackForFragments
 import com.example.rickandmorty.R
 import com.example.rickandmorty.data.episodes.detail.EpisodeDetailsRepositoryImpl
 import com.example.rickandmorty.data.episodes.detail.model.SingleEpisodeDetailData
@@ -22,6 +24,7 @@ class EpisodeDetailsFragment : Fragment(R.layout.fragment_episode_details) {
 
     private var _binding: FragmentEpisodeDetailsBinding? = null
     private val binding get() = _binding!!
+    private var callBackForFragments: CallBackForFragments? = null
 
     private val viewModel by lazy {
         EpisodeDetailViewModel()
@@ -31,12 +34,19 @@ class EpisodeDetailsFragment : Fragment(R.layout.fragment_episode_details) {
         EpisodeDetailsRepositoryImpl()
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        callBackForFragments = requireActivity() as CallBackForFragments
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentEpisodeDetailsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val episodeId = requireArguments().getInt(EPISODE_ID)
+        viewModel.loadEpisodeById(episodeId)
         observeVM()
     }
 

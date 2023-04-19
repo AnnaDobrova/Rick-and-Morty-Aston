@@ -8,9 +8,7 @@ import com.example.rickandmorty.databinding.ActivityMainBinding
 import com.example.rickandmorty.presentation.characters.list.model.SingleCharacterUi
 import com.example.rickandmorty.presentation.characters.CharacterListDetailsListener
 import com.example.rickandmorty.domain.episode.EpisodeListDetailsListener
-import com.example.rickandmorty.domain.episode.list.model.Episode
 import com.example.rickandmorty.domain.location.LocationListDetailsListener
-import com.example.rickandmorty.domain.location.list.Location
 import com.example.rickandmorty.presentation.characters.list.CharacterListFragment
 import com.example.rickandmorty.presentation.characters.list.CharacterListFragment.Companion.TAG_CHARACTERS_FRAGMENT
 import com.example.rickandmorty.presentation.characters.detail.CharacterDetailsFragment
@@ -18,9 +16,10 @@ import com.example.rickandmorty.presentation.episodes.details.EpisodeDetailsFrag
 import com.example.rickandmorty.presentation.episodes.list.EpisodeListFragment
 import com.example.rickandmorty.presentation.episodes.list.EpisodeListFragment.Companion.TAG_EPISODES_FRAGMENT
 import com.example.rickandmorty.presentation.episodes.list.model.SingleEpisodeUI
-import com.example.rickandmorty.presentation.locations.LocationsFragment
-import com.example.rickandmorty.presentation.locations.LocationsFragment.Companion.TAG_LOCATIONS_FRAGMENT
-import com.example.rickandmorty.presentation.locations.details.LocationDetailsFragment
+import com.example.rickandmorty.presentation.locations.list.LocationListFragment
+import com.example.rickandmorty.presentation.locations.list.LocationListFragment.Companion.TAG_LOCATIONS_FRAGMENT
+import com.example.rickandmorty.presentation.locations.detail.LocationDetailsFragment
+import com.example.rickandmorty.presentation.locations.list.model.SingleLocationUI
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : FragmentActivity(R.layout.activity_main),
@@ -66,7 +65,7 @@ class MainActivity : FragmentActivity(R.layout.activity_main),
 
                     supportFragmentManager.beginTransaction().run {
                         setReorderingAllowed(true)
-                        replace(R.id.fragment_container, LocationsFragment.newInstance(), TAG_LOCATIONS_FRAGMENT)
+                        replace(R.id.fragment_container, LocationListFragment.newInstance(), TAG_LOCATIONS_FRAGMENT)
                         addToBackStack(TAG_LOCATIONS_FRAGMENT)
                         commit()
                     }
@@ -105,7 +104,7 @@ class MainActivity : FragmentActivity(R.layout.activity_main),
         bottomNavigation?.visibility = GONE
     }
 
-    override fun goToDetailsLocation(location: Location) {
+    override fun goToDetailsLocation(location: SingleLocationUI) {
         supportFragmentManager.beginTransaction().run {
             setReorderingAllowed(true)
             replace(

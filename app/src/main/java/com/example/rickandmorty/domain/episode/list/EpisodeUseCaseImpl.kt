@@ -4,22 +4,28 @@ import com.example.rickandmorty.data.episodes.list.EpisodeRepositoryImpl
 import com.example.rickandmorty.domain.episode.list.model.SingleEpisodeListDomain
 import com.example.rickandmorty.presentation.episodes.list.EpisodeListFromDomainToUiCallback
 
-class EpisodeUseCaseImpl: EpisodeUseCase, EpisodeListFromDomainToUiCallback {
+class EpisodeUseCaseImpl : EpisodeUseCase, EpisodeListFromDataToDomainCallBack {
 
     private val episodeRepository: EpisodesRepository by lazy {
         EpisodeRepositoryImpl()
     }
 
-    override fun getAllEpisodesFromDomainToUI(episodeList: List<SingleEpisodeListDomain>) {
-        TODO("Not yet implemented")
+    private var callFromDomainToUI: EpisodeListFromDomainToUiCallback? = null
+
+    init {
+        episodeRepository.resisterFromDataToDomainCallback(this)
     }
 
     override fun resisterFromDataToDomainCallback(callback: EpisodeListFromDomainToUiCallback) {
-        TODO("Not yet implemented")
+        this.callFromDomainToUI = callback
     }
 
     override fun loadAllEpisodes() {
-        TODO("Not yet implemented")
+        episodeRepository.loadAllEpisodes()
+    }
+
+    override fun getAllEpisodesFromDataToDomain(episodeList: List<SingleEpisodeListDomain>) {
+        callFromDomainToUI?.getAllEpisodesFromDomainToUI(episodeList)
     }
 
 }

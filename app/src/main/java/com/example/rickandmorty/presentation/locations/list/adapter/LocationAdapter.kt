@@ -1,16 +1,16 @@
-package com.example.rickandmorty.presentation.locations.adapter
+package com.example.rickandmorty.presentation.locations.list.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.rickandmorty.R
 import com.example.rickandmorty.domain.location.LocationListDetailsListener
-import com.example.rickandmorty.domain.location.list.Location
+import com.example.rickandmorty.presentation.locations.list.model.SingleLocationUI
 
 class LocationAdapter(private val locationListDetailsListener: LocationListDetailsListener) :
     RecyclerView.Adapter<LocationViewHolder>() {
 
-    private var locations = mutableListOf<Location>()
+    private var locations = mutableListOf<SingleLocationUI>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LocationViewHolder {
         return LocationViewHolder(
@@ -33,7 +33,7 @@ class LocationAdapter(private val locationListDetailsListener: LocationListDetai
         return locations.size
     }
 
-    fun updateLocations(newLocations: List<Location>) {
+    fun updateLocations(newLocations: List<SingleLocationUI>) {
         locations.clear()
         locations.addAll(newLocations)
         notifyDataSetChanged()

@@ -1,11 +1,12 @@
-package com.example.rickandmorty.domain.location.detail
+package com.example.rickandmorty.domain.location.list.model
 
-data class LocationDetails (
+
+data class SingleLocationDomain(
     val id: Int,
     val nameLocation: String,
     val typeLocation : String,
     val dimensionLocation: String,
-    val residents: List<String>,
+    val listCharactersInLocation: List<String>,
     val url: String,
     val created: String
-    )
+)

@@ -1,7 +1,8 @@
-package com.example.rickandmorty.presentation.locations
+package com.example.rickandmorty.presentation.locations.list
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,14 +10,14 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.rickandmorty.CallBackForFragments
 import com.example.rickandmorty.R
-import com.example.rickandmorty.data.locations.LocationsRepository
-import com.example.rickandmorty.data.locations.list.model.SingleLocationData
+import com.example.rickandmorty.data.locations.LocationsRepositoryImpl
 import com.example.rickandmorty.databinding.FragmentLocationsBinding
 import com.example.rickandmorty.domain.location.LocationListDetailsListener
-import com.example.rickandmorty.presentation.locations.adapter.LocationAdapter
-import com.example.rickandmorty.presentation.locations.mapper.LocationDataToLocationMapper
+import com.example.rickandmorty.domain.location.list.model.SingleLocationDomain
+import com.example.rickandmorty.presentation.locations.list.adapter.LocationAdapter
+import com.example.rickandmorty.presentation.locations.list.mapper.SingleLocationDomainToSingleLocationUiMapper
 
-class LocationsFragment : Fragment(R.layout.fragment_locations), LocationsListener {
+class LocationListFragment : Fragment(R.layout.fragment_locations) {
 
     private var _binding: FragmentLocationsBinding? = null
     private val binding get() = _binding!!
@@ -26,12 +27,8 @@ class LocationsFragment : Fragment(R.layout.fragment_locations), LocationsListen
         LocationAdapter(requireActivity() as LocationListDetailsListener)
     }
 
-    private val locationRepository: LocationsRepository by lazy {
-        LocationsRepository()
-    }
-
-    private val mapper: LocationDataToLocationMapper by lazy {
-        LocationDataToLocationMapper()
+    private val viewModel: LocationsViewModel by lazy {
+        LocationsViewModel()
     }
 
     override fun onAttach(context: Context) {
@@ -46,22 +43,18 @@ class LocationsFragment : Fragment(R.layout.fragment_locations), LocationsListen
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initAllLocations()
+        observerVM()
         initRecycler()
     }
 
-    override fun getAllLocations(locations: List<SingleLocationData>) {
-        locationAdapter.updateLocations(mapper.map(locations))
-    }
-
-    private fun initAllLocations() {
-        with(locationRepository) {
-            registerListener(this@LocationsFragment)
-            loadCharacters()
+    private fun observerVM() {
+        viewModel.getLocations().observe(viewLifecycleOwner) { newLocationList ->
+            locationAdapter.updateLocations(newLocationList)
         }
     }
 
     private fun initRecycler() {
+        Log.d("TAG", "initRecycler in LocationListFragment")
         with(binding.recyclerViewLocation) {
             layoutManager = GridLayoutManager(requireActivity(), 2)
             adapter = locationAdapter
@@ -71,6 +64,6 @@ class LocationsFragment : Fragment(R.layout.fragment_locations), LocationsListen
     companion object {
         const val TAG_LOCATIONS_FRAGMENT = "TAG_LOCATIONS_FRAGMENT"
 
-        fun newInstance() = LocationsFragment()
+        fun newInstance() = LocationListFragment()
     }
 }
