@@ -107,11 +107,14 @@ class MainActivity : FragmentActivity(R.layout.activity_main),
     //TODO delete
     override fun getCharacterString(characterString: String) {
         supportFragmentManager.beginTransaction().run {
-            val index = characterString.lastIndex - 1
-            val secondLastChar = "${characterString[index]}${characterString.last()}"
+            val index = characterString.lastIndex
+            val threeLastChar = "${characterString[index - 2]}${characterString[index - 1]}${characterString.last()}"
+            val secondLastChar = "${characterString[index - 1]}${characterString.last()}"
             val id: Int = if (
-                isNumeric(secondLastChar)
+                isNumeric(threeLastChar)
             ) {
+                threeLastChar.toInt()
+            } else if (isNumeric(secondLastChar)) {
                 secondLastChar.toInt()
             } else {
                 characterString.last().digitToInt()
@@ -158,9 +161,14 @@ class MainActivity : FragmentActivity(R.layout.activity_main),
 
     // TODO потом удалить
     override fun goToDetailsEpisodeString(episodeString: String) {
-        val index = episodeString.lastIndex - 1
-        val secondLastChar = "${episodeString[index]}${episodeString.last()}"
+        val index = episodeString.lastIndex
+        val threeLastChar = "${episodeString[index - 2]}${episodeString[index - 1]}${episodeString.last()}"
+        val secondLastChar = "${episodeString[index - 1]}${episodeString.last()}"
         val id: Int = if (
+            isNumeric(threeLastChar)
+        ) {
+            threeLastChar.toInt()
+        } else if (
             isNumeric(secondLastChar)
         ) {
             secondLastChar.toInt()
