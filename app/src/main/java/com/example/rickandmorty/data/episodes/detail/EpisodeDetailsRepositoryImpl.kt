@@ -6,7 +6,6 @@ import com.example.rickandmorty.data.episodes.detail.mapper.EpisodeDetailDataToE
 import com.example.rickandmorty.data.episodes.detail.model.SingleEpisodeDetailData
 import com.example.rickandmorty.domain.episode.details.EpisodeDetailFromDataToDomainCallback
 import com.example.rickandmorty.domain.episode.details.EpisodeDetailUseCase
-import com.example.rickandmorty.presentation.episodes.list.EpisodeListFromDomainToUiCallback
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -29,8 +28,8 @@ class EpisodeDetailsRepositoryImpl : EpisodeDetailUseCase {
         callbackFromDataToDomainCallback = callback
     }
 
-    override fun loadEpisodeById(id: Int) {
-        episodeDetailsNetworkDataSours?.getEpisodeDetails(id)
+    override fun loadEpisodeById(int: Int) {
+        episodeDetailsNetworkDataSours?.getEpisodeDetails(int)
             ?.enqueue(object : Callback<SingleEpisodeDetailData> {
                 override fun onResponse(
                     call: Call<SingleEpisodeDetailData>,

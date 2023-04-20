@@ -95,7 +95,31 @@ class MainActivity : FragmentActivity(R.layout.activity_main),
             setReorderingAllowed(true)
             replace(
                 R.id.fragment_container,
-                CharacterDetailsFragment.newInstance(singleCharacterUi),
+                CharacterDetailsFragment.newInstance(singleCharacterUi.id),
+                CharacterDetailsFragment.TAG
+            )
+            addToBackStack(CharacterDetailsFragment.TAG)
+            commit()
+        }
+        bottomNavigation?.visibility = GONE
+    }
+
+    //TODO delete
+    override fun getCharacterString(characterString: String) {
+        supportFragmentManager.beginTransaction().run {
+            val index = characterString.lastIndex - 1
+            val secondLastChar = "${characterString[index]}${characterString.last()}"
+            val id: Int = if (
+                isNumeric(secondLastChar)
+            ) {
+                secondLastChar.toInt()
+            } else {
+                characterString.last().digitToInt()
+            }
+            setReorderingAllowed(true)
+            replace(
+                R.id.fragment_container,
+                CharacterDetailsFragment.newInstance(id),
                 CharacterDetailsFragment.TAG
             )
             addToBackStack(CharacterDetailsFragment.TAG)
@@ -109,7 +133,7 @@ class MainActivity : FragmentActivity(R.layout.activity_main),
             setReorderingAllowed(true)
             replace(
                 R.id.fragment_container,
-                LocationDetailsFragment.newInstance(location),
+                LocationDetailsFragment.newInstance(location.id.toInt()),
                 LocationDetailsFragment.TAG
             )
             addToBackStack(LocationDetailsFragment.TAG)
@@ -123,13 +147,41 @@ class MainActivity : FragmentActivity(R.layout.activity_main),
             setReorderingAllowed(true)
             replace(
                 R.id.fragment_container,
-                EpisodeDetailsFragment.newInstance(episode),
+                EpisodeDetailsFragment.newInstance(episode.id),
                 EpisodeDetailsFragment.TAG
             )
             addToBackStack(EpisodeDetailsFragment.TAG)
             commit()
         }
         bottomNavigation?.visibility = GONE
+    }
+
+    // TODO потом удалить
+    override fun goToDetailsEpisodeString(episodeString: String) {
+        val index = episodeString.lastIndex - 1
+        val secondLastChar = "${episodeString[index]}${episodeString.last()}"
+        val id: Int = if (
+            isNumeric(secondLastChar)
+        ) {
+            secondLastChar.toInt()
+        } else {
+            episodeString.last().digitToInt()
+        }
+        supportFragmentManager.beginTransaction().run {
+            setReorderingAllowed(true)
+            replace(
+                R.id.fragment_container,
+                EpisodeDetailsFragment.newInstance(id),
+                EpisodeDetailsFragment.TAG
+            )
+            addToBackStack(EpisodeDetailsFragment.TAG)
+            commit()
+        }
+        bottomNavigation?.visibility = GONE
+    }
+
+    private fun isNumeric(s: String): Boolean {
+        return s.chars().allMatch { Character.isDigit(it) }
     }
 
     override fun back() {

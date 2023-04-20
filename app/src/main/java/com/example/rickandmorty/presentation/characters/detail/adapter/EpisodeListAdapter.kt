@@ -12,6 +12,7 @@ class EpisodeListAdapter(private val episodeListDetailsListener: EpisodeListDeta
     RecyclerView.Adapter<CharacterDetailsEpisodeViewHolder>() {
 
     private val episodeList = mutableListOf<SingleEpisodeUI>()
+    private var episodeListString = mutableListOf<String>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterDetailsEpisodeViewHolder {
         return CharacterDetailsEpisodeViewHolder(
@@ -25,17 +26,23 @@ class EpisodeListAdapter(private val episodeListDetailsListener: EpisodeListDeta
     }
 
     override fun onBindViewHolder(holder: CharacterDetailsEpisodeViewHolder, position: Int) {
-        val episode = episodeList[position]
-        holder.bindEpisode(episode)
+        val episode = episodeListString[position]
+        holder.bindEpisodeString(episode)
     }
 
     override fun getItemCount(): Int {
-        return episodeList.size
+        return episodeListString.size
     }
 
     fun updateEpisodeList(newEpisodeList: List<SingleEpisodeUI>) {
         episodeList.clear()
         episodeList.addAll(newEpisodeList)
+        notifyDataSetChanged()
+    }
+
+    fun updateEpisodeListString(newEpisodeList: List<String>) {
+        episodeListString.clear()
+        episodeListString.addAll(newEpisodeList)
         notifyDataSetChanged()
     }
 

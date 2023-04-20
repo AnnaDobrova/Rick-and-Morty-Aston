@@ -2,29 +2,30 @@ package com.example.rickandmorty.presentation.episodes.details
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.rickandmorty.CallBackForFragments
 import com.example.rickandmorty.R
 import com.example.rickandmorty.data.episodes.detail.EpisodeDetailsRepositoryImpl
-import com.example.rickandmorty.data.episodes.detail.model.SingleEpisodeDetailData
-import com.example.rickandmorty.data.episodes.list.model.EpisodeListData
 import com.example.rickandmorty.databinding.FragmentEpisodeDetailsBinding
-import com.example.rickandmorty.domain.episode.list.model.Episode
-import com.example.rickandmorty.presentation.episodes.EpisodeDetailsListener
+import com.example.rickandmorty.presentation.characters.CharacterListDetailsListener
+import com.example.rickandmorty.presentation.episodes.details.adapter.CharacterListInEpisodeAdapter
 import com.example.rickandmorty.presentation.episodes.details.model.EpisodeDetailUi
-import com.example.rickandmorty.presentation.episodes.list.EpisodesViewModel
-import com.example.rickandmorty.presentation.episodes.list.mapper.SingleEpisodeDomainToSingleEpisodeUiMapper
-import com.example.rickandmorty.presentation.episodes.list.model.SingleEpisodeUI
 
 class EpisodeDetailsFragment : Fragment(R.layout.fragment_episode_details) {
 
     private var _binding: FragmentEpisodeDetailsBinding? = null
     private val binding get() = _binding!!
     private var callBackForFragments: CallBackForFragments? = null
+
+    private val characterListInEpisodeAdapter: CharacterListInEpisodeAdapter by lazy {
+        CharacterListInEpisodeAdapter(requireActivity() as CharacterListDetailsListener)
+    }
 
     private val viewModel by lazy {
         EpisodeDetailViewModel()
@@ -48,6 +49,7 @@ class EpisodeDetailsFragment : Fragment(R.layout.fragment_episode_details) {
         val episodeId = requireArguments().getInt(EPISODE_ID)
         viewModel.loadEpisodeById(episodeId)
         observeVM()
+        initRecycler()
     }
 
     private fun observeVM() {
@@ -62,15 +64,24 @@ class EpisodeDetailsFragment : Fragment(R.layout.fragment_episode_details) {
             numberEpisodeDetails.text = episodeDetail.numberEpisode
             airDataEpisodeDetails.text = episodeDetail.airDataEpisode
         }
+        characterListInEpisodeAdapter.updateCharacterListString(episodeDetail.characters)
+    }
+
+    private fun initRecycler() {
+        Log.d("TAG", "initRecycler in EpisodeDetailsFragment ")
+        with(binding.recyclerViewEpisodes) {
+            layoutManager = GridLayoutManager(requireActivity(), 2)
+            adapter = characterListInEpisodeAdapter
+        }
     }
 
     companion object {
         const val TAG = "EpisodeDetailsFragment"
         private const val EPISODE_ID = "ID"
 
-        fun newInstance(episode: SingleEpisodeUI) = EpisodeDetailsFragment().also {
+        fun newInstance(id: Int) = EpisodeDetailsFragment().also {
             it.arguments = bundleOf(
-                EPISODE_ID to episode.id
+                EPISODE_ID to id
             )
         }
     }

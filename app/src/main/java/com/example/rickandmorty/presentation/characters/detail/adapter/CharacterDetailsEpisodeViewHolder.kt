@@ -25,4 +25,15 @@ class CharacterDetailsEpisodeViewHolder(
             episodeListDetailsListener.goToDetailsEpisode(episode)
         }
     }
+
+    fun bindEpisodeString(episodeString: String) {
+        with(binding) {
+
+            nameEpisode.text = episodeString
+
+        }
+        itemView.setOnClickListener {
+            episodeListDetailsListener.goToDetailsEpisodeString(episodeString)
+        }
+    }
 }

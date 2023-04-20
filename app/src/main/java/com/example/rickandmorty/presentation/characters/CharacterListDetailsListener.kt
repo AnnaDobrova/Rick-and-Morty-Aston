@@ -4,4 +4,5 @@ import com.example.rickandmorty.presentation.characters.list.model.SingleCharact
 
 interface CharacterListDetailsListener {
     fun goToDetailsCharacter(singleCharacterUi: SingleCharacterUi)
+    fun getCharacterString(characterString: String)
 }
