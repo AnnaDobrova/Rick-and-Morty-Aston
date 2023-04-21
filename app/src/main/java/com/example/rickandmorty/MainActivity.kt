@@ -195,5 +195,12 @@ class MainActivity : FragmentActivity(R.layout.activity_main),
 
     override fun back() {
         onBackPressed()
+        if (supportFragmentManager.findFragmentByTag(CharacterDetailsFragment.TAG) == null
+            && supportFragmentManager.findFragmentByTag(EpisodeDetailsFragment.TAG) == null
+            && supportFragmentManager.findFragmentByTag(LocationDetailsFragment.TAG) == null){
+            binder.bottomNavigation.visibility = VISIBLE
+        }else{
+            binder.bottomNavigation.visibility = GONE
+        }
     }
 }
