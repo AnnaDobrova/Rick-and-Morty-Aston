@@ -1,5 +1,6 @@
 package com.example.rickandmorty.presentation.locations.detail
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.rickandmorty.CallBackForFragments
 import com.example.rickandmorty.R
 import com.example.rickandmorty.data.locations.detail.LocationDetailsRepositoryImpl
 import com.example.rickandmorty.databinding.FragmentLocetionDetailsBinding
@@ -21,6 +23,8 @@ class LocationDetailsFragment : Fragment(R.layout.fragment_locetion_details) {
 
     private var _binding: FragmentLocetionDetailsBinding? = null
     private val binding get() = _binding!!
+    private var callBackForFragments : CallBackForFragments? = null
+
 
     private val characterListInLocationAdapter: CharacterListInLocationAdapter by lazy {
         CharacterListInLocationAdapter(requireActivity() as CharacterListDetailsListener)
@@ -38,6 +42,11 @@ class LocationDetailsFragment : Fragment(R.layout.fragment_locetion_details) {
         LocationDetailsRepositoryImpl()
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        callBackForFragments = requireActivity() as CallBackForFragments
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentLocetionDetailsBinding.inflate(inflater, container, false)
         return binding.root
@@ -48,6 +57,7 @@ class LocationDetailsFragment : Fragment(R.layout.fragment_locetion_details) {
         viewModel.loadLocationById(locationId)
         observeVm()
         initRecycler()
+        visibilityToolBar()
     }
 
     private fun observeVm() {
@@ -71,6 +81,13 @@ class LocationDetailsFragment : Fragment(R.layout.fragment_locetion_details) {
         with(binding.recyclerViewLocations) {
             layoutManager = GridLayoutManager(requireActivity(), 2)
             adapter = characterListInLocationAdapter
+        }
+    }
+
+    private fun visibilityToolBar(){
+        binding.toolbarLocationDetail.setOnClickListener {
+            callBackForFragments?.back()
+            binding.toolbarLocationDetail.visibility = View.GONE
         }
     }
 

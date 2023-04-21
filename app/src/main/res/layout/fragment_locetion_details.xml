@@ -1,10 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#809ecf">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_location_detail"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/green"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:navigationIcon="@drawable/ic_baseline_navigate_before_24"
+        app:title="Локация"
+        app:titleTextColor="#FFBE9B"
+        style="@style/RickAndMortyToolBar"
+        tools:ignore="MissingConstraints" />
 
     <TextView
         android:id="@+id/id_Location_details"
@@ -25,7 +39,7 @@
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/toolbar_location_detail" />
 
     <TextView
         android:id="@+id/type_location_details"

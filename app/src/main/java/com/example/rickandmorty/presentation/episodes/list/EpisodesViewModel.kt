@@ -1,5 +1,6 @@
 package com.example.rickandmorty.presentation.episodes.list
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -33,7 +34,7 @@ class EpisodesViewModel : ViewModel(), EpisodeListFromDomainToUiCallback {
 
     fun getAllEpisodes(): LiveData<List<SingleEpisodeUI>> = episodes
 
-    private fun loadAllEpisodes() {
+    fun loadAllEpisodes() {
         episodesUseCase?.loadAllEpisodes()
     }
 }

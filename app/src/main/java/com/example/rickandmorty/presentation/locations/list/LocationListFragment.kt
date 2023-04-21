@@ -1,6 +1,9 @@
 package com.example.rickandmorty.presentation.locations.list
 
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -43,8 +46,10 @@ class LocationListFragment : Fragment(R.layout.fragment_locations) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        isConnect()
         observerVM()
         initRecycler()
+        updateNetwork()
     }
 
     private fun observerVM() {
@@ -58,6 +63,33 @@ class LocationListFragment : Fragment(R.layout.fragment_locations) {
         with(binding.recyclerViewLocation) {
             layoutManager = GridLayoutManager(requireActivity(), 2)
             adapter = locationAdapter
+        }
+    }
+
+    private fun updateNetwork() {
+        with(binding.swipeLocations) {
+            setOnRefreshListener {
+                viewModel.loadAllLocations()
+                this.isRefreshing = false
+            }
+        }
+    }
+
+    private fun isConnect(): Boolean {
+        val connectivityManager = (context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager)
+        connectivityManager.apply {
+            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                getNetworkCapabilities(activeNetwork)?.run {
+                    when {
+                        hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+                        hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+                        hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+                        else -> false
+                    }
+                } ?: false
+            } else {
+                activeNetworkInfo?.isConnected ?: false
+            }
         }
     }
 

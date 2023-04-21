@@ -31,7 +31,7 @@ class LocationsViewModel : ViewModel(), LocationListFromDomainToUiCallback {
 
     fun getLocations(): LiveData<List<SingleLocationUI>> = locations
 
-    private fun loadAllLocations() {
+    fun loadAllLocations() {
         locationsUseCase?.loadLocations()
     }
 }

@@ -192,6 +192,7 @@ class MainActivity : FragmentActivity(R.layout.activity_main),
         return s.chars().allMatch { Character.isDigit(it) }
     }
 
+
     override fun back() {
         onBackPressed()
     }

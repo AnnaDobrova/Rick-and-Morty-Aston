@@ -1,12 +1,16 @@
 package com.example.rickandmorty.presentation.characters.list
 
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.rickandmorty.CallBackForFragments
 import com.example.rickandmorty.R
 import com.example.rickandmorty.databinding.FragmentCharactersBinding
@@ -39,8 +43,10 @@ class CharacterListFragment : Fragment(R.layout.fragment_characters) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        isConnect()
         observeVM()
         initRecycler()
+        updateNetwork()
     }
 
     // 2-13
@@ -64,6 +70,33 @@ class CharacterListFragment : Fragment(R.layout.fragment_characters) {
         with(binding.recyclerViewCharacters) {
             layoutManager = GridLayoutManager(requireActivity(), 2)
             adapter = charactersAdapter
+        }
+    }
+
+    private fun updateNetwork() {
+        with(binding.swipeCharacters){
+            setOnRefreshListener {
+                viewModel.loadAllCharacters()
+                this.isRefreshing = false
+            }
+        }
+    }
+
+    private fun isConnect(): Boolean {
+        val connectivityManager = (context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager)
+        connectivityManager.apply {
+            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                getNetworkCapabilities(activeNetwork)?.run {
+                    when {
+                        hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+                        hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+                        hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+                        else -> false
+                    }
+                } ?: false
+            } else {
+                activeNetworkInfo?.isConnected ?: false
+            }
         }
     }
 

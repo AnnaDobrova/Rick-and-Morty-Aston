@@ -1,10 +1,15 @@
 package com.example.rickandmorty.presentation.episodes.list
 
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Binder
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.rickandmorty.CallBackForFragments
@@ -41,9 +46,10 @@ class EpisodeListFragment : Fragment(R.layout.fragment_episodes) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        isConnect()
         observeVM()
         initRecycler()
-
+        updateNetwork()
     }
 
     private fun observeVM() {
@@ -59,10 +65,36 @@ class EpisodeListFragment : Fragment(R.layout.fragment_episodes) {
         }
     }
 
+    private fun updateNetwork() {
+        with(binding.swipeEpisodes) {
+            setOnRefreshListener {
+                viewModel.loadAllEpisodes()
+                this.isRefreshing = false
+            }
+        }
+    }
+
     companion object {
         const val TAG_EPISODES_FRAGMENT = "TAG_EPISODES_FRAGMENT"
 
         fun newInstance() = EpisodeListFragment()
     }
 
+    private fun isConnect(): Boolean {
+        val connectivityManager = (context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager)
+        connectivityManager.apply {
+            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                getNetworkCapabilities(activeNetwork)?.run {
+                    when {
+                        hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+                        hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+                        hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+                        else -> false
+                    }
+                } ?: false
+            } else {
+                activeNetworkInfo?.isConnected ?: false
+            }
+        }
+    }
 }

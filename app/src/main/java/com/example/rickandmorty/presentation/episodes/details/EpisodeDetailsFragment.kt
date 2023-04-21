@@ -50,6 +50,7 @@ class EpisodeDetailsFragment : Fragment(R.layout.fragment_episode_details) {
         viewModel.loadEpisodeById(episodeId)
         observeVM()
         initRecycler()
+        visibilityToolBar()
     }
 
     private fun observeVM() {
@@ -72,6 +73,13 @@ class EpisodeDetailsFragment : Fragment(R.layout.fragment_episode_details) {
         with(binding.recyclerViewEpisodes) {
             layoutManager = GridLayoutManager(requireActivity(), 2)
             adapter = characterListInEpisodeAdapter
+        }
+    }
+
+    private fun visibilityToolBar(){
+        binding.toolbarEpisodeDetail.setOnClickListener {
+            callBackForFragments?.back()
+            binding.toolbarEpisodeDetail.visibility = View.GONE
         }
     }
 

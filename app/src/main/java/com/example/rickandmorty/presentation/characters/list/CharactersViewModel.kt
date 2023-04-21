@@ -55,7 +55,7 @@ class CharactersViewModel : ViewModel(), CharacterListFromDomainToUiCallback {
      * делаем запрос в сеть
      * Метод которые делает запрос в сеть
      */
-    private fun loadAllCharacters() {
+    fun loadAllCharacters() {
         charactersUseCase?.loadAllCharacters()
     }
 }

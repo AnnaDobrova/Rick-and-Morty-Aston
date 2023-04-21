@@ -51,6 +51,7 @@ class CharacterDetailsFragment : Fragment(R.layout.fragment_character_details) {
         viewModel.loadCharacterById(characterId)
         observeVM()
         initRecycler()
+        visibilityToolBar()
     }
 
     private fun observeVM() {
@@ -85,6 +86,12 @@ class CharacterDetailsFragment : Fragment(R.layout.fragment_character_details) {
         with(binding.recyclerViewDetails) {
             layoutManager = LinearLayoutManager(requireActivity())
             adapter = episodeListAdapter
+        }
+    }
+    private fun visibilityToolBar(){
+        binding.toolbarCharacterDetail.setOnClickListener {
+           callBackForFragments?.back()
+            binding.toolbarCharacterDetail.visibility = View.GONE
         }
     }
 
