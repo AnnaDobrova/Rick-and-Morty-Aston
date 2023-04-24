@@ -43,6 +43,7 @@ class CharacterListFragment : Fragment(R.layout.fragment_characters) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.charactersPb.showProgress()
         isConnect()
         observeVM()
         initRecycler()
@@ -55,6 +56,7 @@ class CharacterListFragment : Fragment(R.layout.fragment_characters) {
     private fun observeVM() {
         viewModel.getAllCharacters().observe(viewLifecycleOwner) { newCharacterList ->
             charactersAdapter.updateListCharacters(newCharacterList)
+            binding.charactersPb.hideProgress()
         }
     }
 
@@ -74,7 +76,7 @@ class CharacterListFragment : Fragment(R.layout.fragment_characters) {
     }
 
     private fun updateNetwork() {
-        with(binding.swipeCharacters){
+        with(binding.swipeCharacters) {
             setOnRefreshListener {
                 viewModel.loadAllCharacters()
                 this.isRefreshing = false

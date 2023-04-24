@@ -46,6 +46,7 @@ class LocationListFragment : Fragment(R.layout.fragment_locations) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.locationsPb.showProgress()
         isConnect()
         observerVM()
         initRecycler()
@@ -64,6 +65,7 @@ class LocationListFragment : Fragment(R.layout.fragment_locations) {
             layoutManager = GridLayoutManager(requireActivity(), 2)
             adapter = locationAdapter
         }
+        binding.locationsPb.hideProgress()
     }
 
     private fun updateNetwork() {

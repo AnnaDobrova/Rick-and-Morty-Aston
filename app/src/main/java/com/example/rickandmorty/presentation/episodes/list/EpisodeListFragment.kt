@@ -46,6 +46,7 @@ class EpisodeListFragment : Fragment(R.layout.fragment_episodes) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.episodesPb.showProgress()
         isConnect()
         observeVM()
         initRecycler()
@@ -56,6 +57,7 @@ class EpisodeListFragment : Fragment(R.layout.fragment_episodes) {
         viewModel.getAllEpisodes().observe(viewLifecycleOwner) { newCharacterList ->
             episodeAdapter.updateEpisodes(newCharacterList)
         }
+        binding.episodesPb.hideProgress()
     }
 
     private fun initRecycler() {
