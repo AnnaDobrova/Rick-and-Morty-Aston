@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.rickandmorty.CallBackForFragments
@@ -17,8 +18,11 @@ import com.example.rickandmorty.data.locations.LocationsRepositoryImpl
 import com.example.rickandmorty.databinding.FragmentLocationsBinding
 import com.example.rickandmorty.domain.location.LocationListDetailsListener
 import com.example.rickandmorty.domain.location.list.model.SingleLocationDomain
+import com.example.rickandmorty.presentation.episodes.list.model.SingleEpisodeUI
 import com.example.rickandmorty.presentation.locations.list.adapter.LocationAdapter
 import com.example.rickandmorty.presentation.locations.list.mapper.SingleLocationDomainToSingleLocationUiMapper
+import com.example.rickandmorty.presentation.locations.list.model.SingleLocationUI
+import java.util.Locale
 
 class LocationListFragment : Fragment(R.layout.fragment_locations) {
 
@@ -51,6 +55,7 @@ class LocationListFragment : Fragment(R.layout.fragment_locations) {
         observerVM()
         initRecycler()
         updateNetwork()
+        searchEpisodes()
     }
 
     private fun observerVM() {
@@ -94,6 +99,39 @@ class LocationListFragment : Fragment(R.layout.fragment_locations) {
             }
         }
     }
+    private fun searchEpisodes() {
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
+            androidx.appcompat.widget.SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                filterList(newText)
+                return true
+            }
+        })
+    }
+
+    private fun filterList(query: String?) {
+        if (query != null) {
+            val list = mutableListOf<SingleLocationUI>()
+            val filterList = mutableListOf<SingleLocationUI>()
+            viewModel.getLocations().observe(viewLifecycleOwner) { newCharacterList ->
+                list.addAll(newCharacterList)
+            }
+            for (i in list) {
+                if (i.name.lowercase(Locale.ROOT).contains(query)) {
+                    filterList.add(i)
+                }
+            }
+            if (filterList.isNotEmpty()) {
+                locationAdapter.updateLocations(filterList)
+            }
+        }
+    }
+
+
 
     companion object {
         const val TAG_LOCATIONS_FRAGMENT = "TAG_LOCATIONS_FRAGMENT"

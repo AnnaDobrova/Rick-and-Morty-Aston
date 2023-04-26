@@ -7,7 +7,11 @@ import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.SearchView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -16,6 +20,8 @@ import com.example.rickandmorty.R
 import com.example.rickandmorty.databinding.FragmentCharactersBinding
 import com.example.rickandmorty.presentation.characters.CharacterListDetailsListener
 import com.example.rickandmorty.presentation.characters.list.adapter.CharactersAdapter
+import com.example.rickandmorty.presentation.characters.list.model.SingleCharacterUi
+import java.util.Locale
 
 class CharacterListFragment : Fragment(R.layout.fragment_characters) {
 
@@ -48,6 +54,7 @@ class CharacterListFragment : Fragment(R.layout.fragment_characters) {
         observeVM()
         initRecycler()
         updateNetwork()
+        searchCharacters()
     }
 
     // 2-13
@@ -100,6 +107,42 @@ class CharacterListFragment : Fragment(R.layout.fragment_characters) {
                 activeNetworkInfo?.isConnected ?: false
             }
         }
+    }
+
+    private fun searchCharacters() {
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
+            androidx.appcompat.widget.SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                filterList(newText)
+                return true
+            }
+        })
+    }
+
+    private fun filterList(query: String?) {
+        if (query != null) {
+            val list = mutableListOf<SingleCharacterUi>()
+            val filterList = mutableListOf<SingleCharacterUi>()
+            viewModel.getAllCharacters().observe(viewLifecycleOwner) { newCharacterList ->
+                list.addAll(newCharacterList)
+            }
+            for (i in list) {
+                if (i.name.lowercase(Locale.ROOT).contains(query)) {
+                    filterList.add(i)
+                }
+            }
+            if (filterList.isNotEmpty()) {
+                charactersAdapter.updateListCharacters(filterList)
+            }
+        }
+    }
+
+    private fun filter(){
+
     }
 
     companion object {
