@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/text_view_dialog_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/green"
+        android:gravity="center"
+        android:padding="@dimen/dp_size8"
+        android:text="Как будем фильтровать?"
+        android:textSize="@dimen/sp_text20"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/text_view_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dp_size6"
+        android:layout_marginTop="@dimen/dp_size22"
+        android:text="Введите имя"
+        android:gravity="center"
+        android:textSize="@dimen/sp_text16"
+        android:background="#7EEF8D"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_view_dialog_fragment" />
+
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/search_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_view_name"
+        />
+
+    <TextView
+        android:id="@+id/filter_status"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="#7EEF8D"
+        android:padding="@dimen/dp_size6"
+        android:text="По Статусу"
+        android:textSize="@dimen/sp_text16"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_view" />
+
+    <ImageButton
+        android:id="@+id/arrow_down_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/dp_size6"
+        android:background="#7EEF8D"
+        android:src="@drawable/arrow_down_24"
+        app:layout_constraintBottom_toBottomOf="@id/filter_status"
+        app:layout_constraintEnd_toEndOf="@id/filter_status"
+        app:layout_constraintTop_toTopOf="@id/filter_status" />
+
+    <ImageButton
+        android:id="@+id/arrow_up_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/dp_size6"
+        android:background="#7EEF8D"
+        android:src="@drawable/arrow_up_24"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@id/filter_status"
+        app:layout_constraintEnd_toEndOf="@id/filter_status"
+        app:layout_constraintTop_toTopOf="@id/filter_status" />
+
+    <RadioGroup
+        android:id="@+id/radio_group_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_size20"
+        android:layout_marginTop="@dimen/dp_size16"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/filter_status">
+
+
+        <RadioButton
+            android:id="@+id/status_alive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dp_size6"
+            android:text="alive"
+            android:textSize="@dimen/sp_text16"
+            android:textStyle="italic|bold" />
+
+        <RadioButton
+            android:id="@+id/status_dead"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dp_size6"
+            android:text="dead"
+            android:textSize="@dimen/sp_text16"
+            android:textStyle="italic|bold" />
+
+        <RadioButton
+            android:id="@+id/status_unknown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dp_size6"
+            android:text="unknown"
+            android:textSize="@dimen/sp_text16"
+            android:textStyle="italic|bold" />
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/filter_species"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_size22"
+        android:background="#7EEF8D"
+        android:padding="@dimen/dp_size6"
+        android:text="По Виду"
+        android:textSize="@dimen/sp_text16"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/radio_group_status" />
+
+    <ImageButton
+        android:id="@+id/arrow_down_species"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/dp_size6"
+        android:background="#7EEF8D"
+        android:src="@drawable/arrow_down_24"
+        app:layout_constraintBottom_toBottomOf="@id/filter_species"
+        app:layout_constraintEnd_toEndOf="@id/filter_species"
+        app:layout_constraintTop_toTopOf="@id/filter_species" />
+
+    <ImageButton
+        android:id="@+id/arrow_up_species"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/dp_size6"
+        android:background="#7EEF8D"
+        android:src="@drawable/arrow_up_24"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@id/filter_species"
+        app:layout_constraintEnd_toEndOf="@id/filter_species"
+        app:layout_constraintTop_toTopOf="@id/filter_species" />
+
+
+    <RadioGroup
+        android:id="@+id/radio_group_species"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_size20"
+        android:layout_marginTop="@dimen/dp_size16"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/filter_species">
+
+
+        <RadioButton
+            android:id="@+id/species_human"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dp_size6"
+            android:text="human"
+            android:textSize="@dimen/sp_text16"
+            android:textStyle="italic|bold" />
+
+        <RadioButton
+            android:id="@+id/species_alien"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dp_size6"
+            android:text="alien"
+            android:textSize="@dimen/sp_text16"
+            android:textStyle="italic|bold" />
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/filter_gender"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_size22"
+        android:background="#7EEF8D"
+        android:padding="@dimen/dp_size6"
+        android:text="По Полу"
+        android:textSize="@dimen/sp_text16"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/radio_group_species" />
+
+    <ImageButton
+        android:id="@+id/arrow_down_gender"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/dp_size6"
+        android:background="#7EEF8D"
+        android:src="@drawable/arrow_down_24"
+        app:layout_constraintBottom_toBottomOf="@id/filter_gender"
+        app:layout_constraintEnd_toEndOf="@id/filter_gender"
+        app:layout_constraintTop_toTopOf="@id/filter_gender" />
+
+    <ImageButton
+        android:id="@+id/arrow_up_gender"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/dp_size6"
+        android:background="#7EEF8D"
+        android:src="@drawable/arrow_up_24"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@id/filter_gender"
+        app:layout_constraintEnd_toEndOf="@id/filter_gender"
+        app:layout_constraintTop_toTopOf="@id/filter_gender" />
+
+    <RadioGroup
+        android:id="@+id/radio_group_gender"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_size20"
+        android:layout_marginTop="@dimen/dp_size16"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/filter_gender">
+
+        <RadioButton
+            android:id="@+id/gender_male"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dp_size6"
+            android:text="male"
+            android:textSize="@dimen/sp_text16"
+            android:textStyle="italic|bold" />
+
+        <RadioButton
+            android:id="@+id/gender_female"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dp_size6"
+            android:text="female"
+            android:textSize="@dimen/sp_text16"
+            android:textStyle="italic|bold" />
+
+        <RadioButton
+            android:id="@+id/gender_genderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dp_size6"
+            android:text="genderless"
+            android:textSize="@dimen/sp_text16"
+            android:textStyle="italic|bold" />
+
+        <RadioButton
+            android:id="@+id/gender_unknown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dp_size6"
+            android:text="unknown"
+            android:textSize="@dimen/sp_text16"
+            android:textStyle="italic|bold" />
+    </RadioGroup>
+    <!--    -->
+    <!--        <TextView-->
+    <!--            android:id="@+id/filter_type"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_marginTop="@dimen/dp_size22"-->
+    <!--            android:background="#7EEF8D"-->
+    <!--            android:padding="@dimen/dp_size6"-->
+    <!--            android:text="По Типу"-->
+    <!--            android:textSize="@dimen/sp_text16"-->
+    <!--            app:layout_constraintEnd_toEndOf="parent"-->
+    <!--            app:layout_constraintStart_toStartOf="parent"-->
+    <!--            app:layout_constraintTop_toBottomOf="@id/radio_group_gender" />-->
+
+    <!--        <ImageButton-->
+    <!--            android:id="@+id/arrow_down_type"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_marginEnd="@dimen/dp_size6"-->
+    <!--            android:background="#7EEF8D"-->
+    <!--            android:src="@drawable/arrow_down_24"-->
+    <!--            app:layout_constraintBottom_toBottomOf="@id/filter_type"-->
+    <!--            app:layout_constraintEnd_toEndOf="@id/filter_type"-->
+    <!--            app:layout_constraintTop_toTopOf="@id/filter_type" />-->
+
+    <!--        <ImageButton-->
+    <!--            android:id="@+id/arrow_up_type"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_marginEnd="@dimen/dp_size6"-->
+    <!--            android:background="#7EEF8D"-->
+    <!--            android:src="@drawable/arrow_up_24"-->
+    <!--            android:visibility="invisible"-->
+    <!--            app:layout_constraintBottom_toBottomOf="@id/filter_type"-->
+    <!--            app:layout_constraintEnd_toEndOf="@id/filter_type"-->
+    <!--            app:layout_constraintTop_toTopOf="@id/filter_type" />-->
+
+    <!--        <RadioGroup-->
+    <!--            android:id="@+id/radio_group_type"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_marginStart="@dimen/dp_size20"-->
+    <!--            android:layout_marginTop="@dimen/dp_size16"-->
+    <!--            android:visibility="gone"-->
+    <!--            app:layout_constraintStart_toStartOf="parent"-->
+    <!--            app:layout_constraintTop_toBottomOf="@id/filter_type">-->
+
+
+    <!--            <RadioButton-->
+    <!--                android:id="@+id/type_male"-->
+    <!--                android:layout_width="wrap_content"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:padding="@dimen/dp_size6"-->
+    <!--                android:text="male"-->
+    <!--                android:textSize="@dimen/sp_text16"-->
+    <!--                android:textStyle="italic|bold" />-->
+
+    <!--            <RadioButton-->
+    <!--                android:id="@+id/type_female"-->
+    <!--                android:layout_width="wrap_content"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:padding="@dimen/dp_size6"-->
+    <!--                android:text="female"-->
+    <!--                android:textSize="@dimen/sp_text16"-->
+    <!--                android:textStyle="italic|bold" />-->
+
+    <!--            <RadioButton-->
+    <!--                android:id="@+id/type_unknown"-->
+    <!--                android:layout_width="wrap_content"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:padding="@dimen/dp_size6"-->
+    <!--                android:text="unknown"-->
+    <!--                android:textSize="@dimen/sp_text16"-->
+    <!--                android:textStyle="italic|bold" />-->
+    <!--        </RadioGroup>-->
+
+    <Button
+        android:id="@+id/Button_cansel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dp_size20"
+        android:backgroundTint="#E91E63"
+        android:padding="@dimen/dp_size8"
+        android:text="Отменить"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/radio_group_gender" />
+
+    <Button
+        android:id="@+id/button_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dp_size20"
+        android:backgroundTint="@color/green"
+        android:padding="@dimen/dp_size8"
+        android:text="Применить"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/radio_group_gender" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

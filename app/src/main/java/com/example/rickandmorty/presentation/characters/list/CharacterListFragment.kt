@@ -55,6 +55,7 @@ class CharacterListFragment : Fragment(R.layout.fragment_characters) {
         initRecycler()
         updateNetwork()
         searchCharacters()
+        filter()
     }
 
     // 2-13
@@ -141,8 +142,11 @@ class CharacterListFragment : Fragment(R.layout.fragment_characters) {
         }
     }
 
-    private fun filter(){
-
+    private fun filter() {
+        binding.filterIcon.setOnClickListener {
+            var dialog = DialogFragmentCharacters()
+            dialog.show(parentFragmentManager,DialogFragmentCharacters.TAG)
+        }
     }
 
     companion object {

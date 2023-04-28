@@ -23,15 +23,14 @@
             android:id="@+id/search_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="Введите имя"
-            app:searchIcon="@drawable/baseline_saved_search_24"
-            />
+            app:searchIcon="@drawable/baseline_saved_search_24" />
 
         <ImageView
             android:id="@+id/filter_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
+            android:layout_marginEnd="@dimen/dp_size20"
             android:src="@drawable/baseline_filter_list_24" />
 
     </androidx.appcompat.widget.Toolbar>
@@ -63,7 +62,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
