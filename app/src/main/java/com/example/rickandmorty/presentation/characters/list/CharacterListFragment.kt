@@ -7,14 +7,10 @@ import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.GONE
-import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.SearchView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.rickandmorty.CallBackForFragments
 import com.example.rickandmorty.R
 import com.example.rickandmorty.databinding.FragmentCharactersBinding
@@ -23,7 +19,7 @@ import com.example.rickandmorty.presentation.characters.list.adapter.CharactersA
 import com.example.rickandmorty.presentation.characters.list.model.SingleCharacterUi
 import java.util.Locale
 
-class CharacterListFragment : Fragment(R.layout.fragment_characters) {
+class CharacterListFragment : Fragment(R.layout.fragment_characters), CharacterListFilter {
 
     private var _binding: FragmentCharactersBinding? = null
     private val binding get() = _binding!!
@@ -144,8 +140,8 @@ class CharacterListFragment : Fragment(R.layout.fragment_characters) {
 
     private fun filter() {
         binding.filterIcon.setOnClickListener {
-            var dialog = DialogFragmentCharacters()
-            dialog.show(parentFragmentManager,DialogFragmentCharacters.TAG)
+            val dialog = DialogFragmentCharacters()
+            dialog.show(parentFragmentManager, DialogFragmentCharacters.TAG)
         }
     }
 
@@ -154,6 +150,57 @@ class CharacterListFragment : Fragment(R.layout.fragment_characters) {
 
         fun newInstance() = CharacterListFragment()
 
+    }
+
+    override fun filterStatus(selected: String) {
+            val list = mutableListOf<SingleCharacterUi>()
+            val filterList = mutableListOf<SingleCharacterUi>()
+
+            viewModel.getAllCharacters().observe(viewLifecycleOwner) { newCharacterList ->
+                list.addAll(newCharacterList)
+            }
+            for (i in list) {
+                if (i.status.lowercase(Locale.ROOT).contains(selected)) {
+                    filterList.add(i)
+                }
+            }
+            if (filterList.isNotEmpty()) {
+                charactersAdapter.updateListCharacters(filterList)
+            }
+    }
+
+    override fun filterSpecies(selected: String) {
+        val list = mutableListOf<SingleCharacterUi>()
+        val filterList = mutableListOf<SingleCharacterUi>()
+
+        viewModel.getAllCharacters().observe(viewLifecycleOwner) { newCharacterList ->
+            list.addAll(newCharacterList)
+        }
+        for (i in list) {
+            if (i.species.lowercase(Locale.ROOT).contains(selected)) {
+                filterList.add(i)
+            }
+        }
+        if (filterList.isNotEmpty()) {
+            charactersAdapter.updateListCharacters(filterList)
+        }
+    }
+
+    override fun filterGender(selected: String) {
+        val list = mutableListOf<SingleCharacterUi>()
+        val filterList = mutableListOf<SingleCharacterUi>()
+
+        viewModel.getAllCharacters().observe(viewLifecycleOwner) { newCharacterList ->
+            list.addAll(newCharacterList)
+        }
+        for (i in list) {
+            if (i.gender.lowercase(Locale.ROOT).contains(selected)) {
+                filterList.add(i)
+            }
+        }
+        if (filterList.isNotEmpty()) {
+            charactersAdapter.updateListCharacters(filterList)
+        }
     }
 
 }

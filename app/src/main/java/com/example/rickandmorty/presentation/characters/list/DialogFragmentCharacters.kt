@@ -8,14 +8,23 @@ import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
 import com.example.rickandmorty.databinding.DialogFragmentCharactersBinding
 
-class DialogFragmentCharacters : DialogFragment() {
+class DialogFragmentCharacters() : DialogFragment() {
 
     private var _binding: DialogFragmentCharactersBinding? = null
     private val binding get() = _binding!!
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    private var filter: CharacterListFragment? = null
+
+    @Deprecated("Deprecated in Java")
+    override fun onAttachFragment(childFragment: Fragment) {
+        super.onAttachFragment(childFragment)
+        filter = requireParentFragment() as CharacterListFragment
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = DialogFragmentCharactersBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -27,9 +36,9 @@ class DialogFragmentCharacters : DialogFragment() {
             dismiss()
         }
         binding.buttonSave.setOnClickListener {
-            val selectedIdStatus = binding.radioGroupStatus.checkedRadioButtonId
-            val selectedIdSpecies = binding.radioGroupSpecies.checkedRadioButtonId
-            val selectedIdGender = binding.radioGroupGender.checkedRadioButtonId
+       filter?.filterStatus(filterStatus())
+       filter?.filterSpecies(filterSpecies())
+       filter?.filterGender(filterGender())
         }
     }
 
@@ -76,6 +85,73 @@ class DialogFragmentCharacters : DialogFragment() {
         openFilterStatus()
         openFilterSpecies()
         openFilterGender()
+    }
+
+    private fun filterStatus():String {
+        val selected =
+            when (binding.radioGroupStatus.checkedRadioButtonId) {
+                binding.statusAlive.id -> {
+                    binding.statusAlive.text.toString()
+                }
+
+                binding.statusDead.id -> {
+                    binding.statusDead.text.toString()
+                }
+
+                binding.statusUnknown.id -> {
+                    binding.statusUnknown.text.toString()
+                }
+
+                else -> {
+                    " "
+                }
+            }
+        return selected
+    }
+
+    private fun filterSpecies(): String {
+        val selected =
+            when (binding.radioGroupSpecies.checkedRadioButtonId) {
+                binding.speciesAlien.id -> {
+                    binding.speciesAlien.text.toString()
+                }
+
+                binding.speciesHuman.id -> {
+                    binding.speciesHuman.text.toString()
+                }
+
+                else -> {
+                    " "
+                }
+            }
+        return selected
+    }
+
+    private fun filterGender():String {
+        val selected =
+            when (binding.radioGroupGender.checkedRadioButtonId) {
+                binding.genderMale.id -> {
+                    binding.genderMale.text.toString()
+                }
+
+                binding.genderFemale.id -> {
+                    binding.genderFemale.text.toString()
+                }
+
+                binding.genderGenderless.id -> {
+                    binding.genderGenderless.text.toString()
+                }
+
+                binding.genderUnknown.id -> {
+                    binding.genderUnknown.text.toString()
+                }
+
+                else -> {
+                    " "
+                }
+            }
+        return selected
+
     }
 
     companion object {
