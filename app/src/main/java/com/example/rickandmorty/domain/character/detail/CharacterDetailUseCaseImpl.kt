@@ -1,16 +1,15 @@
 package com.example.rickandmorty.domain.character.detail
 
-import com.example.rickandmorty.data.characters.detail.CharacterDetailsRepositoryImpl
 import com.example.rickandmorty.data.episodes.detail.EpisodeDetailsRepositoryImpl
 import com.example.rickandmorty.domain.character.detail.model.CharacterDetailDomain
 import com.example.rickandmorty.presentation.characters.detail.CharacterDetailFromDomainToUiCallback
+import javax.inject.Inject
 
-class CharacterDetailUseCaseImpl : CharacterDetailUseCase, CharacterDetailFromDataToDomainCallback {
+class CharacterDetailUseCaseImpl @Inject constructor(
+    private val characterDetailsRepository: CharacterDetailRepository
+) : CharacterDetailUseCase, CharacterDetailFromDataToDomainCallback {
 
     private var callbackFromDomainToUiCallback: CharacterDetailFromDomainToUiCallback? = null
-    private val characterDetailsRepository: CharacterDetailsRepositoryImpl by lazy {
-        CharacterDetailsRepositoryImpl()
-    }
 
     private val episodeDetailsRepositoryImpl: EpisodeDetailsRepositoryImpl by lazy {
         EpisodeDetailsRepositoryImpl()

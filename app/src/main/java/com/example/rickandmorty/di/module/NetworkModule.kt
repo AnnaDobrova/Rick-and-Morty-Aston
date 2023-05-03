@@ -1,5 +1,6 @@
 package com.example.rickandmorty.di.module
 
+import com.example.rickandmorty.data.characters.detail.api.CharacterDetailsNetworkDataSource
 import com.example.rickandmorty.data.characters.list.api.CharactersNetworkDataSource
 import com.example.rickandmorty.di.scope.ActivityScope
 import dagger.Module
@@ -44,4 +45,10 @@ class NetworkModule {
     fun provideCharactersNetworkSource(
         retrofit: Retrofit
     ): CharactersNetworkDataSource = retrofit.create(CharactersNetworkDataSource::class.java)
+
+    @Provides
+    @ActivityScope
+    fun provideCharacterDetailsNetworkDataSource(
+        retrofit: Retrofit
+    ): CharacterDetailsNetworkDataSource = retrofit.create(CharacterDetailsNetworkDataSource::class.java)
 }

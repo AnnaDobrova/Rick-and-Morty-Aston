@@ -2,7 +2,10 @@ package com.example.rickandmorty.di.module
 
 import androidx.lifecycle.ViewModel
 import com.example.rickandmorty.di.key.ViewModelKey
+import com.example.rickandmorty.domain.character.detail.CharacterDetailUseCase
 import com.example.rickandmorty.domain.character.list.CharactersUseCase
+import com.example.rickandmorty.presentation.characters.detail.CharactersDetailViewModel
+import com.example.rickandmorty.presentation.characters.detail.mapper.CharacterDetailDomainToCharacterDetailUiMapper
 import com.example.rickandmorty.presentation.characters.list.CharactersViewModel
 import com.example.rickandmorty.presentation.characters.list.mapper.SingleCharacterDomainToSingleCharacterUiMapper
 import dagger.Module
@@ -22,6 +25,19 @@ class ViewModelModule {
         return CharactersViewModel(
             charactersUseCase,
             singleCharacterDomainToSingleCharacterUiMapper
+        )
+    }
+
+    @IntoMap
+    @ViewModelKey(CharactersDetailViewModel::class)
+    @Provides
+    fun provideCharactersDetailViewModel(
+        characterDetailUseCase: CharacterDetailUseCase,
+        characterDetailDomainToCharacterDetailUiMapper: CharacterDetailDomainToCharacterDetailUiMapper
+    ): ViewModel {
+        return CharactersDetailViewModel(
+            characterDetailUseCase,
+            characterDetailDomainToCharacterDetailUiMapper
         )
     }
 }

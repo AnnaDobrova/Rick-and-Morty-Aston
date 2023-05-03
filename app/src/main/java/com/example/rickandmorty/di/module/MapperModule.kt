@@ -1,6 +1,8 @@
 package com.example.rickandmorty.di.module
 
+import com.example.rickandmorty.data.characters.detail.mapper.CharacterDetailDataToCharacterDetailDomainMapper
 import com.example.rickandmorty.data.characters.list.mapper.CharactersDataToListSingleCharacterDomainMapper
+import com.example.rickandmorty.presentation.characters.detail.mapper.CharacterDetailDomainToCharacterDetailUiMapper
 import com.example.rickandmorty.presentation.characters.list.mapper.SingleCharacterDomainToSingleCharacterUiMapper
 import dagger.Module
 import dagger.Provides
@@ -18,5 +20,17 @@ class MapperModule {
     @Provides
     fun provideSingleCharacterDomainToSingleCharacterUiMapper(): SingleCharacterDomainToSingleCharacterUiMapper {
         return SingleCharacterDomainToSingleCharacterUiMapper()
+    }
+
+    // Маппер для деталей персонажа из дата в домейн
+    @Provides
+    fun provideCharacterDetailDataToCharacterDetailDomainMapper(): CharacterDetailDataToCharacterDetailDomainMapper {
+        return CharacterDetailDataToCharacterDetailDomainMapper()
+    }
+
+    // Маппер для деталей персонажа из домаин в презентейшн
+    @Provides
+    fun provideCharacterDetailDomainToCharacterDetailUiMapper(): CharacterDetailDomainToCharacterDetailUiMapper {
+        return CharacterDetailDomainToCharacterDetailUiMapper()
     }
 }

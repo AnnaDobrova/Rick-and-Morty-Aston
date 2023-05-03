@@ -4,23 +4,20 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.rickandmorty.domain.character.detail.CharacterDetailUseCase
-import com.example.rickandmorty.domain.character.detail.CharacterDetailUseCaseImpl
 import com.example.rickandmorty.domain.character.detail.model.CharacterDetailDomain
 import com.example.rickandmorty.presentation.characters.detail.mapper.CharacterDetailDomainToCharacterDetailUiMapper
 import com.example.rickandmorty.presentation.characters.detail.model.CharacterDetailUi
+import javax.inject.Inject
 
-class CharactersDetailViewModel : ViewModel(), CharacterDetailFromDomainToUiCallback {
+class CharactersDetailViewModel @Inject constructor(
+    private val characterDetailUseCase: CharacterDetailUseCase,
+    private val mapperFromDomainToUi: CharacterDetailDomainToCharacterDetailUiMapper
+) : ViewModel(), CharacterDetailFromDomainToUiCallback {
 
     private var character = MutableLiveData<CharacterDetailUi>()
 
-    private var characterDetailUseCase: CharacterDetailUseCase? = null
-    private val mapperFromDomainToUi by lazy {
-        CharacterDetailDomainToCharacterDetailUiMapper()
-    }
-
     init {
-        characterDetailUseCase = CharacterDetailUseCaseImpl()
-        characterDetailUseCase?.registerFromDomainToUiCallback(this@CharactersDetailViewModel)
+        characterDetailUseCase.registerFromDomainToUiCallback(this@CharactersDetailViewModel)
     }
 
     override fun getCharacterDetail(characterDetail: CharacterDetailDomain) {
@@ -28,7 +25,7 @@ class CharactersDetailViewModel : ViewModel(), CharacterDetailFromDomainToUiCall
     }
 
     fun loadCharacterById(id: Int) {
-        characterDetailUseCase?.loadCharacterById(id)
+        characterDetailUseCase.loadCharacterById(id)
     }
 
     fun getCharacter(): LiveData<CharacterDetailUi> = character

@@ -9,29 +9,22 @@ import com.example.rickandmorty.domain.character.detail.CharacterDetailRepositor
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
 
-class CharacterDetailsRepositoryImpl : CharacterDetailRepository {
-
-    private var characterDetailsNetworkDataSource: CharacterDetailsNetworkDataSource? = null
+class CharacterDetailsRepositoryImpl @Inject constructor(
+    private val characterDetailsNetworkDataSource: CharacterDetailsNetworkDataSource,
+    private val mapperFromDataToDomain: CharacterDetailDataToCharacterDetailDomainMapper
+) : CharacterDetailRepository {
 
     private var callbackFromDataToDomainCallback: CharacterDetailFromDataToDomainCallback? = null
-
-    private val mapperFromDataToDomain by lazy {
-        CharacterDetailDataToCharacterDetailDomainMapper()
-    }
-
-    init {
-        characterDetailsNetworkDataSource =
-            RetrofitClient.fillRetrofit().create(CharacterDetailsNetworkDataSource::class.java)
-    }
 
     override fun registerFromDataToDomainCallback(callback: CharacterDetailFromDataToDomainCallback) {
         callbackFromDataToDomainCallback = callback
     }
 
     override fun loadCharacterById(id: Int) {
-        characterDetailsNetworkDataSource?.getCharacterDetails(id)
-            ?.enqueue(object : Callback<CharacterDetailData> {
+        characterDetailsNetworkDataSource.getCharacterDetails(id)
+            .enqueue(object : Callback<CharacterDetailData> {
                 override fun onResponse(
                     call: Call<CharacterDetailData>,
                     response: Response<CharacterDetailData>
