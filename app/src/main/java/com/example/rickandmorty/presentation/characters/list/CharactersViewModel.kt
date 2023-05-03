@@ -17,7 +17,6 @@ class CharactersViewModel : ViewModel(), CharacterListFromDomainToUiCallback {
     private val mapperFromDomainToUi by lazy {
         SingleCharacterDomainToSingleCharacterUiMapper()
     }
-
     /**
      * 1 шаг
      * инициализируем Юс кейс, и как только его проинитили, сразу же  региструем обратный коллбэк
