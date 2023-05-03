@@ -5,6 +5,8 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import androidx.fragment.app.FragmentActivity
 import com.example.rickandmorty.databinding.ActivityMainBinding
+import com.example.rickandmorty.di.DaggerRickAndMortyComponent
+import com.example.rickandmorty.di.RickAndMortyComponent
 import com.example.rickandmorty.presentation.characters.list.model.SingleCharacterUi
 import com.example.rickandmorty.presentation.characters.CharacterListDetailsListener
 import com.example.rickandmorty.domain.episode.EpisodeListDetailsListener
@@ -30,6 +32,8 @@ class MainActivity : FragmentActivity(R.layout.activity_main),
 
     private var bottomNavigation: BottomNavigationView? = null
     private lateinit var binder: ActivityMainBinding
+
+    var rickAndMortyComponent: RickAndMortyComponent = DaggerRickAndMortyComponent.create()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,6 +64,7 @@ class MainActivity : FragmentActivity(R.layout.activity_main),
                     }
                     true
                 }
+
                 R.id.nav_location -> {
                     bottomNavigation?.visibility = VISIBLE
 
@@ -71,6 +76,7 @@ class MainActivity : FragmentActivity(R.layout.activity_main),
                     }
                     true
                 }
+
                 R.id.nav_episodes -> {
                     bottomNavigation?.visibility = VISIBLE
 
@@ -82,6 +88,7 @@ class MainActivity : FragmentActivity(R.layout.activity_main),
                     }
                     true
                 }
+
                 else -> {
                     false
                 }
@@ -192,14 +199,14 @@ class MainActivity : FragmentActivity(R.layout.activity_main),
         return s.chars().allMatch { Character.isDigit(it) }
     }
 
-
     override fun back() {
         onBackPressed()
         if (supportFragmentManager.findFragmentByTag(CharacterDetailsFragment.TAG) == null
             && supportFragmentManager.findFragmentByTag(EpisodeDetailsFragment.TAG) == null
-            && supportFragmentManager.findFragmentByTag(LocationDetailsFragment.TAG) == null){
+            && supportFragmentManager.findFragmentByTag(LocationDetailsFragment.TAG) == null
+        ) {
             binder.bottomNavigation.visibility = VISIBLE
-        }else{
+        } else {
             binder.bottomNavigation.visibility = GONE
         }
     }

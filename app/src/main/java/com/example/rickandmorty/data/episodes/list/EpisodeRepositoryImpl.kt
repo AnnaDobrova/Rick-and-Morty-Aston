@@ -6,7 +6,6 @@ import com.example.rickandmorty.data.episodes.list.mapper.EpisodeDataToListSingl
 import com.example.rickandmorty.data.episodes.list.model.EpisodeListData
 import com.example.rickandmorty.domain.episode.list.EpisodeListFromDataToDomainCallBack
 import com.example.rickandmorty.domain.episode.list.EpisodesRepository
-import com.example.rickandmorty.presentation.episodes.list.EpisodeListFromDomainToUiCallback
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

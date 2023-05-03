@@ -13,15 +13,21 @@ import android.view.ViewGroup
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.rickandmorty.CallBackForFragments
+import com.example.rickandmorty.MainActivity
 import com.example.rickandmorty.R
 import com.example.rickandmorty.databinding.FragmentCharactersBinding
+import com.example.rickandmorty.di.DaggerRickAndMortyComponent
+import com.example.rickandmorty.di.RickAndMortyComponent
 import com.example.rickandmorty.presentation.characters.CharacterListDetailsListener
 import com.example.rickandmorty.presentation.characters.list.adapter.CharactersAdapter
 import com.example.rickandmorty.presentation.characters.list.model.SingleCharacterUi
+import com.example.rickandmorty.utils.ViewModelFactory
 import java.util.Locale
+import javax.inject.Inject
 
 class CharacterListFragment : Fragment(R.layout.fragment_characters) {
 
@@ -32,14 +38,21 @@ class CharacterListFragment : Fragment(R.layout.fragment_characters) {
     private val charactersAdapter: CharactersAdapter by lazy {
         CharactersAdapter(requireActivity() as CharacterListDetailsListener)
     }
+    var rickAndMortyComponent: RickAndMortyComponent? = null
 
-    private val viewModel: CharactersViewModel by lazy {
-        CharactersViewModel()
-    }
+    @Inject lateinit var viewModel: CharactersViewModel
+    @Inject lateinit var viewModelFactory: ViewModelFactory
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        rickAndMortyComponent = (activity as MainActivity).rickAndMortyComponent
+        rickAndMortyComponent?.inject(this)
         callBackForFragments = requireActivity() as CallBackForFragments
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModelFactory = rickAndMortyComponent!!.getViewModelFactory()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -49,6 +62,9 @@ class CharacterListFragment : Fragment(R.layout.fragment_characters) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel = ViewModelProvider(this, viewModelFactory)[CharactersViewModel::class.java]
+
         binding.charactersPb.showProgress()
         isConnect()
         observeVM()
@@ -145,7 +161,7 @@ class CharacterListFragment : Fragment(R.layout.fragment_characters) {
     private fun filter() {
         binding.filterIcon.setOnClickListener {
             var dialog = DialogFragmentCharacters()
-            dialog.show(parentFragmentManager,DialogFragmentCharacters.TAG)
+            dialog.show(parentFragmentManager, DialogFragmentCharacters.TAG)
         }
     }
 

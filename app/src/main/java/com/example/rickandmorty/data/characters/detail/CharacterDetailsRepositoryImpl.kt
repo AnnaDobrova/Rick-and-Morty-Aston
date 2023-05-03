@@ -4,10 +4,8 @@ import com.example.rickandmorty.data.RetrofitClient
 import com.example.rickandmorty.data.characters.detail.api.CharacterDetailsNetworkDataSource
 import com.example.rickandmorty.data.characters.detail.mapper.CharacterDetailDataToCharacterDetailDomainMapper
 import com.example.rickandmorty.data.characters.detail.model.CharacterDetailData
-import com.example.rickandmorty.data.characters.list.model.SingleCharacterData
 import com.example.rickandmorty.domain.character.detail.CharacterDetailFromDataToDomainCallback
 import com.example.rickandmorty.domain.character.detail.CharacterDetailRepository
-import com.example.rickandmorty.domain.character.list.CharacterListFromDataToDomainCallback
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

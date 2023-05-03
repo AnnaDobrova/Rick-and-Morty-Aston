@@ -8,15 +8,15 @@ import com.example.rickandmorty.domain.character.list.CharactersUseCaseImpl
 import com.example.rickandmorty.domain.character.list.model.SingleCharacterDomain
 import com.example.rickandmorty.presentation.characters.list.mapper.SingleCharacterDomainToSingleCharacterUiMapper
 import com.example.rickandmorty.presentation.characters.list.model.SingleCharacterUi
+import javax.inject.Inject
 
-class CharactersViewModel : ViewModel(), CharacterListFromDomainToUiCallback {
+class CharactersViewModel @Inject constructor(
+    private val charactersUseCase: CharactersUseCase,
+    private val mapperFromDomainToUi: SingleCharacterDomainToSingleCharacterUiMapper
+) : ViewModel(), CharacterListFromDomainToUiCallback {
 
     private var characters = MutableLiveData<List<SingleCharacterUi>>(emptyList())
 
-    private var charactersUseCase: CharactersUseCase? = null
-    private val mapperFromDomainToUi by lazy {
-        SingleCharacterDomainToSingleCharacterUiMapper()
-    }
     /**
      * 1 шаг
      * инициализируем Юс кейс, и как только его проинитили, сразу же  региструем обратный коллбэк
@@ -25,8 +25,7 @@ class CharactersViewModel : ViewModel(), CharacterListFromDomainToUiCallback {
      * Регистрируем коллбэк с помощью Юс кейса
      */
     init {
-        charactersUseCase = CharactersUseCaseImpl()
-        charactersUseCase?.registerFromDomainToUiCallback(this@CharactersViewModel)
+        charactersUseCase.registerFromDomainToUiCallback(this@CharactersViewModel)
         loadAllCharacters()
     }
 

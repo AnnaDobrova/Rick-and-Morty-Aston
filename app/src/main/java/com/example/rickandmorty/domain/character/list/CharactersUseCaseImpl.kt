@@ -1,14 +1,13 @@
 package com.example.rickandmorty.domain.character.list
 
-import com.example.rickandmorty.data.characters.list.CharactersRepositoryImpl
 import com.example.rickandmorty.domain.character.list.model.SingleCharacterDomain
 import com.example.rickandmorty.presentation.characters.list.CharacterListFromDomainToUiCallback
+import javax.inject.Inject
 
-class CharactersUseCaseImpl : CharactersUseCase, CharacterListFromDataToDomainCallback {
+class CharactersUseCaseImpl @Inject constructor(
+    private val charactersRepository: CharactersRepository
+) : CharactersUseCase, CharacterListFromDataToDomainCallback {
 
-    private val charactersRepository: CharactersRepository by lazy {
-        CharactersRepositoryImpl()
-    }
     private var callbackFromDomainToUi: CharacterListFromDomainToUiCallback? = null
 
     /**
