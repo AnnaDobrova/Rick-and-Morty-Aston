@@ -1,28 +1,28 @@
-package com.example.rickandmorty.presentation.episodes.list
+package com.example.rickandmorty.presentation.list
 
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import android.os.Binder
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
-import androidx.core.content.getSystemService
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.rickandmorty.CallBackForFragments
+import com.example.rickandmorty.MainActivity
 import com.example.rickandmorty.R
 import com.example.rickandmorty.databinding.FragmentEpisodesBinding
+import com.example.rickandmorty.di.RickAndMortyComponent
 import com.example.rickandmorty.domain.episode.EpisodeListDetailsListener
-import com.example.rickandmorty.domain.episode.list.model.Episode
-import com.example.rickandmorty.presentation.characters.list.model.SingleCharacterUi
-import com.example.rickandmorty.presentation.episodes.list.adapter.EpisodeAdapter
-import com.example.rickandmorty.presentation.episodes.list.model.SingleEpisodeUI
-import com.example.rickandmorty.presentation.episodes.mapper.EpisodeDataToEpisodeMap
+import com.example.rickandmorty.presentation.list.adapter.EpisodeAdapter
+import com.example.rickandmorty.presentation.list.model.SingleEpisodeUI
+import com.example.rickandmorty.utils.ViewModelFactory
 import java.util.Locale
+import javax.inject.Inject
 
 class EpisodeListFragment : Fragment(R.layout.fragment_episodes) {
 
@@ -34,22 +34,33 @@ class EpisodeListFragment : Fragment(R.layout.fragment_episodes) {
         EpisodeAdapter(requireActivity() as EpisodeListDetailsListener)
     }
 
-    private val viewModel: EpisodesViewModel by lazy {
-        EpisodesViewModel()
-    }
+    var rickAndMortyComponent: RickAndMortyComponent? = null
+
+    @Inject lateinit var viewModel: EpisodesViewModel
+    @Inject lateinit var viewModelFactory: ViewModelFactory
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        rickAndMortyComponent = (activity as MainActivity).rickAndMortyComponent
+        rickAndMortyComponent?.inject(this)
         callBackForFragments = requireActivity() as CallBackForFragments
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModelFactory = rickAndMortyComponent!!.getViewModelFactory()
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentEpisodesBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel = ViewModelProvider(this, viewModelFactory)[EpisodesViewModel::class.java]
+
         binding.episodesPb.showProgress()
         isConnect()
         observeVM()

@@ -8,14 +8,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.rickandmorty.CallBackForFragments
+import com.example.rickandmorty.MainActivity
 import com.example.rickandmorty.R
-import com.example.rickandmorty.data.episodes.detail.EpisodeDetailsRepositoryImpl
 import com.example.rickandmorty.databinding.FragmentEpisodeDetailsBinding
+import com.example.rickandmorty.di.RickAndMortyComponent
 import com.example.rickandmorty.presentation.characters.CharacterListDetailsListener
 import com.example.rickandmorty.presentation.episodes.details.adapter.CharacterListInEpisodeAdapter
 import com.example.rickandmorty.presentation.episodes.details.model.EpisodeDetailUi
+import com.example.rickandmorty.utils.ViewModelFactory
+import javax.inject.Inject
 
 class EpisodeDetailsFragment : Fragment(R.layout.fragment_episode_details) {
 
@@ -26,27 +30,31 @@ class EpisodeDetailsFragment : Fragment(R.layout.fragment_episode_details) {
     private val characterListInEpisodeAdapter: CharacterListInEpisodeAdapter by lazy {
         CharacterListInEpisodeAdapter(requireActivity() as CharacterListDetailsListener)
     }
+    var rickAndMortyComponent: RickAndMortyComponent? = null
 
-    private val viewModel by lazy {
-        EpisodeDetailViewModel()
-    }
-
-    private val episodeDetailsRepositoryImpl: EpisodeDetailsRepositoryImpl by lazy {
-        EpisodeDetailsRepositoryImpl()
-    }
+    @Inject lateinit var viewModel: EpisodeDetailViewModel
+    @Inject lateinit var viewModelFactory: ViewModelFactory
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        rickAndMortyComponent = (activity as MainActivity).rickAndMortyComponent
+        rickAndMortyComponent?.inject(this)
         callBackForFragments = requireActivity() as CallBackForFragments
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModelFactory = rickAndMortyComponent!!.getViewModelFactory()
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentEpisodeDetailsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val episodeId = requireArguments().getInt(EPISODE_ID)
+        viewModel = ViewModelProvider(this, viewModelFactory)[EpisodeDetailViewModel::class.java]
         viewModel.loadEpisodeById(episodeId)
         observeVM()
         initRecycler()
@@ -76,7 +84,7 @@ class EpisodeDetailsFragment : Fragment(R.layout.fragment_episode_details) {
         }
     }
 
-    private fun visibilityToolBar(){
+    private fun visibilityToolBar() {
         binding.toolbarEpisodeDetail.setOnClickListener {
             callBackForFragments?.back()
             binding.toolbarEpisodeDetail.visibility = View.GONE

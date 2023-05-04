@@ -15,9 +15,9 @@ import com.example.rickandmorty.presentation.characters.list.CharacterListFragme
 import com.example.rickandmorty.presentation.characters.list.CharacterListFragment.Companion.TAG_CHARACTERS_FRAGMENT
 import com.example.rickandmorty.presentation.characters.detail.CharacterDetailsFragment
 import com.example.rickandmorty.presentation.episodes.details.EpisodeDetailsFragment
-import com.example.rickandmorty.presentation.episodes.list.EpisodeListFragment
-import com.example.rickandmorty.presentation.episodes.list.EpisodeListFragment.Companion.TAG_EPISODES_FRAGMENT
-import com.example.rickandmorty.presentation.episodes.list.model.SingleEpisodeUI
+import com.example.rickandmorty.presentation.list.EpisodeListFragment
+import com.example.rickandmorty.presentation.list.EpisodeListFragment.Companion.TAG_EPISODES_FRAGMENT
+import com.example.rickandmorty.presentation.list.model.SingleEpisodeUI
 import com.example.rickandmorty.presentation.locations.list.LocationListFragment
 import com.example.rickandmorty.presentation.locations.list.LocationListFragment.Companion.TAG_LOCATIONS_FRAGMENT
 import com.example.rickandmorty.presentation.locations.detail.LocationDetailsFragment

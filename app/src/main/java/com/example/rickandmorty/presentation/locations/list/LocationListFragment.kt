@@ -11,18 +11,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.rickandmorty.CallBackForFragments
+import com.example.rickandmorty.MainActivity
 import com.example.rickandmorty.R
-import com.example.rickandmorty.data.locations.LocationsRepositoryImpl
 import com.example.rickandmorty.databinding.FragmentLocationsBinding
+import com.example.rickandmorty.di.RickAndMortyComponent
 import com.example.rickandmorty.domain.location.LocationListDetailsListener
-import com.example.rickandmorty.domain.location.list.model.SingleLocationDomain
-import com.example.rickandmorty.presentation.episodes.list.model.SingleEpisodeUI
 import com.example.rickandmorty.presentation.locations.list.adapter.LocationAdapter
-import com.example.rickandmorty.presentation.locations.list.mapper.SingleLocationDomainToSingleLocationUiMapper
 import com.example.rickandmorty.presentation.locations.list.model.SingleLocationUI
+import com.example.rickandmorty.utils.ViewModelFactory
 import java.util.Locale
+import javax.inject.Inject
 
 class LocationListFragment : Fragment(R.layout.fragment_locations) {
 
@@ -34,22 +35,33 @@ class LocationListFragment : Fragment(R.layout.fragment_locations) {
         LocationAdapter(requireActivity() as LocationListDetailsListener)
     }
 
-    private val viewModel: LocationsViewModel by lazy {
-        LocationsViewModel()
-    }
+    var rickAnMortyComponent: RickAndMortyComponent? = null
+
+    @Inject lateinit var viewModel: LocationsViewModel
+    @Inject lateinit var viewModelFactory: ViewModelFactory
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        rickAnMortyComponent = (activity as MainActivity).rickAndMortyComponent
+        rickAnMortyComponent?.inject(this)
         callBackForFragments = requireActivity() as CallBackForFragments
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModelFactory = rickAnMortyComponent!!.getViewModelFactory()
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentLocationsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel = ViewModelProvider(this, viewModelFactory)[LocationsViewModel::class.java]
+
         binding.locationsPb.showProgress()
         isConnect()
         observerVM()
@@ -99,6 +111,7 @@ class LocationListFragment : Fragment(R.layout.fragment_locations) {
             }
         }
     }
+
     private fun searchEpisodes() {
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
             androidx.appcompat.widget.SearchView.OnQueryTextListener {
@@ -130,8 +143,6 @@ class LocationListFragment : Fragment(R.layout.fragment_locations) {
             }
         }
     }
-
-
 
     companion object {
         const val TAG_LOCATIONS_FRAGMENT = "TAG_LOCATIONS_FRAGMENT"

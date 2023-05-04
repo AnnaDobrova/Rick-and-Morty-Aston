@@ -1,14 +1,12 @@
 package com.example.rickandmorty.domain.location.list
 
-import com.example.rickandmorty.data.locations.LocationsRepositoryImpl
 import com.example.rickandmorty.domain.location.list.model.SingleLocationDomain
 import com.example.rickandmorty.presentation.locations.list.LocationListFromDomainToUiCallback
+import javax.inject.Inject
 
-class LocationUseCaseImpl : LocationUseCase, LocationListFromDataToDomainCallback {
-
-    private val locationRepository: LocationRepository by lazy {
-        LocationsRepositoryImpl()
-    }
+class LocationUseCaseImpl @Inject constructor(
+    private val locationRepository: LocationRepository
+) : LocationUseCase, LocationListFromDataToDomainCallback {
 
     private var callbackFromDomainToUi: LocationListFromDomainToUiCallback? = null
 

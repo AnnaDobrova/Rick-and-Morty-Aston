@@ -58,7 +58,7 @@
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
-    <com.example.rickandmorty.utils.CustomProgressBar
+    <com.example.rickandmorty.utils.progressbar.CustomProgressBar
         android:id="@+id/characters_pb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

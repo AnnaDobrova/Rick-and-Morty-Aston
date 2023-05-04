@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.rickandmorty.R
 import com.example.rickandmorty.domain.episode.EpisodeListDetailsListener
 import com.example.rickandmorty.domain.episode.list.model.Episode
-import com.example.rickandmorty.presentation.episodes.list.model.SingleEpisodeUI
+import com.example.rickandmorty.presentation.list.model.SingleEpisodeUI
 
 class EpisodeListAdapter(private val episodeListDetailsListener: EpisodeListDetailsListener) :
     RecyclerView.Adapter<CharacterDetailsEpisodeViewHolder>() {

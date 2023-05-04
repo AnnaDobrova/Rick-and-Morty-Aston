@@ -1,14 +1,13 @@
 package com.example.rickandmorty.domain.episode.list
 
-import com.example.rickandmorty.data.episodes.list.EpisodeRepositoryImpl
 import com.example.rickandmorty.domain.episode.list.model.SingleEpisodeListDomain
-import com.example.rickandmorty.presentation.episodes.list.EpisodeListFromDomainToUiCallback
+import com.example.rickandmorty.presentation.list.EpisodeListFromDomainToUiCallback
+import javax.inject.Inject
 
-class EpisodeUseCaseImpl : EpisodeUseCase, EpisodeListFromDataToDomainCallBack {
+class EpisodeUseCaseImpl @Inject constructor(
+    private val episodeRepository: EpisodesRepository
+) : EpisodeUseCase, EpisodeListFromDataToDomainCallBack {
 
-    private val episodeRepository: EpisodesRepository by lazy {
-        EpisodeRepositoryImpl()
-    }
 
     private var callFromDomainToUI: EpisodeListFromDomainToUiCallback? = null
 

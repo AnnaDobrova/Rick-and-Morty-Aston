@@ -7,20 +7,15 @@ import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.GONE
-import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.SearchView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.rickandmorty.CallBackForFragments
 import com.example.rickandmorty.MainActivity
 import com.example.rickandmorty.R
 import com.example.rickandmorty.databinding.FragmentCharactersBinding
-import com.example.rickandmorty.di.DaggerRickAndMortyComponent
 import com.example.rickandmorty.di.RickAndMortyComponent
 import com.example.rickandmorty.presentation.characters.CharacterListDetailsListener
 import com.example.rickandmorty.presentation.characters.list.adapter.CharactersAdapter
@@ -160,7 +155,7 @@ class CharacterListFragment : Fragment(R.layout.fragment_characters) {
 
     private fun filter() {
         binding.filterIcon.setOnClickListener {
-            var dialog = DialogFragmentCharacters()
+            val dialog = DialogFragmentCharacters()
             dialog.show(parentFragmentManager, DialogFragmentCharacters.TAG)
         }
     }

@@ -8,52 +8,56 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.rickandmorty.CallBackForFragments
+import com.example.rickandmorty.MainActivity
 import com.example.rickandmorty.R
-import com.example.rickandmorty.data.locations.detail.LocationDetailsRepositoryImpl
 import com.example.rickandmorty.databinding.FragmentLocetionDetailsBinding
+import com.example.rickandmorty.di.RickAndMortyComponent
 import com.example.rickandmorty.presentation.characters.CharacterListDetailsListener
-import com.example.rickandmorty.presentation.episodes.details.adapter.CharacterListInEpisodeAdapter
 import com.example.rickandmorty.presentation.locations.detail.adapter.CharacterListInLocationAdapter
-import com.example.rickandmorty.presentation.locations.detail.mapper.LocationDetailsDomainToLocationDetailsUIMapper
 import com.example.rickandmorty.presentation.locations.detail.model.LocationDetailUi
+import com.example.rickandmorty.utils.ViewModelFactory
+import javax.inject.Inject
 
 class LocationDetailsFragment : Fragment(R.layout.fragment_locetion_details) {
 
     private var _binding: FragmentLocetionDetailsBinding? = null
     private val binding get() = _binding!!
-    private var callBackForFragments : CallBackForFragments? = null
-
+    private var callBackForFragments: CallBackForFragments? = null
 
     private val characterListInLocationAdapter: CharacterListInLocationAdapter by lazy {
         CharacterListInLocationAdapter(requireActivity() as CharacterListDetailsListener)
     }
 
-    private val mapper: LocationDetailsDomainToLocationDetailsUIMapper by lazy {
-        LocationDetailsDomainToLocationDetailsUIMapper()
-    }
+    var rickAndMortyComponent: RickAndMortyComponent? = null
 
-    private val viewModel by lazy {
-        LocationDetailViewModel()
-    }
-
-    private val locationDetailsRepositoryImpl: LocationDetailsRepositoryImpl by lazy {
-        LocationDetailsRepositoryImpl()
-    }
+    @Inject lateinit var viewModel: LocationDetailViewModel
+    @Inject lateinit var viewModelFactory: ViewModelFactory
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        rickAndMortyComponent = (activity as MainActivity).rickAndMortyComponent
+        rickAndMortyComponent?.inject(this)
         callBackForFragments = requireActivity() as CallBackForFragments
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModelFactory = rickAndMortyComponent!!.getViewModelFactory()
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentLocetionDetailsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val locationId = requireArguments().getInt(LOCATION_ID)
+
+        viewModel = ViewModelProvider(this, viewModelFactory)[LocationDetailViewModel::class.java]
+
         viewModel.loadLocationById(locationId)
         observeVm()
         initRecycler()
@@ -84,7 +88,7 @@ class LocationDetailsFragment : Fragment(R.layout.fragment_locetion_details) {
         }
     }
 
-    private fun visibilityToolBar(){
+    private fun visibilityToolBar() {
         binding.toolbarLocationDetail.setOnClickListener {
             callBackForFragments?.back()
             binding.toolbarLocationDetail.visibility = View.GONE

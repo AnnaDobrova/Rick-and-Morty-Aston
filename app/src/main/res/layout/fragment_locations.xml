@@ -52,7 +52,7 @@
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <com.example.rickandmorty.utils.CustomProgressBar
+    <com.example.rickandmorty.utils.progressbar.CustomProgressBar
         android:id="@+id/locations_pb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

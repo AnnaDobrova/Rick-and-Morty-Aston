@@ -1,4 +1,4 @@
-package com.example.rickandmorty.utils
+package com.example.rickandmorty.utils.progressbar
 
 import android.view.animation.CycleInterpolator
 import android.view.animation.TranslateAnimation

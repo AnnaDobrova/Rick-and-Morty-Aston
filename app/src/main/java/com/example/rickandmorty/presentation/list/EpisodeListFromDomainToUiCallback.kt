@@ -1,4 +1,4 @@
-package com.example.rickandmorty.presentation.episodes.list
+package com.example.rickandmorty.presentation.list
 
 import com.example.rickandmorty.data.episodes.list.model.SingleEpisodeListData
 import com.example.rickandmorty.domain.episode.list.model.Episode

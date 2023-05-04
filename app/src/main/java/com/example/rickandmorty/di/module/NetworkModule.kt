@@ -2,6 +2,10 @@ package com.example.rickandmorty.di.module
 
 import com.example.rickandmorty.data.characters.detail.api.CharacterDetailsNetworkDataSource
 import com.example.rickandmorty.data.characters.list.api.CharactersNetworkDataSource
+import com.example.rickandmorty.data.episodes.detail.api.EpisodesDetailsNetworkDataSource
+import com.example.rickandmorty.data.episodes.list.api.EpisodeNetworkDataSource
+import com.example.rickandmorty.data.locations.detail.api.LocationDetailsNetworkDataSource
+import com.example.rickandmorty.data.locations.list.api.LocationNetworkDataSours
 import com.example.rickandmorty.di.scope.ActivityScope
 import dagger.Module
 import dagger.Provides
@@ -51,4 +55,33 @@ class NetworkModule {
     fun provideCharacterDetailsNetworkDataSource(
         retrofit: Retrofit
     ): CharacterDetailsNetworkDataSource = retrofit.create(CharacterDetailsNetworkDataSource::class.java)
+
+//TODO ДЛЯ ЕПИЗОДОВ
+
+    @Provides
+    @ActivityScope
+    fun provideEpisodeNetworkDataSource(
+        retrofit: Retrofit
+    ): EpisodeNetworkDataSource = retrofit.create(EpisodeNetworkDataSource::class.java)
+
+    @Provides
+    @ActivityScope
+    fun provideEpisodesDetailsNetworkDataSource(
+        retrofit: Retrofit
+    ): EpisodesDetailsNetworkDataSource = retrofit.create(EpisodesDetailsNetworkDataSource::class.java)
+
+
+    //TODO ДЛЯ ЛОКАЦИЙ
+    @Provides
+    @ActivityScope
+    fun provideLocationNetworkDataSours(
+        retrofit: Retrofit
+    ): LocationNetworkDataSours = retrofit.create(LocationNetworkDataSours::class.java)
+
+    @Provides
+    @ActivityScope
+    fun provideLocationDetailsNetworkDataSource(
+        retrofit: Retrofit
+    ): LocationDetailsNetworkDataSource = retrofit.create(LocationDetailsNetworkDataSource::class.java)
+
 }

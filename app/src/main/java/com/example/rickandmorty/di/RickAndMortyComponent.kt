@@ -8,6 +8,10 @@ import com.example.rickandmorty.di.module.ViewModelModule
 import com.example.rickandmorty.di.scope.ActivityScope
 import com.example.rickandmorty.presentation.characters.detail.CharacterDetailsFragment
 import com.example.rickandmorty.presentation.characters.list.CharacterListFragment
+import com.example.rickandmorty.presentation.episodes.details.EpisodeDetailsFragment
+import com.example.rickandmorty.presentation.list.EpisodeListFragment
+import com.example.rickandmorty.presentation.locations.detail.LocationDetailsFragment
+import com.example.rickandmorty.presentation.locations.list.LocationListFragment
 import com.example.rickandmorty.utils.ViewModelFactory
 import dagger.Component
 
@@ -25,6 +29,11 @@ interface RickAndMortyComponent {
 
     fun inject(characterListFragment: CharacterListFragment)
     fun inject(characterDetailFragment: CharacterDetailsFragment)
+    fun inject(episodeListFragment: EpisodeListFragment)
+    fun inject(episodeDetailsFragment: EpisodeDetailsFragment)
+    fun inject(locationListFragment: LocationListFragment)
+    fun inject(locationDetailsFragment: LocationDetailsFragment)
+
 
     @Component.Factory
     interface RickAndMortyComponentFactory {

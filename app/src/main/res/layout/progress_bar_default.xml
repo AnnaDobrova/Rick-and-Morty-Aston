@@ -7,7 +7,7 @@
     android:clickable="true"
     android:focusable="true">
 
-    <com.example.rickandmorty.utils.ArchProgressWidget
+    <com.example.rickandmorty.utils.progressbar.ArchProgressWidget
         android:id="@+id/default_progress_bar"
         android:layout_width="100dp"
         android:layout_height="100dp"

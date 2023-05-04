@@ -1,7 +1,7 @@
-package com.example.rickandmorty.presentation.episodes.list.mapper
+package com.example.rickandmorty.presentation.list.mapper
 
 import com.example.rickandmorty.domain.episode.list.model.SingleEpisodeListDomain
-import com.example.rickandmorty.presentation.episodes.list.model.SingleEpisodeUI
+import com.example.rickandmorty.presentation.list.model.SingleEpisodeUI
 
 class SingleEpisodeDomainToSingleEpisodeUiMapper {
 
