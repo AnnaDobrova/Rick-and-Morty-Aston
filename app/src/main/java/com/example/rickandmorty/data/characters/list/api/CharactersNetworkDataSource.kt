@@ -1,7 +1,6 @@
 package com.example.rickandmorty.data.characters.list.api
 
 import com.example.rickandmorty.data.characters.list.model.CharactersData
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.GET
 
@@ -12,5 +11,5 @@ interface CharactersNetworkDataSource {
      * В обертку Call мы засовываем результат преобразования нашего json'а
      */
     @GET("character")
-    fun getAllCharacters(): Call<CharactersData>
+    suspend fun getAllCharacters(): Response<CharactersData>
 }

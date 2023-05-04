@@ -103,9 +103,10 @@ class CharacterDetailsFragment : Fragment(R.layout.fragment_character_details) {
             adapter = episodeListAdapter
         }
     }
-    private fun visibilityToolBar(){
+
+    private fun visibilityToolBar() {
         binding.toolbarCharacterDetail.setOnClickListener {
-           callBackForFragments?.back()
+            callBackForFragments?.back()
             binding.toolbarCharacterDetail.visibility = View.GONE
         }
     }

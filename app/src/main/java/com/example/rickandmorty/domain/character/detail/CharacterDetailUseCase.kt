@@ -1,8 +1,9 @@
 package com.example.rickandmorty.domain.character.detail
 
-import com.example.rickandmorty.presentation.characters.detail.CharacterDetailFromDomainToUiCallback
+import com.example.rickandmorty.domain.character.detail.model.CharacterDetailDomain
+import com.example.rickandmorty.utils.AnnaResponse
+import kotlinx.coroutines.flow.Flow
 
 interface CharacterDetailUseCase {
-    fun registerFromDomainToUiCallback(callback: CharacterDetailFromDomainToUiCallback)
-    fun loadCharacterById(id: Int)
+    fun loadCharacterById(id: Int): Flow<AnnaResponse<CharacterDetailDomain>>
 }

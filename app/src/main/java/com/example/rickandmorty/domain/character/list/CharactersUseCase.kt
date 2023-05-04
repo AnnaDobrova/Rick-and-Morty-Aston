@@ -1,8 +1,7 @@
 package com.example.rickandmorty.domain.character.list
 
-import com.example.rickandmorty.presentation.characters.list.CharacterListFromDomainToUiCallback
+import com.example.rickandmorty.domain.character.list.model.SingleCharacterDomain
 
 interface CharactersUseCase {
-    fun registerFromDomainToUiCallback(callback: CharacterListFromDomainToUiCallback)
-    fun loadAllCharacters()
+    suspend fun getAllCharacters(): List<SingleCharacterDomain>
 }
