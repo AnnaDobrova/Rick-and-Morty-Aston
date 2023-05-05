@@ -1,8 +1,7 @@
 package com.example.rickandmorty.domain.episode.list
 
-import com.example.rickandmorty.presentation.list.EpisodeListFromDomainToUiCallback
+import com.example.rickandmorty.domain.episode.list.model.SingleEpisodeListDomain
 
 interface EpisodeUseCase {
-    fun resisterFromDataToDomainCallback(callback: EpisodeListFromDomainToUiCallback)
-    fun loadAllEpisodes()
+    suspend fun getAllEpisodes(): List<SingleEpisodeListDomain>
 }

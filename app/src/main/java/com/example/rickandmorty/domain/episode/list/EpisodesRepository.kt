@@ -1,6 +1,7 @@
 package com.example.rickandmorty.domain.episode.list
 
+import com.example.rickandmorty.domain.episode.list.model.SingleEpisodeListDomain
+
 interface EpisodesRepository {
-    fun resisterFromDataToDomainCallback( callback: EpisodeListFromDataToDomainCallBack)
-    fun loadAllEpisodes()
+   suspend fun getAllEpisodes(): List<SingleEpisodeListDomain>
 }

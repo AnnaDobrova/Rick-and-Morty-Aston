@@ -1,4 +1,4 @@
-package com.example.rickandmorty.presentation.list
+package com.example.rickandmorty.presentation.episodes.list
 
 import android.content.Context
 import android.net.ConnectivityManager
@@ -18,8 +18,8 @@ import com.example.rickandmorty.R
 import com.example.rickandmorty.databinding.FragmentEpisodesBinding
 import com.example.rickandmorty.di.RickAndMortyComponent
 import com.example.rickandmorty.domain.episode.EpisodeListDetailsListener
-import com.example.rickandmorty.presentation.list.adapter.EpisodeAdapter
-import com.example.rickandmorty.presentation.list.model.SingleEpisodeUI
+import com.example.rickandmorty.presentation.episodes.list.adapter.EpisodeAdapter
+import com.example.rickandmorty.presentation.episodes.list.model.SingleEpisodeUI
 import com.example.rickandmorty.utils.ViewModelFactory
 import java.util.Locale
 import javax.inject.Inject

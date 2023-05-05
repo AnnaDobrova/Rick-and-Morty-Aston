@@ -1,4 +1,4 @@
-package com.example.rickandmorty.presentation.list.model
+package com.example.rickandmorty.presentation.episodes.list.model
 
 data class SingleEpisodeUI(
     val id: Int,

@@ -1,8 +1,9 @@
 package com.example.rickandmorty.domain.location.detail
 
-import com.example.rickandmorty.presentation.locations.detail.LocationDetailFromDomainToUiCallback
+import com.example.rickandmorty.domain.location.detail.model.LocationDetailsDomain
+import com.example.rickandmorty.utils.AnnaResponse
+import kotlinx.coroutines.flow.Flow
 
 interface LocationDetailUseCase {
-    fun registerFromDomainToUiCallback(callback: LocationDetailFromDomainToUiCallback)
-    fun loadLocationById(id: Int)
+    fun loadLocationById(id: Int): Flow<AnnaResponse<LocationDetailsDomain>>
 }

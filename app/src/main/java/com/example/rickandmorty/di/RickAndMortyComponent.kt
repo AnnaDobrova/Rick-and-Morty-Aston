@@ -9,7 +9,7 @@ import com.example.rickandmorty.di.scope.ActivityScope
 import com.example.rickandmorty.presentation.characters.detail.CharacterDetailsFragment
 import com.example.rickandmorty.presentation.characters.list.CharacterListFragment
 import com.example.rickandmorty.presentation.episodes.details.EpisodeDetailsFragment
-import com.example.rickandmorty.presentation.list.EpisodeListFragment
+import com.example.rickandmorty.presentation.episodes.list.EpisodeListFragment
 import com.example.rickandmorty.presentation.locations.detail.LocationDetailsFragment
 import com.example.rickandmorty.presentation.locations.list.LocationListFragment
 import com.example.rickandmorty.utils.ViewModelFactory

@@ -1,9 +1,7 @@
 package com.example.rickandmorty.domain.location.list
 
-import com.example.rickandmorty.presentation.locations.list.LocationListFromDomainToUiCallback
-import retrofit2.Callback
+import com.example.rickandmorty.domain.location.list.model.SingleLocationDomain
 
 interface LocationUseCase {
-    fun registerFromDomainToUiCallback(callback: LocationListFromDomainToUiCallback)
-    fun loadLocations()
+   suspend fun getAllLocations() : List<SingleLocationDomain>
 }

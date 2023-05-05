@@ -1,30 +1,13 @@
 package com.example.rickandmorty.domain.episode.list
 
 import com.example.rickandmorty.domain.episode.list.model.SingleEpisodeListDomain
-import com.example.rickandmorty.presentation.list.EpisodeListFromDomainToUiCallback
 import javax.inject.Inject
 
 class EpisodeUseCaseImpl @Inject constructor(
     private val episodeRepository: EpisodesRepository
-) : EpisodeUseCase, EpisodeListFromDataToDomainCallBack {
+) : EpisodeUseCase {
 
-
-    private var callFromDomainToUI: EpisodeListFromDomainToUiCallback? = null
-
-    init {
-        episodeRepository.resisterFromDataToDomainCallback(this)
+    override suspend fun getAllEpisodes(): List<SingleEpisodeListDomain> {
+        return episodeRepository.getAllEpisodes()
     }
-
-    override fun resisterFromDataToDomainCallback(callback: EpisodeListFromDomainToUiCallback) {
-        this.callFromDomainToUI = callback
-    }
-
-    override fun loadAllEpisodes() {
-        episodeRepository.loadAllEpisodes()
-    }
-
-    override fun getAllEpisodesFromDataToDomain(episodeList: List<SingleEpisodeListDomain>) {
-        callFromDomainToUI?.getAllEpisodesFromDomainToUI(episodeList)
-    }
-
 }

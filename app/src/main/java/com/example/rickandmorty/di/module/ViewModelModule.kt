@@ -14,8 +14,8 @@ import com.example.rickandmorty.presentation.characters.list.CharactersViewModel
 import com.example.rickandmorty.presentation.characters.list.mapper.SingleCharacterDomainToSingleCharacterUiMapper
 import com.example.rickandmorty.presentation.episodes.details.EpisodeDetailViewModel
 import com.example.rickandmorty.presentation.episodes.details.mapper.EpisodeDetailDomainToEpisodeDetailUiMapper
-import com.example.rickandmorty.presentation.list.EpisodesViewModel
-import com.example.rickandmorty.presentation.list.mapper.SingleEpisodeDomainToSingleEpisodeUiMapper
+import com.example.rickandmorty.presentation.episodes.list.EpisodesViewModel
+import com.example.rickandmorty.presentation.episodes.list.mapper.SingleEpisodeDomainToSingleEpisodeUiMapper
 import com.example.rickandmorty.presentation.locations.detail.LocationDetailViewModel
 import com.example.rickandmorty.presentation.locations.detail.mapper.LocationDetailsDomainToLocationDetailsUIMapper
 import com.example.rickandmorty.presentation.locations.list.LocationsViewModel

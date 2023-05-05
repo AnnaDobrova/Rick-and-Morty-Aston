@@ -27,7 +27,9 @@ class CharactersDetailViewModel @Inject constructor(
                         character.postValue(mapperFromDomainToUi.map(annaResponse.data))
                     }
 
-                    is AnnaResponse.Failure -> { Throwable(annaResponse.error) }
+                    is AnnaResponse.Failure -> {
+                        Throwable(annaResponse.error)
+                    }
                 }
             }
         }

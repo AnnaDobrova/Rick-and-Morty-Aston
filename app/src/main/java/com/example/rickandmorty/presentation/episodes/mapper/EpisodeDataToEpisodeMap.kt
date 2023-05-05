@@ -3,7 +3,7 @@ package com.example.rickandmorty.presentation.episodes.mapper
 import com.example.rickandmorty.data.episodes.list.model.EpisodeListData
 import com.example.rickandmorty.data.episodes.list.model.SingleEpisodeListData
 import com.example.rickandmorty.domain.episode.list.model.Episode
-import com.example.rickandmorty.presentation.list.model.SingleEpisodeUI
+import com.example.rickandmorty.presentation.episodes.list.model.SingleEpisodeUI
 
 class EpisodeDataToEpisodeMap {
 
