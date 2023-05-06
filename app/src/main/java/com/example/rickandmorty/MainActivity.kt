@@ -15,6 +15,7 @@ import com.example.rickandmorty.presentation.characters.list.CharacterListFragme
 import com.example.rickandmorty.presentation.characters.list.CharacterListFragment.Companion.TAG_CHARACTERS_FRAGMENT
 import com.example.rickandmorty.presentation.characters.detail.CharacterDetailsFragment
 import com.example.rickandmorty.presentation.episodes.details.EpisodeDetailsFragment
+import com.example.rickandmorty.presentation.episodes.details.model.EpisodeDetailUi
 import com.example.rickandmorty.presentation.episodes.list.EpisodeListFragment
 import com.example.rickandmorty.presentation.episodes.list.EpisodeListFragment.Companion.TAG_EPISODES_FRAGMENT
 import com.example.rickandmorty.presentation.episodes.list.model.SingleEpisodeUI
@@ -94,7 +95,6 @@ class MainActivity : FragmentActivity(R.layout.activity_main),
                 }
             }
         }
-
     }
 
     override fun goToDetailsCharacter(singleCharacterUi: SingleCharacterUi) {
@@ -152,7 +152,7 @@ class MainActivity : FragmentActivity(R.layout.activity_main),
         bottomNavigation?.visibility = GONE
     }
 
-    override fun goToDetailsEpisode(episode: SingleEpisodeUI) {
+    override fun goToDetailsEpisode(episode: EpisodeDetailUi) {
         supportFragmentManager.beginTransaction().run {
             setReorderingAllowed(true)
             replace(
@@ -164,6 +164,10 @@ class MainActivity : FragmentActivity(R.layout.activity_main),
             commit()
         }
         bottomNavigation?.visibility = GONE
+    }
+
+    override fun goToDetailsEpisode(episode: SingleEpisodeUI) {
+        TODO("Not yet implemented")
     }
 
     // TODO потом удалить

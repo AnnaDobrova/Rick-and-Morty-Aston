@@ -20,7 +20,6 @@ import com.example.rickandmorty.domain.episode.EpisodeListDetailsListener
 import com.example.rickandmorty.presentation.characters.detail.adapter.EpisodeDataToEpisodeMapper
 import com.example.rickandmorty.presentation.characters.detail.adapter.EpisodeListAdapter
 import com.example.rickandmorty.presentation.characters.detail.model.CharacterDetailUi
-import com.example.rickandmorty.presentation.characters.list.CharactersViewModel
 import com.example.rickandmorty.utils.ViewModelFactory
 import javax.inject.Inject
 
@@ -36,12 +35,11 @@ class CharacterDetailsFragment : Fragment(R.layout.fragment_character_details) {
 
     var rickAndMortyComponent: RickAndMortyComponent? = null
 
-    @Inject lateinit var viewModel: CharactersDetailViewModel
-    @Inject lateinit var viewModelFactory: ViewModelFactory
+    @Inject
+    lateinit var viewModel: CharactersDetailViewModel
 
-    private val mapperEpisode: EpisodeDataToEpisodeMapper by lazy {
-        EpisodeDataToEpisodeMapper()
-    }
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -63,7 +61,7 @@ class CharacterDetailsFragment : Fragment(R.layout.fragment_character_details) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewModel = ViewModelProvider(this, viewModelFactory)[CharactersDetailViewModel::class.java]
         val characterId = requireArguments().getInt(CHARACTER_ID)
-        viewModel.loadCharacterById(characterId)
+        viewModel.getCharacterById(characterId)
         observeVM()
         initRecycler()
         visibilityToolBar()
@@ -73,6 +71,10 @@ class CharacterDetailsFragment : Fragment(R.layout.fragment_character_details) {
         viewModel.getCharacter().observe(viewLifecycleOwner) { characterDetail ->
             fillCharacterDetail(characterDetail)
         }
+        viewModel.getEpisodeList().observe(viewLifecycleOwner) { episodeList ->
+            binding.progressBar.hideProgress()
+            episodeListAdapter.updateEpisodeList(episodeList)
+        }
     }
 
     private fun fillCharacterDetail(characterDetail: CharacterDetailUi) {
@@ -81,20 +83,15 @@ class CharacterDetailsFragment : Fragment(R.layout.fragment_character_details) {
             speciesCharacterDetails.text = characterDetail.species
             genderCharacterDetails.text = characterDetail.gender
             statusCharacterDetails.text = characterDetail.status
+
+            Glide.with(this@CharacterDetailsFragment)
+                .load(characterDetail.image)
+                .into(imageCharacterDetails)
+
+            viewModel.loadEpisodeById(characterDetail.episodeList)
+            progressBar.showProgress()
         }
-        Glide.with(this@CharacterDetailsFragment)
-            .load(characterDetail.image)
-            .into(binding.imageCharacterDetails)
-
-        episodeListAdapter.updateEpisodeListString(characterDetail.episodeList)
-//        characterDetail.episodeList.map { episode ->
-//            episode.last().digitToIntOrNull()?.let { episodeDetailsRepository.loadEpisodeById(it) }
-//        }
     }
-
-//    override fun getEpisodeById(episode:SingleEpisodeDetailData) {
-//        episodeListAdapter.addEpisode(mapperEpisode.map(episode))
-//    }
 
     private fun initRecycler() {
         Log.d("TAG", "initRecycler in CharacterDetailsFragment ")

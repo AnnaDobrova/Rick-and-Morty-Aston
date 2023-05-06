@@ -9,6 +9,7 @@
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_character_detail"
+        style="@style/RickAndMortyToolBar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/green"
@@ -17,7 +18,6 @@
         app:navigationIcon="@drawable/ic_baseline_navigate_before_24"
         app:title="Персонаж"
         app:titleTextColor="#FFBE9B"
-        style="@style/RickAndMortyToolBar"
         tools:ignore="MissingConstraints" />
 
     <TextView
@@ -80,13 +80,22 @@
         app:layout_constraintStart_toEndOf="@+id/image_character_details"
         app:layout_constraintTop_toBottomOf="@id/gender_character_details" />
 
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/image_character_details" />
 
-
+    <com.example.rickandmorty.utils.progressbar.CustomProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/recycler_view_details"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/image_character_details" />
 </androidx.constraintlayout.widget.ConstraintLayout>

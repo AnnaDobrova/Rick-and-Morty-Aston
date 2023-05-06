@@ -45,11 +45,15 @@ class ViewModelModule {
     @Provides
     fun provideCharactersDetailViewModel(
         characterDetailUseCase: CharacterDetailUseCase,
-        characterDetailDomainToCharacterDetailUiMapper: CharacterDetailDomainToCharacterDetailUiMapper
+        episodeDetailUseCase: EpisodeDetailUseCase,
+        characterDetailDomainToCharacterDetailUiMapper: CharacterDetailDomainToCharacterDetailUiMapper,
+        episodeDetailDomainToEpisodeDetailUiMapper: EpisodeDetailDomainToEpisodeDetailUiMapper
     ): ViewModel {
         return CharactersDetailViewModel(
             characterDetailUseCase,
-            characterDetailDomainToCharacterDetailUiMapper
+            episodeDetailUseCase = episodeDetailUseCase,
+            characterDetailDomainToCharacterDetailUiMapper,
+            mapperFromDomainToUiForEpisodes = episodeDetailDomainToEpisodeDetailUiMapper
         )
     }
 

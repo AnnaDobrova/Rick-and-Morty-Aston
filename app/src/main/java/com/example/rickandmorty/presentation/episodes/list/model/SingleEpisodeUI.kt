@@ -1,5 +1,9 @@
 package com.example.rickandmorty.presentation.episodes.list.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class SingleEpisodeUI(
     val id: Int,
     val nameEpisode: String,
@@ -8,4 +12,4 @@ data class SingleEpisodeUI(
     val characters: List<String>,
     val url: String,
     val created: String
-)
+) : Parcelable

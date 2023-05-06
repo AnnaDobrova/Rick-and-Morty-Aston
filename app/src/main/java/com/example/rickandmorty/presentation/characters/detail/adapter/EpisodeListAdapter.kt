@@ -6,13 +6,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.rickandmorty.R
 import com.example.rickandmorty.domain.episode.EpisodeListDetailsListener
 import com.example.rickandmorty.domain.episode.list.model.Episode
+import com.example.rickandmorty.presentation.episodes.details.model.EpisodeDetailUi
 import com.example.rickandmorty.presentation.episodes.list.model.SingleEpisodeUI
 
 class EpisodeListAdapter(private val episodeListDetailsListener: EpisodeListDetailsListener) :
     RecyclerView.Adapter<CharacterDetailsEpisodeViewHolder>() {
 
-    private val episodeList = mutableListOf<SingleEpisodeUI>()
-    private var episodeListString = mutableListOf<String>()
+    private val episodeList = mutableListOf<EpisodeDetailUi>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterDetailsEpisodeViewHolder {
         return CharacterDetailsEpisodeViewHolder(
@@ -26,29 +26,22 @@ class EpisodeListAdapter(private val episodeListDetailsListener: EpisodeListDeta
     }
 
     override fun onBindViewHolder(holder: CharacterDetailsEpisodeViewHolder, position: Int) {
-        val episode = episodeListString[position]
-        holder.bindEpisodeString(episode)
+        val episode = episodeList[position]
+        holder.bindEpisode(episode)
     }
 
     override fun getItemCount(): Int {
-        return episodeListString.size
+        return episodeList.size
     }
 
-    fun updateEpisodeList(newEpisodeList: List<SingleEpisodeUI>) {
+    fun updateEpisodeList(newEpisodeList: List<EpisodeDetailUi>) {
         episodeList.clear()
         episodeList.addAll(newEpisodeList)
         notifyDataSetChanged()
     }
 
-    fun updateEpisodeListString(newEpisodeList: List<String>) {
-        episodeListString.clear()
-        episodeListString.addAll(newEpisodeList)
-        notifyDataSetChanged()
-    }
-
-    fun addEpisode(episode: SingleEpisodeUI) {
+    fun addEpisode(episode: EpisodeDetailUi) {
         episodeList.add(episode)
         notifyDataSetChanged()
     }
-
 }

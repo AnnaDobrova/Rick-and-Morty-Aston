@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.rickandmorty.databinding.EpisodeBinding
 import com.example.rickandmorty.domain.episode.EpisodeListDetailsListener
 import com.example.rickandmorty.domain.episode.list.model.Episode
+import com.example.rickandmorty.presentation.episodes.details.model.EpisodeDetailUi
 import com.example.rickandmorty.presentation.episodes.list.model.SingleEpisodeUI
 
 class CharacterDetailsEpisodeViewHolder(
@@ -14,7 +15,7 @@ class CharacterDetailsEpisodeViewHolder(
 
     private val binding = EpisodeBinding.bind(itemView)
 
-    fun bindEpisode(episode: SingleEpisodeUI) {
+    fun bindEpisode(episode: EpisodeDetailUi) {
         with(binding) {
             idEpisode.text = episode.id.toString()
             nameEpisode.text = episode.nameEpisode
@@ -23,17 +24,6 @@ class CharacterDetailsEpisodeViewHolder(
         }
         itemView.setOnClickListener {
             episodeListDetailsListener.goToDetailsEpisode(episode)
-        }
-    }
-
-    fun bindEpisodeString(episodeString: String) {
-        with(binding) {
-
-            nameEpisode.text = episodeString
-
-        }
-        itemView.setOnClickListener {
-            episodeListDetailsListener.goToDetailsEpisodeString(episodeString)
         }
     }
 }
