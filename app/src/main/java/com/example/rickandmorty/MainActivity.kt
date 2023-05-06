@@ -14,6 +14,7 @@ import com.example.rickandmorty.domain.location.LocationListDetailsListener
 import com.example.rickandmorty.presentation.characters.list.CharacterListFragment
 import com.example.rickandmorty.presentation.characters.list.CharacterListFragment.Companion.TAG_CHARACTERS_FRAGMENT
 import com.example.rickandmorty.presentation.characters.detail.CharacterDetailsFragment
+import com.example.rickandmorty.presentation.characters.detail.model.CharacterDetailUi
 import com.example.rickandmorty.presentation.episodes.details.EpisodeDetailsFragment
 import com.example.rickandmorty.presentation.episodes.details.model.EpisodeDetailUi
 import com.example.rickandmorty.presentation.episodes.list.EpisodeListFragment
@@ -34,7 +35,7 @@ class MainActivity : FragmentActivity(R.layout.activity_main),
     private var bottomNavigation: BottomNavigationView? = null
     private lateinit var binder: ActivityMainBinding
 
-    var rickAndMortyComponent: RickAndMortyComponent = DaggerRickAndMortyComponent.create()
+    var rickAndMortyComponent: RickAndMortyComponent = DaggerRickAndMortyComponent.factory().create(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -97,12 +98,12 @@ class MainActivity : FragmentActivity(R.layout.activity_main),
         }
     }
 
-    override fun goToDetailsCharacter(singleCharacterUi: SingleCharacterUi) {
+    override fun goToDetailsCharacter(character: SingleCharacterUi) {
         supportFragmentManager.beginTransaction().run {
             setReorderingAllowed(true)
             replace(
                 R.id.fragment_container,
-                CharacterDetailsFragment.newInstance(singleCharacterUi.id),
+                CharacterDetailsFragment.newInstance(character.id),
                 CharacterDetailsFragment.TAG
             )
             addToBackStack(CharacterDetailsFragment.TAG)
@@ -111,25 +112,13 @@ class MainActivity : FragmentActivity(R.layout.activity_main),
         bottomNavigation?.visibility = GONE
     }
 
-    //TODO delete
-    override fun getCharacterString(characterString: String) {
+    override fun goToDetailsCharacter(character: CharacterDetailUi) {
+
         supportFragmentManager.beginTransaction().run {
-            val index = characterString.lastIndex
-            val threeLastChar = "${characterString[index - 2]}${characterString[index - 1]}${characterString.last()}"
-            val secondLastChar = "${characterString[index - 1]}${characterString.last()}"
-            val id: Int = if (
-                isNumeric(threeLastChar)
-            ) {
-                threeLastChar.toInt()
-            } else if (isNumeric(secondLastChar)) {
-                secondLastChar.toInt()
-            } else {
-                characterString.last().digitToInt()
-            }
             setReorderingAllowed(true)
             replace(
                 R.id.fragment_container,
-                CharacterDetailsFragment.newInstance(id),
+                CharacterDetailsFragment.newInstance(character.id),
                 CharacterDetailsFragment.TAG
             )
             addToBackStack(CharacterDetailsFragment.TAG)
@@ -167,7 +156,17 @@ class MainActivity : FragmentActivity(R.layout.activity_main),
     }
 
     override fun goToDetailsEpisode(episode: SingleEpisodeUI) {
-        TODO("Not yet implemented")
+        supportFragmentManager.beginTransaction().run {
+            setReorderingAllowed(true)
+            replace(
+                R.id.fragment_container,
+                EpisodeDetailsFragment.newInstance(episode.id),
+                EpisodeDetailsFragment.TAG
+            )
+            addToBackStack(EpisodeDetailsFragment.TAG)
+            commit()
+        }
+        bottomNavigation?.visibility = GONE
     }
 
     // TODO потом удалить

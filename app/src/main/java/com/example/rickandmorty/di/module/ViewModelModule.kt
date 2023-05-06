@@ -70,19 +70,23 @@ class ViewModelModule {
         )
     }
 
-
     @IntoMap
     @ViewModelKey(EpisodeDetailViewModel::class)
     @Provides
     fun provideEpisodeDetailViewModel(
         episodeDetailUseCase: EpisodeDetailUseCase,
-        episodeDetailDomainToCharacterDetailUiMapper: EpisodeDetailDomainToEpisodeDetailUiMapper
+        characterDetailUseCase: CharacterDetailUseCase,
+        episodeDetailDomainToCharacterDetailUiMapper: EpisodeDetailDomainToEpisodeDetailUiMapper,
+        characterDetailDomainToCharacterDetailUiMapper: CharacterDetailDomainToCharacterDetailUiMapper
     ): ViewModel {
         return EpisodeDetailViewModel(
             episodeDetailUseCase,
-            episodeDetailDomainToCharacterDetailUiMapper
+            characterDetailUseCase,
+            episodeDetailDomainToCharacterDetailUiMapper,
+            characterDetailDomainToCharacterDetailUiMapper
         )
     }
+
     @IntoMap
     @ViewModelKey(LocationsViewModel::class)
     @Provides
@@ -96,17 +100,20 @@ class ViewModelModule {
         )
     }
 
-
     @IntoMap
     @ViewModelKey(LocationDetailViewModel::class)
     @Provides
     fun provideLocationDetailViewModel(
         locationDetailUseCase: LocationDetailUseCase,
-        locationDetailsDomainToLocationDetailsUIMapper: LocationDetailsDomainToLocationDetailsUIMapper
+        characterDetailUseCase: CharacterDetailUseCase,
+        locationDetailsDomainToLocationDetailsUIMapper: LocationDetailsDomainToLocationDetailsUIMapper,
+        characterDetailDomainToCharacterDetailUiMapper: CharacterDetailDomainToCharacterDetailUiMapper
     ): ViewModel {
         return LocationDetailViewModel(
             locationDetailUseCase,
-            locationDetailsDomainToLocationDetailsUIMapper
+            characterDetailUseCase,
+            locationDetailsDomainToLocationDetailsUIMapper,
+            characterDetailDomainToCharacterDetailUiMapper
         )
     }
 }

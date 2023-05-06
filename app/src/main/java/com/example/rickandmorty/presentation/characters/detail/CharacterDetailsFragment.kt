@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -74,6 +75,10 @@ class CharacterDetailsFragment : Fragment(R.layout.fragment_character_details) {
         viewModel.getEpisodeList().observe(viewLifecycleOwner) { episodeList ->
             binding.progressBar.hideProgress()
             episodeListAdapter.updateEpisodeList(episodeList)
+        }
+        viewModel.getError().observe(viewLifecycleOwner) { message ->
+            binding.progressBar.hideProgress()
+            Toast.makeText(requireActivity(), message, Toast.LENGTH_SHORT).show()
         }
     }
 

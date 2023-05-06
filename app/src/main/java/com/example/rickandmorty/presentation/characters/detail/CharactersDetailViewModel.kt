@@ -9,6 +9,7 @@ import com.example.rickandmorty.domain.character.detail.CharacterDetailUseCase
 import com.example.rickandmorty.domain.episode.details.EpisodeDetailUseCase
 import com.example.rickandmorty.presentation.characters.detail.mapper.CharacterDetailDomainToCharacterDetailUiMapper
 import com.example.rickandmorty.presentation.characters.detail.model.CharacterDetailUi
+import com.example.rickandmorty.presentation.characters.list.model.SingleCharacterUi
 import com.example.rickandmorty.presentation.episodes.details.mapper.EpisodeDetailDomainToEpisodeDetailUiMapper
 import com.example.rickandmorty.presentation.episodes.details.model.EpisodeDetailUi
 import com.example.rickandmorty.utils.AnnaResponse
@@ -26,6 +27,8 @@ class CharactersDetailViewModel @Inject constructor(
 
     private var episodeList = MutableLiveData<List<EpisodeDetailUi>>(emptyList())
 
+    private var error = MutableLiveData<String>()
+
     fun getCharacterById(id: Int) {
         viewModelScope.launch {
             characterDetailUseCase.loadCharacterById(id).collect { annaResponse ->
@@ -33,8 +36,9 @@ class CharactersDetailViewModel @Inject constructor(
                     is AnnaResponse.Success -> {
                         character.postValue(mapperFromDomainToUi.map(annaResponse.data))
                     }
+
                     is AnnaResponse.Failure -> {
-                        Throwable(annaResponse.error)
+                        error.postValue(Throwable(annaResponse.error).message)
                     }
                 }
             }
@@ -44,6 +48,8 @@ class CharactersDetailViewModel @Inject constructor(
     fun getCharacter(): LiveData<CharacterDetailUi> = character
 
     fun getEpisodeList(): LiveData<List<EpisodeDetailUi>> = episodeList
+
+    fun getError(): LiveData<String> = error
 
     fun loadEpisodeById(episodeStringList: List<String>) {
         viewModelScope.launch {

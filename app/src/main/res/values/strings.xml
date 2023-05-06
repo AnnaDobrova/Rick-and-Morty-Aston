@@ -13,4 +13,6 @@
     <string name="name_episode">Название эпизода</string>
     <string name="number_episode">Номер Эпизода</string>
     <string name="air_data_episode">Дата релиза</string>
+    <string name="error_connectivity">Отсутствует интернет соединение</string>
+
 </resources>

@@ -1,5 +1,6 @@
 package com.example.rickandmorty.di
 
+import android.content.Context
 import com.example.rickandmorty.di.module.MapperModule
 import com.example.rickandmorty.di.module.NetworkModule
 import com.example.rickandmorty.di.module.RepositoryModule
@@ -13,6 +14,7 @@ import com.example.rickandmorty.presentation.episodes.list.EpisodeListFragment
 import com.example.rickandmorty.presentation.locations.detail.LocationDetailsFragment
 import com.example.rickandmorty.presentation.locations.list.LocationListFragment
 import com.example.rickandmorty.utils.ViewModelFactory
+import dagger.BindsInstance
 import dagger.Component
 
 @Component(
@@ -34,10 +36,9 @@ interface RickAndMortyComponent {
     fun inject(locationListFragment: LocationListFragment)
     fun inject(locationDetailsFragment: LocationDetailsFragment)
 
-
     @Component.Factory
     interface RickAndMortyComponentFactory {
-        fun create(): RickAndMortyComponent
+        fun create(@BindsInstance context: Context): RickAndMortyComponent
     }
 
     fun getViewModelFactory(): ViewModelFactory

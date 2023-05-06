@@ -5,11 +5,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.rickandmorty.R
 import com.example.rickandmorty.presentation.characters.CharacterListDetailsListener
+import com.example.rickandmorty.presentation.characters.detail.model.CharacterDetailUi
 
 class CharacterListInLocationAdapter(private val characterListDetailsListener: CharacterListDetailsListener) :
     RecyclerView.Adapter<EpisodeDetailCharacterViewHolder>() {
 
-    private var characterString = mutableListOf<String>()
+    private var characterString = mutableListOf<CharacterDetailUi>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EpisodeDetailCharacterViewHolder {
         return EpisodeDetailCharacterViewHolder(
@@ -24,14 +25,14 @@ class CharacterListInLocationAdapter(private val characterListDetailsListener: C
 
     override fun onBindViewHolder(holder: EpisodeDetailCharacterViewHolder, position: Int) {
         val location = characterString[position]
-        holder.bindLocationString(location)
+        holder.bindCharacter(location)
     }
 
     override fun getItemCount(): Int {
         return characterString.size
     }
 
-    fun updateCharacterListString(newCharacterList: List<String>) {
+    fun updateCharacterList(newCharacterList: List<CharacterDetailUi>) {
         characterString.clear()
         characterString.addAll(newCharacterList)
         notifyDataSetChanged()

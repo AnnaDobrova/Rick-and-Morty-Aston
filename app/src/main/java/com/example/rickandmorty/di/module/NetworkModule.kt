@@ -1,5 +1,7 @@
 package com.example.rickandmorty.di.module
 
+import android.content.Context
+import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.example.rickandmorty.data.characters.detail.api.CharacterDetailsNetworkDataSource
 import com.example.rickandmorty.data.characters.list.api.CharactersNetworkDataSource
 import com.example.rickandmorty.data.episodes.detail.api.EpisodesDetailsNetworkDataSource
@@ -7,12 +9,16 @@ import com.example.rickandmorty.data.episodes.list.api.EpisodeNetworkDataSource
 import com.example.rickandmorty.data.locations.detail.api.LocationDetailsNetworkDataSource
 import com.example.rickandmorty.data.locations.list.api.LocationNetworkDataSours
 import com.example.rickandmorty.di.scope.ActivityScope
+import com.example.rickandmorty.utils.inteceptor.ChukerInterceptor
+import com.example.rickandmorty.utils.inteceptor.ConnectivityInterceptor
+import com.example.rickandmorty.utils.inteceptor.NetworkExceptionInterceptor
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 private const val BASE_URL = "https://rickandmortyapi.com/api/"
 
@@ -34,11 +40,40 @@ class NetworkModule {
 
     @Provides
     @ActivityScope
-    fun provideOkHttp(): OkHttpClient {
-        val logger = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC);
-        return OkHttpClient.Builder()
-            .addInterceptor(logger)
-            .build();
+    fun providesOkHttpClient(
+        chuckerInterceptor: ChuckerInterceptor,
+        httpLoggingInterceptor: HttpLoggingInterceptor,
+        networkExceptionInterceptor: NetworkExceptionInterceptor,
+        connectivityInterceptor: ConnectivityInterceptor
+    ): OkHttpClient = OkHttpClient.Builder().writeTimeout(1, TimeUnit.MINUTES)
+        .readTimeout(1, TimeUnit.MINUTES)
+        .callTimeout(1, TimeUnit.MINUTES)
+        .retryOnConnectionFailure(true)
+        .addInterceptor(networkExceptionInterceptor)
+        .addInterceptor(connectivityInterceptor)
+        .addInterceptor(httpLoggingInterceptor)
+        .addInterceptor(chuckerInterceptor)
+        .build()
+
+    @Provides
+    @ActivityScope
+    fun providesChuckerInterceptor(context: Context) =
+        ChukerInterceptor(context).intercept()
+
+    @Provides
+    @ActivityScope
+    fun providesNetworkExceptionInterceptor() =
+        NetworkExceptionInterceptor()
+
+    @Provides
+    @ActivityScope
+    fun providesConnectivityInterceptor(context: Context) =
+        ConnectivityInterceptor(context)
+
+    @Provides
+    @ActivityScope
+    fun providesHttpLoggingInterceptor() = HttpLoggingInterceptor().apply {
+        level = HttpLoggingInterceptor.Level.BODY
     }
 
     /**
@@ -56,7 +91,7 @@ class NetworkModule {
         retrofit: Retrofit
     ): CharacterDetailsNetworkDataSource = retrofit.create(CharacterDetailsNetworkDataSource::class.java)
 
-//TODO ДЛЯ ЕПИЗОДОВ
+    //TODO ДЛЯ ЕПИЗОДОВ
 
     @Provides
     @ActivityScope
@@ -70,7 +105,6 @@ class NetworkModule {
         retrofit: Retrofit
     ): EpisodesDetailsNetworkDataSource = retrofit.create(EpisodesDetailsNetworkDataSource::class.java)
 
-
     //TODO ДЛЯ ЛОКАЦИЙ
     @Provides
     @ActivityScope
@@ -83,5 +117,4 @@ class NetworkModule {
     fun provideLocationDetailsNetworkDataSource(
         retrofit: Retrofit
     ): LocationDetailsNetworkDataSource = retrofit.create(LocationDetailsNetworkDataSource::class.java)
-
 }

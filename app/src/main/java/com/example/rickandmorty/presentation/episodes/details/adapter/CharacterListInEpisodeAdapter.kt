@@ -5,11 +5,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.rickandmorty.R
 import com.example.rickandmorty.presentation.characters.CharacterListDetailsListener
+import com.example.rickandmorty.presentation.characters.detail.model.CharacterDetailUi
 
 class CharacterListInEpisodeAdapter(private val characterListDetailsListener: CharacterListDetailsListener) :
     RecyclerView.Adapter<EpisodeDetailCharacterViewHolder>() {
 
-    private var characterString = mutableListOf<String>()
+    private var characterList = mutableListOf<CharacterDetailUi>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EpisodeDetailCharacterViewHolder {
         return EpisodeDetailCharacterViewHolder(
@@ -23,18 +24,22 @@ class CharacterListInEpisodeAdapter(private val characterListDetailsListener: Ch
     }
 
     override fun onBindViewHolder(holder: EpisodeDetailCharacterViewHolder, position: Int) {
-        val location = characterString[position]
-        holder.bindLocationString(location)
+        val episode = characterList[position]
+        holder.bindCharacters(episode)
     }
 
     override fun getItemCount(): Int {
-        return characterString.size
+        return characterList.size
     }
 
-    fun updateCharacterListString(newCharacterList: List<String>) {
-        characterString.clear()
-        characterString.addAll(newCharacterList)
+    fun updateCharacterList(newEpisodeList: List<CharacterDetailUi>) {
+        characterList.clear()
+        characterList.addAll(newEpisodeList)
         notifyDataSetChanged()
     }
 
+    fun addEpisode(episode: CharacterDetailUi) {
+        characterList.add(episode)
+        notifyDataSetChanged()
+    }
 }

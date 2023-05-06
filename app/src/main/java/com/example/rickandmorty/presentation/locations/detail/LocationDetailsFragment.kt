@@ -33,8 +33,11 @@ class LocationDetailsFragment : Fragment(R.layout.fragment_locetion_details) {
 
     var rickAndMortyComponent: RickAndMortyComponent? = null
 
-    @Inject lateinit var viewModel: LocationDetailViewModel
-    @Inject lateinit var viewModelFactory: ViewModelFactory
+    @Inject
+    lateinit var viewModel: LocationDetailViewModel
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -67,7 +70,10 @@ class LocationDetailsFragment : Fragment(R.layout.fragment_locetion_details) {
     private fun observeVm() {
         viewModel.getLocation().observe(viewLifecycleOwner) { locationDetail ->
             fillLocationDetail(locationDetail)
-
+        }
+        viewModel.getCharacterList().observe(viewLifecycleOwner) { characters ->
+            characterListInLocationAdapter.updateCharacterList(characters)
+            binding.progressBar.hideProgress()
         }
     }
 
@@ -77,7 +83,8 @@ class LocationDetailsFragment : Fragment(R.layout.fragment_locetion_details) {
             typeLocationDetails.text = locationDetail.type
             dimensionLocationDetails.text = locationDetail.dimension
         }
-        characterListInLocationAdapter.updateCharacterListString(locationDetail.listCharactersInLocation)
+        viewModel.loadCharacterById(locationDetail.listCharactersInLocation)
+        binding.progressBar.showProgress()
     }
 
     private fun initRecycler() {

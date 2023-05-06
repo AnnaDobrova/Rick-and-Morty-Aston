@@ -32,8 +32,11 @@ class EpisodeDetailsFragment : Fragment(R.layout.fragment_episode_details) {
     }
     var rickAndMortyComponent: RickAndMortyComponent? = null
 
-    @Inject lateinit var viewModel: EpisodeDetailViewModel
-    @Inject lateinit var viewModelFactory: ViewModelFactory
+    @Inject
+    lateinit var viewModel: EpisodeDetailViewModel
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -65,6 +68,10 @@ class EpisodeDetailsFragment : Fragment(R.layout.fragment_episode_details) {
         viewModel.getEpisode().observe(viewLifecycleOwner) { episodeDetail ->
             fillEpisodeDetail(episodeDetail)
         }
+        viewModel.getCharacterList().observe(viewLifecycleOwner) { characters ->
+            characterListInEpisodeAdapter.updateCharacterList(characters)
+            binding.progressBar.hideProgress()
+        }
     }
 
     private fun fillEpisodeDetail(episodeDetail: EpisodeDetailUi) {
@@ -72,8 +79,10 @@ class EpisodeDetailsFragment : Fragment(R.layout.fragment_episode_details) {
             nameEpisodeDetails.text = episodeDetail.nameEpisode
             numberEpisodeDetails.text = episodeDetail.numberEpisode
             airDataEpisodeDetails.text = episodeDetail.airDataEpisode
+
+            viewModel.loadCharacterById(episodeDetail.characters)
+            progressBar.showProgress()
         }
-        characterListInEpisodeAdapter.updateCharacterListString(episodeDetail.characters)
     }
 
     private fun initRecycler() {
