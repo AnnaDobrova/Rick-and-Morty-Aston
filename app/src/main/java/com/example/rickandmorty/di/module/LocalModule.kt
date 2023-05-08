@@ -22,6 +22,7 @@ class LocalModule {
 
     @Provides
     @ActivityScope
-    fun provideCharacterListDao(appDatabase: AppDatabase): CharacterLocalDao = appDatabase.characterListDao()
+    fun provideCharacterLocalDao(appDatabase: AppDatabase): CharacterLocalDao =
+        appDatabase.characterListDao()
 
 }

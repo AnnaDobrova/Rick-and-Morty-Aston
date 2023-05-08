@@ -6,10 +6,10 @@ import androidx.room.PrimaryKey
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-@Entity(tableName = "CharacterListEntity")
+@Entity(tableName = "CharacterListEntity") //local
 data class SingleCharacterData(
     @Expose
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey(autoGenerate = true) //local
     val id: Long,
     @Expose
     val name: String,
@@ -22,10 +22,10 @@ data class SingleCharacterData(
     @Expose
     val gender: String,
     @Expose
-    @ColumnInfo("origin")
+    @ColumnInfo("origin") //local
     val origin: SingleCharacterOriginData,
     @Expose
-    @ColumnInfo("location")
+    @ColumnInfo("location") //local
     val location: SingleCharacterLocationData,
     @Expose
     val image: String,

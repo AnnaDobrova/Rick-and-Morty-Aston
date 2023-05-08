@@ -8,10 +8,6 @@ import com.example.rickandmorty.data.characters.list.model.SingleCharacterLocati
 import com.example.rickandmorty.data.characters.list.model.SingleCharacterOriginData
 import com.example.rickandmorty.data.local.characters.CharacterLocalDao
 import com.example.rickandmorty.data.local.converter.Converters
-import com.example.rickandmorty.data.local.characters.model.CharacterListEntity
-import com.example.rickandmorty.data.local.characters.model.CharacterLocationEntity
-import com.example.rickandmorty.data.local.characters.model.CharacterOriginEntity
-import com.example.rickandmorty.data.locations.list.model.SingleLocationData
 
 @Database(
     entities = [
