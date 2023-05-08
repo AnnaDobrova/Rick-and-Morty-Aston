@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.rickandmorty.domain.character.list.CharactersUseCase
 import com.example.rickandmorty.presentation.characters.list.mapper.SingleCharacterDomainToSingleCharacterUiMapper
 import com.example.rickandmorty.presentation.characters.list.model.SingleCharacterUi
+import com.example.rickandmorty.utils.AnnaResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -18,16 +19,22 @@ class CharactersViewModel @Inject constructor(
 
     private var characters = MutableLiveData<List<SingleCharacterUi>>(emptyList())
 
+    private val error = MutableLiveData<String>()
+
     init {
         loadAllCharacters()
     }
 
     fun loadAllCharacters() {
         viewModelScope.launch(Dispatchers.IO) {
-            characters.postValue(mapperFromDomainToUi.map(charactersUseCase.getAllCharacters()))
+            when (val response = charactersUseCase.getAllCharacters()) {
+                is AnnaResponse.Success -> characters.postValue(mapperFromDomainToUi.map(response.data))
+                is AnnaResponse.Failure -> { error.postValue(response.error.message) }
+            }
+
         }
     }
 
     fun getAllCharacters(): LiveData<List<SingleCharacterUi>> = characters
-
+    fun getError(): LiveData<String> = error
 }

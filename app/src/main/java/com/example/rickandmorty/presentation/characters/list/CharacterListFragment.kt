@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -35,8 +36,10 @@ class CharacterListFragment : Fragment(R.layout.fragment_characters) {
     }
     var rickAndMortyComponent: RickAndMortyComponent? = null
 
-    @Inject lateinit var viewModel: CharactersViewModel
-    @Inject lateinit var viewModelFactory: ViewModelFactory
+    @Inject
+    lateinit var viewModel: CharactersViewModel
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -61,7 +64,6 @@ class CharacterListFragment : Fragment(R.layout.fragment_characters) {
         viewModel = ViewModelProvider(this, viewModelFactory)[CharactersViewModel::class.java]
 
         binding.charactersPb.showProgress()
-        isConnect()
         observeVM()
         initRecycler()
         updateNetwork()
@@ -69,23 +71,16 @@ class CharacterListFragment : Fragment(R.layout.fragment_characters) {
         filter()
     }
 
-    // 2-13
-    // 2 шаг подписываемся на то что бы слушать данные из getAllCharacters,
-    // 13 шаг как только они изменяться  то мы их сразу применим
     private fun observeVM() {
         viewModel.getAllCharacters().observe(viewLifecycleOwner) { newCharacterList ->
             charactersAdapter.updateListCharacters(newCharacterList)
             binding.charactersPb.hideProgress()
         }
+        viewModel.getError().observe(viewLifecycleOwner) { error ->
+            binding.charactersPb.hideProgress()
+            Toast.makeText(requireContext(), R.string.error_connectivity, Toast.LENGTH_SHORT).show()
+        }
     }
-
-//    /**
-//     * При реализации метода getAllCharacters, который является методом интерфейса CharactersListener
-//     * полученный список данных, которые придут из charactersRepository, мы отправляем в charactersAdapter
-//     * для отображения или обновления списка
-//     */
-
-    // 1 шаг регистрация листенера(колбэка) и требование начать загрузку всех персонажей
 
     private fun initRecycler() {
         with(binding.recyclerViewCharacters) {
@@ -99,24 +94,6 @@ class CharacterListFragment : Fragment(R.layout.fragment_characters) {
             setOnRefreshListener {
                 viewModel.loadAllCharacters()
                 this.isRefreshing = false
-            }
-        }
-    }
-
-    private fun isConnect(): Boolean {
-        val connectivityManager = (context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager)
-        connectivityManager.apply {
-            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                getNetworkCapabilities(activeNetwork)?.run {
-                    when {
-                        hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
-                        hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
-                        hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
-                        else -> false
-                    }
-                } ?: false
-            } else {
-                activeNetworkInfo?.isConnected ?: false
             }
         }
     }
@@ -164,7 +141,5 @@ class CharacterListFragment : Fragment(R.layout.fragment_characters) {
         const val TAG_CHARACTERS_FRAGMENT = "TAG_CHARACTERS_FRAGMENT"
 
         fun newInstance() = CharacterListFragment()
-
     }
-
 }
