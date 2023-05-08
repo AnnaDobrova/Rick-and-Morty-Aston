@@ -31,9 +31,20 @@ class CharactersViewModel @Inject constructor(
                 is AnnaResponse.Success -> characters.postValue(mapperFromDomainToUi.map(response.data))
                 is AnnaResponse.Failure -> {
                     error.postValue(response.error.message)
+                    loadAllCharactersFromLocal()
                 }
             }
+        }
+    }
 
+    private fun loadAllCharactersFromLocal() {
+        viewModelScope.launch(Dispatchers.IO) {
+            when (val response = charactersUseCase.getAllCharactersFromLocal()) {
+                is AnnaResponse.Success -> characters.postValue(mapperFromDomainToUi.map(response.data))
+                is AnnaResponse.Failure -> {
+                    error.postValue(response.error.message)
+                }
+            }
         }
     }
 

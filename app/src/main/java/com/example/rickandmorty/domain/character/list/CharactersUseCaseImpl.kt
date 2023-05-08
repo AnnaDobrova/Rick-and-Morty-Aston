@@ -11,4 +11,8 @@ class CharactersUseCaseImpl @Inject constructor(
     override suspend fun getAllCharacters(): AnnaResponse<List<SingleCharacterDomain>> {
         return charactersRepository.getAllCharacters()
     }
+
+    override suspend fun getAllCharactersFromLocal(): AnnaResponse<List<SingleCharacterDomain>> {
+        return charactersRepository.getAllCharactersFromLocal()
+    }
 }

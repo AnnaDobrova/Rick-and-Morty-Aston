@@ -1,6 +1,7 @@
 package com.example.rickandmorty.di
 
 import android.content.Context
+import com.example.rickandmorty.di.module.LocalModule
 import com.example.rickandmorty.di.module.MapperModule
 import com.example.rickandmorty.di.module.NetworkModule
 import com.example.rickandmorty.di.module.RepositoryModule
@@ -23,7 +24,8 @@ import dagger.Component
         MapperModule::class,
         RepositoryModule::class,
         UseCaseModule::class,
-        ViewModelModule::class
+        ViewModelModule::class,
+        LocalModule::class
     ]
 )
 @ActivityScope

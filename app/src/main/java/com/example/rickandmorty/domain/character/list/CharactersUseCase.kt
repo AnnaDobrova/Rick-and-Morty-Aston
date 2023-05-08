@@ -5,4 +5,5 @@ import com.example.rickandmorty.utils.AnnaResponse
 
 interface CharactersUseCase {
     suspend fun getAllCharacters(): AnnaResponse<List<SingleCharacterDomain>>
+    suspend fun getAllCharactersFromLocal(): AnnaResponse<List<SingleCharacterDomain>>
 }
