@@ -5,9 +5,6 @@ import com.example.rickandmorty.data.episodes.list.mapper.EpisodeDataToListSingl
 import com.example.rickandmorty.domain.episode.list.EpisodesRepository
 import com.example.rickandmorty.domain.episode.list.model.SingleEpisodeListDomain
 import com.example.rickandmorty.utils.AnnaResponse
-import com.example.rickandmorty.utils.tryMapSuspended
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class EpisodeRepositoryImpl @Inject constructor(
@@ -15,10 +12,16 @@ class EpisodeRepositoryImpl @Inject constructor(
     private val mapperFromDataToDomain: EpisodeDataToListSingleEpisodeDomainMapper
 ) : EpisodesRepository {
 
-    override suspend fun getAllEpisodes(): List<SingleEpisodeListDomain> {
-        return mapperFromDataToDomain.map(
-            episodeDetailsNetworkDataSours.getAllEpisodes().body()?.episodes ?: emptyList()
-        )
+    override suspend fun getAllEpisodes(): AnnaResponse<List<SingleEpisodeListDomain>> {
+        return try {
+            AnnaResponse.Success(
+                mapperFromDataToDomain.map(
+                    episodeDetailsNetworkDataSours.getAllEpisodes().body()?.episodes ?: emptyList()
+                )
+            )
+        } catch (e: Throwable) {
+            AnnaResponse.Failure(e)
+        }
     }
 
 }

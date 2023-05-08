@@ -18,7 +18,6 @@ import com.example.rickandmorty.R
 import com.example.rickandmorty.databinding.FragmentCharacterDetailsBinding
 import com.example.rickandmorty.di.RickAndMortyComponent
 import com.example.rickandmorty.domain.episode.EpisodeListDetailsListener
-import com.example.rickandmorty.presentation.characters.detail.adapter.EpisodeDataToEpisodeMapper
 import com.example.rickandmorty.presentation.characters.detail.adapter.EpisodeListAdapter
 import com.example.rickandmorty.presentation.characters.detail.model.CharacterDetailUi
 import com.example.rickandmorty.utils.ViewModelFactory
@@ -54,7 +53,7 @@ class CharacterDetailsFragment : Fragment(R.layout.fragment_character_details) {
         viewModelFactory = rickAndMortyComponent!!.getViewModelFactory()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentCharacterDetailsBinding.inflate(inflater, container, false)
         return binding.root
     }

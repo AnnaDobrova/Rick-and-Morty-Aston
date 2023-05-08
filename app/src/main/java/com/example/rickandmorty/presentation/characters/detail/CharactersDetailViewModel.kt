@@ -9,7 +9,6 @@ import com.example.rickandmorty.domain.character.detail.CharacterDetailUseCase
 import com.example.rickandmorty.domain.episode.details.EpisodeDetailUseCase
 import com.example.rickandmorty.presentation.characters.detail.mapper.CharacterDetailDomainToCharacterDetailUiMapper
 import com.example.rickandmorty.presentation.characters.detail.model.CharacterDetailUi
-import com.example.rickandmorty.presentation.characters.list.model.SingleCharacterUi
 import com.example.rickandmorty.presentation.episodes.details.mapper.EpisodeDetailDomainToEpisodeDetailUiMapper
 import com.example.rickandmorty.presentation.episodes.details.model.EpisodeDetailUi
 import com.example.rickandmorty.utils.AnnaResponse

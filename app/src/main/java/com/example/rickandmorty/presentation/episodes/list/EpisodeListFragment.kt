@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -72,8 +73,12 @@ class EpisodeListFragment : Fragment(R.layout.fragment_episodes) {
     private fun observeVM() {
         viewModel.getAllEpisodes().observe(viewLifecycleOwner) { newCharacterList ->
             episodeAdapter.updateEpisodes(newCharacterList)
+            binding.episodesPb.hideProgress()
         }
-        binding.episodesPb.hideProgress()
+        viewModel.getError().observe(viewLifecycleOwner) { error ->
+            binding.episodesPb.hideProgress()
+            Toast.makeText(requireContext(), R.string.error_connectivity, Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun initRecycler() {

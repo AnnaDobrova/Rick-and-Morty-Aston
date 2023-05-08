@@ -1,8 +1,8 @@
 package com.example.rickandmorty.domain.location.list
 
-import com.example.rickandmorty.data.locations.list.model.LocationsData
 import com.example.rickandmorty.domain.location.list.model.SingleLocationDomain
+import com.example.rickandmorty.utils.AnnaResponse
 
 interface LocationRepository {
-   suspend fun getLocationList(): List<SingleLocationDomain>
+   suspend fun getLocationList(): AnnaResponse<List<SingleLocationDomain>>
 }

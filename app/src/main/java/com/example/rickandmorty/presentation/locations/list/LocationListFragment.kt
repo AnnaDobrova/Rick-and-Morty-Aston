@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -73,6 +74,11 @@ class LocationListFragment : Fragment(R.layout.fragment_locations) {
     private fun observerVM() {
         viewModel.getLocations().observe(viewLifecycleOwner) { newLocationList ->
             locationAdapter.updateLocations(newLocationList)
+            binding.locationsPb.hideProgress()
+        }
+        viewModel.getError().observe(viewLifecycleOwner) { error ->
+            binding.locationsPb.hideProgress()
+            Toast.makeText(requireContext(), R.string.error_connectivity, Toast.LENGTH_SHORT).show()
         }
     }
 

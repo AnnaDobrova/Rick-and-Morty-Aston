@@ -1,7 +1,8 @@
 package com.example.rickandmorty.domain.location.list
 
 import com.example.rickandmorty.domain.location.list.model.SingleLocationDomain
+import com.example.rickandmorty.utils.AnnaResponse
 
 interface LocationUseCase {
-   suspend fun getAllLocations() : List<SingleLocationDomain>
+   suspend fun getAllLocations() : AnnaResponse<List<SingleLocationDomain>>
 }

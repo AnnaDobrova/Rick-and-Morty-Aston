@@ -29,7 +29,9 @@ class CharactersViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             when (val response = charactersUseCase.getAllCharacters()) {
                 is AnnaResponse.Success -> characters.postValue(mapperFromDomainToUi.map(response.data))
-                is AnnaResponse.Failure -> { error.postValue(response.error.message) }
+                is AnnaResponse.Failure -> {
+                    error.postValue(response.error.message)
+                }
             }
 
         }
