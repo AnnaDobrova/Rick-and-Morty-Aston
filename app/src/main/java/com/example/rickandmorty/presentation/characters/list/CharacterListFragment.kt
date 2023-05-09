@@ -1,9 +1,6 @@
 package com.example.rickandmorty.presentation.characters.list
 
 import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +9,7 @@ import android.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.rickandmorty.CallBackForFragments
 import com.example.rickandmorty.MainActivity
@@ -20,9 +18,8 @@ import com.example.rickandmorty.databinding.FragmentCharactersBinding
 import com.example.rickandmorty.di.RickAndMortyComponent
 import com.example.rickandmorty.presentation.characters.CharacterListDetailsListener
 import com.example.rickandmorty.presentation.characters.list.adapter.CharactersAdapter
-import com.example.rickandmorty.presentation.characters.list.model.SingleCharacterUi
 import com.example.rickandmorty.utils.ViewModelFactory
-import java.util.Locale
+import com.example.rickandmorty.utils.network.NetworkState
 import javax.inject.Inject
 
 class CharacterListFragment : Fragment(R.layout.fragment_characters) {
@@ -38,6 +35,7 @@ class CharacterListFragment : Fragment(R.layout.fragment_characters) {
 
     @Inject
     lateinit var viewModel: CharactersViewModel
+
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
 
@@ -72,13 +70,17 @@ class CharacterListFragment : Fragment(R.layout.fragment_characters) {
     }
 
     private fun observeVM() {
-        viewModel.getAllCharacters().observe(viewLifecycleOwner) { newCharacterList ->
-            charactersAdapter.updateListCharacters(newCharacterList)
-            binding.charactersPb.hideProgress()
-        }
-        viewModel.getError().observe(viewLifecycleOwner) { error ->
-            binding.charactersPb.hideProgress()
-            Toast.makeText(requireContext(), R.string.error_connectivity, Toast.LENGTH_SHORT).show()
+        lifecycleScope.launchWhenStarted {
+            viewModel.getAllCharacters()?.collect { newCharacterList ->
+                charactersAdapter.submitData(newCharacterList)
+                binding.charactersPb.hideProgress()
+            }
+            viewModel.getNetworkState().collect { state ->
+                if (state is NetworkState.Unavailable) {
+                    binding.charactersPb.hideProgress()
+                    Toast.makeText(requireContext(), R.string.error_connectivity, Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
@@ -92,7 +94,7 @@ class CharacterListFragment : Fragment(R.layout.fragment_characters) {
     private fun updateNetwork() {
         with(binding.swipeCharacters) {
             setOnRefreshListener {
-                viewModel.loadAllCharacters()
+                viewModel.initAllCharacters()
                 this.isRefreshing = false
             }
         }
@@ -113,19 +115,12 @@ class CharacterListFragment : Fragment(R.layout.fragment_characters) {
     }
 
     private fun filterList(query: String?) {
-        if (query != null) {
-            val list = mutableListOf<SingleCharacterUi>()
-            val filterList = mutableListOf<SingleCharacterUi>()
-            viewModel.getAllCharacters().observe(viewLifecycleOwner) { newCharacterList ->
-                list.addAll(newCharacterList)
-            }
-            for (i in list) {
-                if (i.name.lowercase(Locale.ROOT).contains(query)) {
-                    filterList.add(i)
+        lifecycleScope.launchWhenStarted {
+            if (query != null) {
+                viewModel.getAllCharacters()?.collect { newCharacterList ->
+                    charactersAdapter.submitData(newCharacterList)
+                    binding.charactersPb.hideProgress()
                 }
-            }
-            if (filterList.isNotEmpty()) {
-                charactersAdapter.updateListCharacters(filterList)
             }
         }
     }

@@ -20,6 +20,7 @@ import com.example.rickandmorty.presentation.locations.detail.LocationDetailView
 import com.example.rickandmorty.presentation.locations.detail.mapper.LocationDetailsDomainToLocationDetailsUIMapper
 import com.example.rickandmorty.presentation.locations.list.LocationsViewModel
 import com.example.rickandmorty.presentation.locations.list.mapper.SingleLocationDomainToSingleLocationUiMapper
+import com.example.rickandmorty.utils.network.NetworkStateTracker
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoMap
@@ -32,11 +33,13 @@ class ViewModelModule {
     @Provides
     fun provideCharactersViewModel(
         charactersUseCase: CharactersUseCase,
-        singleCharacterDomainToSingleCharacterUiMapper: SingleCharacterDomainToSingleCharacterUiMapper
+        singleCharacterDomainToSingleCharacterUiMapper: SingleCharacterDomainToSingleCharacterUiMapper,
+        networkStateTracker: NetworkStateTracker
     ): ViewModel {
         return CharactersViewModel(
             charactersUseCase,
-            singleCharacterDomainToSingleCharacterUiMapper
+            singleCharacterDomainToSingleCharacterUiMapper,
+            networkStateTracker
         )
     }
 

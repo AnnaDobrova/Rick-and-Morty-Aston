@@ -1,9 +1,11 @@
 package com.example.rickandmorty.domain.character.list
 
+import androidx.paging.PagingData
 import com.example.rickandmorty.domain.character.list.model.SingleCharacterDomain
 import com.example.rickandmorty.utils.AnnaResponse
+import kotlinx.coroutines.flow.Flow
 
 interface CharactersRepository {
-    suspend fun getAllCharacters(): AnnaResponse<List<SingleCharacterDomain>>
-    suspend fun getAllCharactersFromLocal(): AnnaResponse<List<SingleCharacterDomain>>
+    fun getAllCharacters(): Flow<PagingData<SingleCharacterDomain>>
+    fun getAllCharactersFromLocal(): Flow<PagingData<SingleCharacterDomain>>
 }

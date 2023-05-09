@@ -1,5 +1,7 @@
 package com.example.rickandmorty.data.characters.list.mapper
 
+import androidx.paging.PagingData
+import androidx.paging.map
 import com.example.rickandmorty.data.characters.list.model.SingleCharacterData
 import com.example.rickandmorty.data.characters.list.model.SingleCharacterLocationData
 import com.example.rickandmorty.data.characters.list.model.SingleCharacterOriginData
@@ -12,7 +14,24 @@ class CharactersDataToListSingleCharacterDomainMapper {
     /**
      * 8 шаг нам нужно смаппить данные из Дата в Домейн
      */
-    fun map(from: List<SingleCharacterData>) = from.map {
+    fun mapFromRemote(from: List<SingleCharacterData>) = from.map {
+        SingleCharacterDomain(
+            id = it.id,
+            name = it.name,
+            status = it.status,
+            species = it.species,
+            type = it.type,
+            gender = it.gender,
+            origin = mapOrigin(it.origin),
+            location = mapLocation(it.location),
+            image = it.image,
+            episodes = it.episodes,
+            url = it.url,
+            created = it.created,
+        )
+    }
+
+    fun mapFromLocal(from: PagingData<SingleCharacterData>) = from.map {
         SingleCharacterDomain(
             id = it.id,
             name = it.name,

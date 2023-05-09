@@ -1,7 +1,7 @@
 package com.example.rickandmorty.data.local.characters
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -12,7 +12,7 @@ import com.example.rickandmorty.data.characters.list.model.SingleCharacterData
 interface CharacterLocalDao {
 
     @Query("SELECT * FROM CharacterListEntity")
-    suspend fun getCharacterList(): List<SingleCharacterData>
+    fun getCharacterList(): PagingSource<Int, SingleCharacterData>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun setCharacterList(characterList: List<SingleCharacterData>)
@@ -20,6 +20,6 @@ interface CharacterLocalDao {
     @Update
     suspend fun updateCharacterList(characterList: List<SingleCharacterData>)
 
-    @Delete
-    suspend fun deleteCharacterList(characterList: List<SingleCharacterData>)
+    @Query("DELETE FROM CharacterListEntity")
+    suspend fun deleteCharacterList()
 }

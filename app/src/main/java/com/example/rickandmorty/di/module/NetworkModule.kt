@@ -10,8 +10,7 @@ import com.example.rickandmorty.data.locations.detail.api.LocationDetailsNetwork
 import com.example.rickandmorty.data.locations.list.api.LocationNetworkDataSours
 import com.example.rickandmorty.di.scope.ActivityScope
 import com.example.rickandmorty.utils.inteceptor.ChukerInterceptor
-import com.example.rickandmorty.utils.inteceptor.ConnectivityInterceptor
-import com.example.rickandmorty.utils.inteceptor.NetworkExceptionInterceptor
+import com.example.rickandmorty.utils.network.NetworkStateTracker
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -25,9 +24,13 @@ private const val BASE_URL = "https://rickandmortyapi.com/api/"
 @Module
 class NetworkModule {
 
-    /**
-     * Тут происходит создание и запуск нашего ретрофита
-     */
+    @Provides
+    @ActivityScope
+    fun provideNetworkStatusTracker(
+        context: Context
+    ): NetworkStateTracker = NetworkStateTracker(context)
+
+
     @Provides
     @ActivityScope
     fun provideRetrofit(
@@ -43,14 +46,10 @@ class NetworkModule {
     fun providesOkHttpClient(
         chuckerInterceptor: ChuckerInterceptor,
         httpLoggingInterceptor: HttpLoggingInterceptor,
-        networkExceptionInterceptor: NetworkExceptionInterceptor,
-        connectivityInterceptor: ConnectivityInterceptor
     ): OkHttpClient = OkHttpClient.Builder().writeTimeout(1, TimeUnit.MINUTES)
         .readTimeout(1, TimeUnit.MINUTES)
         .callTimeout(1, TimeUnit.MINUTES)
         .retryOnConnectionFailure(true)
-        .addInterceptor(networkExceptionInterceptor)
-        .addInterceptor(connectivityInterceptor)
         .addInterceptor(httpLoggingInterceptor)
         .addInterceptor(chuckerInterceptor)
         .build()
@@ -59,16 +58,6 @@ class NetworkModule {
     @ActivityScope
     fun providesChuckerInterceptor(context: Context) =
         ChukerInterceptor(context).intercept()
-
-    @Provides
-    @ActivityScope
-    fun providesNetworkExceptionInterceptor() =
-        NetworkExceptionInterceptor()
-
-    @Provides
-    @ActivityScope
-    fun providesConnectivityInterceptor(context: Context) =
-        ConnectivityInterceptor(context)
 
     @Provides
     @ActivityScope
