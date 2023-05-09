@@ -1,5 +1,7 @@
 package com.example.rickandmorty.presentation.characters.list
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
@@ -23,7 +25,7 @@ class CharactersViewModel @Inject constructor(
     private val networkStateTracker: NetworkStateTracker
 ) : ViewModel() {
 
-    private val _networkState = networkStateTracker.networkStatus.flowOn(Dispatchers.IO)
+    private val _networkState = MutableLiveData(true)
 
     private var characters: Flow<PagingData<SingleCharacterDomain>>? = null
 
@@ -32,13 +34,10 @@ class CharactersViewModel @Inject constructor(
     }
 
     fun initAllCharacters() {
-        viewModelScope.launch {
-            _networkState.collect { status ->
-                when (status) {
-                    is NetworkState.Available -> loadAllCharacters()
-                    is NetworkState.Unavailable -> loadAllCharactersFromLocal()
-                }
-            }
+        if (networkStateTracker.isNetworkAvailable()) {
+            loadAllCharacters()
+        } else {
+            loadAllCharactersFromLocal()
         }
     }
 
@@ -46,7 +45,7 @@ class CharactersViewModel @Inject constructor(
         mapperFromDomainToUi.map(it)
     }
 
-    fun getNetworkState(): Flow<NetworkState> = _networkState
+    fun getNetworkState(): LiveData<Boolean> = _networkState
 
     private fun loadAllCharacters() {
         characters = charactersUseCase.getAllCharacters().cachedIn(viewModelScope)

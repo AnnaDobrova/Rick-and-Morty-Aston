@@ -28,7 +28,6 @@ class CharactersPagingSource(
             val response = charactersService.getAllCharacters(currentPage).body()
             responseData = mapperFromDataToDomain.mapFromRemote(response?.characters ?: emptyList())
             if (response?.characters != null && response.characters.isNotEmpty()) {
-                charactersDao.deleteCharacterList()
                 charactersDao.setCharacterList(response.characters)
             }
             LoadResult.Page(

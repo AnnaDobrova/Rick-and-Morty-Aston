@@ -2,40 +2,30 @@ package com.example.rickandmorty.utils.network
 
 import android.content.Context
 import android.net.ConnectivityManager
-import android.net.Network
 import android.net.NetworkCapabilities
-import android.net.NetworkRequest
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.callbackFlow
+import android.os.Build
 
-class NetworkStateTracker(context: Context) {
+class NetworkStateTracker(
+    private val context: Context
+) {
 
-    private val connectivityManager =
-        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-
-    val networkStatus = callbackFlow {
-        val networkStateCallback = object : ConnectivityManager.NetworkCallback() {
-
-            override fun onUnavailable() {
-                trySend(NetworkState.Unavailable).isSuccess
+    fun isNetworkAvailable(): Boolean {
+        val connectivityManager =
+            (context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager)
+        connectivityManager.apply {
+            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                getNetworkCapabilities(activeNetwork)?.run {
+                    when {
+                        hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+                        hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+                        hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+                        else -> false
+                    }
+                } ?: false
+            } else {
+                connectivityManager.activeNetworkInfo?.isConnected
+                    ?: false
             }
-
-            override fun onAvailable(network: Network) {
-                trySend(NetworkState.Available).isSuccess
-            }
-
-            override fun onLost(network: Network) {
-                trySend(NetworkState.Unavailable).isSuccess
-            }
-        }
-
-        val request = NetworkRequest.Builder()
-            .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-            .build()
-        connectivityManager.registerNetworkCallback(request, networkStateCallback)
-
-        awaitClose {
-            connectivityManager.unregisterNetworkCallback(networkStateCallback)
         }
     }
 }

@@ -60,23 +60,23 @@ class CharacterListFragment : Fragment(R.layout.fragment_characters) {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = ViewModelProvider(this, viewModelFactory)[CharactersViewModel::class.java]
-
+        viewModel.initAllCharacters()
         binding.charactersPb.showProgress()
         observeVM()
         initRecycler()
-        updateNetwork()
-        searchCharacters()
-        filter()
+        updateCharactersRequest()
+        initSearchCharacters()
+        initFilter()
     }
 
     private fun observeVM() {
         lifecycleScope.launchWhenStarted {
             viewModel.getAllCharacters()?.collect { newCharacterList ->
-                charactersAdapter.submitData(newCharacterList)
                 binding.charactersPb.hideProgress()
+                charactersAdapter.submitData(newCharacterList)
             }
-            viewModel.getNetworkState().collect { state ->
-                if (state is NetworkState.Unavailable) {
+            viewModel.getNetworkState().observe(viewLifecycleOwner) { isNetworkAvailable ->
+                if (isNetworkAvailable) {
                     binding.charactersPb.hideProgress()
                     Toast.makeText(requireContext(), R.string.error_connectivity, Toast.LENGTH_SHORT).show()
                 }
@@ -91,7 +91,7 @@ class CharacterListFragment : Fragment(R.layout.fragment_characters) {
         }
     }
 
-    private fun updateNetwork() {
+    private fun updateCharactersRequest() {
         with(binding.swipeCharacters) {
             setOnRefreshListener {
                 viewModel.initAllCharacters()
@@ -100,7 +100,7 @@ class CharacterListFragment : Fragment(R.layout.fragment_characters) {
         }
     }
 
-    private fun searchCharacters() {
+    private fun initSearchCharacters() {
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
             androidx.appcompat.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -125,7 +125,7 @@ class CharacterListFragment : Fragment(R.layout.fragment_characters) {
         }
     }
 
-    private fun filter() {
+    private fun initFilter() {
         binding.filterIcon.setOnClickListener {
             val dialog = DialogFragmentCharacters()
             dialog.show(parentFragmentManager, DialogFragmentCharacters.TAG)
