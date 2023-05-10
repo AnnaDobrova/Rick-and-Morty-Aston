@@ -1,5 +1,6 @@
 package com.example.rickandmorty.data.episodes.list.model
 
+import androidx.room.Entity
 import com.example.rickandmorty.data.characters.list.model.SingleCharacterInfoData
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName

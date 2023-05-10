@@ -31,6 +31,18 @@ class EpisodesViewModel @Inject constructor(
                 is AnnaResponse.Success -> episodes.postValue(mapperFromDomainToUi.map(response.data))
                 is AnnaResponse.Failure -> {
                     error.postValue(response.error.message)
+                    loadAllEpisodeFromLocal()
+                }
+            }
+        }
+    }
+
+    private fun loadAllEpisodeFromLocal() {
+        viewModelScope.launch(Dispatchers.IO) {
+            when (val response = episodesUseCase.getAllEpisodeFromLocal()) {
+                is AnnaResponse.Success -> episodes.postValue(mapperFromDomainToUi.map(response.data))
+                is AnnaResponse.Failure -> {
+                    error.postValue(response.error.message)
                 }
             }
         }

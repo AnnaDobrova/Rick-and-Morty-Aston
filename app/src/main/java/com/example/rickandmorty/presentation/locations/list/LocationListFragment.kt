@@ -64,7 +64,6 @@ class LocationListFragment : Fragment(R.layout.fragment_locations) {
         viewModel = ViewModelProvider(this, viewModelFactory)[LocationsViewModel::class.java]
 
         binding.locationsPb.showProgress()
-        isConnect()
         observerVM()
         initRecycler()
         updateNetwork()
@@ -96,24 +95,6 @@ class LocationListFragment : Fragment(R.layout.fragment_locations) {
             setOnRefreshListener {
                 viewModel.loadAllLocations()
                 this.isRefreshing = false
-            }
-        }
-    }
-
-    private fun isConnect(): Boolean {
-        val connectivityManager = (context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager)
-        connectivityManager.apply {
-            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                getNetworkCapabilities(activeNetwork)?.run {
-                    when {
-                        hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
-                        hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
-                        hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
-                        else -> false
-                    }
-                } ?: false
-            } else {
-                activeNetworkInfo?.isConnected ?: false
             }
         }
     }

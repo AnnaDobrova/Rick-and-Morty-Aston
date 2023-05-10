@@ -12,4 +12,8 @@ class LocationUseCaseImpl @Inject constructor(
         return locationRepository.getLocationList()
     }
 
+    override suspend fun getAllLocationFromLocal(): AnnaResponse<List<SingleLocationDomain>> {
+        return locationRepository.getLocationListFromLocal()
+    }
+
 }

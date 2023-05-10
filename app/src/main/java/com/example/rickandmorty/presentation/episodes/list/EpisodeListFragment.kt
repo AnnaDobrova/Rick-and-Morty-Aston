@@ -63,7 +63,6 @@ class EpisodeListFragment : Fragment(R.layout.fragment_episodes) {
         viewModel = ViewModelProvider(this, viewModelFactory)[EpisodesViewModel::class.java]
 
         binding.episodesPb.showProgress()
-        isConnect()
         observeVM()
         initRecycler()
         updateNetwork()
@@ -97,23 +96,6 @@ class EpisodeListFragment : Fragment(R.layout.fragment_episodes) {
         }
     }
 
-    private fun isConnect(): Boolean {
-        val connectivityManager = (context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager)
-        connectivityManager.apply {
-            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                getNetworkCapabilities(activeNetwork)?.run {
-                    when {
-                        hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
-                        hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
-                        hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
-                        else -> false
-                    }
-                } ?: false
-            } else {
-                activeNetworkInfo?.isConnected ?: false
-            }
-        }
-    }
 
     private fun searchEpisodes() {
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener,

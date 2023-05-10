@@ -11,4 +11,8 @@ class EpisodeUseCaseImpl @Inject constructor(
     override suspend fun getAllEpisodes(): AnnaResponse<List<SingleEpisodeListDomain>> {
         return episodeRepository.getAllEpisodes()
     }
+
+    override suspend fun getAllEpisodeFromLocal(): AnnaResponse<List<SingleEpisodeListDomain>> {
+        return episodeRepository.getEpisodeFromLocal()
+    }
 }

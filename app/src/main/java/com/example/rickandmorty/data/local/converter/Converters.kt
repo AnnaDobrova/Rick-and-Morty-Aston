@@ -3,6 +3,7 @@ package com.example.rickandmorty.data.local.converter
 import androidx.room.TypeConverter
 import com.example.rickandmorty.data.characters.list.model.SingleCharacterLocationData
 import com.example.rickandmorty.data.characters.list.model.SingleCharacterOriginData
+import com.example.rickandmorty.data.episodes.list.model.SingleEpisodeListData
 import com.google.gson.Gson
 
 class Converters {
@@ -34,5 +35,10 @@ class Converters {
 
     @TypeConverter fun toList(stringToSource: String?): List<String> {
         return stringToSource?.split(",") ?: emptyList()
+    }
+
+    //Для объекта SingleEpisodeListData
+    @TypeConverter fun fromSingleEpisodeListData(sourceToString: SingleEpisodeListData?): String {
+        return Gson().toJson(sourceToString)
     }
 }

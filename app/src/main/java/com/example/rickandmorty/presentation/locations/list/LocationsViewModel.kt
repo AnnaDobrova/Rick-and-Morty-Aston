@@ -31,6 +31,18 @@ class LocationsViewModel @Inject constructor(
                 is AnnaResponse.Success -> locations.postValue(mapperFromDomainToUi.map(response.data))
                 is AnnaResponse.Failure -> {
                     error.postValue(response.error.message)
+                    loadAllEpisodeFromLocal()
+                }
+            }
+        }
+    }
+
+    private fun loadAllEpisodeFromLocal() {
+        viewModelScope.launch(Dispatchers.IO) {
+            when (val response = locationsUseCase.getAllLocationFromLocal()) {
+                is AnnaResponse.Success -> locations.postValue(mapperFromDomainToUi.map(response.data))
+                is AnnaResponse.Failure -> {
+                    error.postValue(response.error.message)
                 }
             }
         }
