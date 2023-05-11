@@ -38,6 +38,23 @@ class EpisodeDetailViewModel @Inject constructor(
 
                     is AnnaResponse.Failure -> {
                         Throwable(annaResponse.error)
+                        loadEpisodeByIdLocal(id)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun loadEpisodeByIdLocal(id: Int) {
+        viewModelScope.launch {
+            episodeDetailUseCase.loadEpisodeByIdFromLocal(id).collect() { annaResponse ->
+                when (annaResponse) {
+                    is AnnaResponse.Success -> {
+                        episodes.postValue(mapperFromDomainToUi.map(annaResponse.data))
+                    }
+
+                    is AnnaResponse.Failure -> {
+                        Throwable(annaResponse.error)
                     }
                 }
             }

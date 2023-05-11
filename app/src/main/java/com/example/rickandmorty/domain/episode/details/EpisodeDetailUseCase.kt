@@ -6,4 +6,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface EpisodeDetailUseCase {
     fun loadEpisodeById ( int: Int): Flow<AnnaResponse<EpisodeDetailsDomain>>
+    fun loadEpisodeByIdFromLocal(int: Int):  Flow<AnnaResponse<EpisodeDetailsDomain>>
 }

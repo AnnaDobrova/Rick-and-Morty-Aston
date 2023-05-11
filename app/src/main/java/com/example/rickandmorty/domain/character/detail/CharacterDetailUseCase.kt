@@ -6,4 +6,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface CharacterDetailUseCase {
     fun loadCharacterById(id: Int): Flow<AnnaResponse<CharacterDetailDomain>>
+    fun loadCharacterByIdFromLocal(id: Int): Flow<AnnaResponse<CharacterDetailDomain>>
 }

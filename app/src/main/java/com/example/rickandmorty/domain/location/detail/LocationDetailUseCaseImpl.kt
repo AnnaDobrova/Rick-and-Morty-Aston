@@ -13,4 +13,8 @@ class LocationDetailUseCaseImpl @Inject constructor(
         return locationDetailRepository.loadLocationsById(id)
     }
 
+    override fun loadLocationByIdFromLocal(id: Int): Flow<AnnaResponse<LocationDetailsDomain>> {
+        return locationDetailRepository.loadLocationsByIdFromLocal(id)
+    }
+
 }

@@ -1,9 +1,14 @@
 package com.example.rickandmorty.data.episodes.detail.model
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.Expose
+import com.google.gson.annotations.SerializedName
 
-data class SingleEpisodeDetailData (
+@Entity(tableName = "SingleEpisodeDetailEntity")
+data class SingleEpisodeDetailData(
     @Expose
+    @PrimaryKey(autoGenerate = true)
     val id: Int,
     @Expose
     val name: String,
@@ -17,4 +22,4 @@ data class SingleEpisodeDetailData (
     val url: String,
     @Expose
     val created: String
-    )
+)

@@ -14,4 +14,8 @@ class CharacterDetailUseCaseImpl @Inject constructor(
         return characterDetailsRepository.loadCharacterById(id)
     }
 
+    override fun loadCharacterByIdFromLocal(id: Int): Flow<AnnaResponse<CharacterDetailDomain>> {
+        return characterDetailsRepository.loadCharacterByIdFromLocal(id)
+    }
+
 }

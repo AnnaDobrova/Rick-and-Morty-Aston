@@ -37,6 +37,23 @@ class LocationDetailViewModel @Inject constructor(
 
                     is AnnaResponse.Failure -> {
                         Throwable(annaResponse.error)
+                        loadLocationByIdFromLocal(id)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun loadLocationByIdFromLocal(id: Int) {
+        viewModelScope.launch {
+            locationDetailUseCase.loadLocationByIdFromLocal(id).collect() { annaResponse ->
+                when (annaResponse) {
+                    is AnnaResponse.Success -> {
+                        locations.postValue(mapperFromDomainToUi.map(annaResponse.data))
+                    }
+
+                    is AnnaResponse.Failure -> {
+                        Throwable(annaResponse.error)
                     }
                 }
             }

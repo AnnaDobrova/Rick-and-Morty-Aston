@@ -9,7 +9,11 @@ class EpisodeDetailUseCaseImpl @Inject constructor(
     private val episodeDetailsRepository: EpisodeDetailRepository
 ) : EpisodeDetailUseCase {
 
-    override fun loadEpisodeById(int: Int): Flow<AnnaResponse<EpisodeDetailsDomain>>{
-     return   episodeDetailsRepository.loadEpisodeById(int)
+    override fun loadEpisodeById(int: Int): Flow<AnnaResponse<EpisodeDetailsDomain>> {
+        return episodeDetailsRepository.loadEpisodeById(int)
+    }
+
+    override fun loadEpisodeByIdFromLocal(int: Int): Flow<AnnaResponse<EpisodeDetailsDomain>> {
+        return episodeDetailsRepository.loadEpisodeByIdLocal(int)
     }
 }

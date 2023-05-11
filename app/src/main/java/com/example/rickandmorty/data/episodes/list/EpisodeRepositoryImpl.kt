@@ -2,7 +2,7 @@ package com.example.rickandmorty.data.episodes.list
 
 import com.example.rickandmorty.data.episodes.list.api.EpisodeNetworkDataSource
 import com.example.rickandmorty.data.episodes.list.mapper.EpisodeDataToListSingleEpisodeDomainMapper
-import com.example.rickandmorty.data.local.episodes.EpisodeLocalDao
+import com.example.rickandmorty.data.local.list.episodes.EpisodeLocalDao
 import com.example.rickandmorty.domain.episode.list.EpisodesRepository
 import com.example.rickandmorty.domain.episode.list.model.SingleEpisodeListDomain
 import com.example.rickandmorty.utils.AnnaResponse

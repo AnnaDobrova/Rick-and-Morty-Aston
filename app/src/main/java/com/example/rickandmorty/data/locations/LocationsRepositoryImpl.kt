@@ -1,6 +1,6 @@
 package com.example.rickandmorty.data.locations
 
-import com.example.rickandmorty.data.local.locations.LocationLocalDao
+import com.example.rickandmorty.data.local.list.locations.LocationLocalDao
 import com.example.rickandmorty.data.locations.list.api.LocationNetworkDataSours
 import com.example.rickandmorty.data.locations.list.mapper.LocationListDataToLocationListDomainMapper
 import com.example.rickandmorty.domain.location.list.LocationRepository

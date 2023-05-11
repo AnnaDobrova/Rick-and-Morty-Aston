@@ -12,6 +12,7 @@ import com.example.rickandmorty.presentation.characters.detail.model.CharacterDe
 import com.example.rickandmorty.presentation.episodes.details.mapper.EpisodeDetailDomainToEpisodeDetailUiMapper
 import com.example.rickandmorty.presentation.episodes.details.model.EpisodeDetailUi
 import com.example.rickandmorty.utils.AnnaResponse
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -38,7 +39,22 @@ class CharactersDetailViewModel @Inject constructor(
 
                     is AnnaResponse.Failure -> {
                         error.postValue(Throwable(annaResponse.error).message)
+                        getCharacterByIdFromLocal(id)
                     }
+                }
+            }
+        }
+    }
+
+    private suspend fun getCharacterByIdFromLocal(id: Int) {
+        characterDetailUseCase.loadCharacterByIdFromLocal(id).collect { annaResponse ->
+            when (annaResponse) {
+                is AnnaResponse.Success -> {
+                    character.postValue(mapperFromDomainToUi.map(annaResponse.data))
+                }
+
+                is AnnaResponse.Failure -> {
+                    error.postValue(Throwable(annaResponse.error).message)
                 }
             }
         }

@@ -11,7 +11,7 @@ class CharacterDetailDataToCharacterDetailDomainMapper {
 
     fun map(from: CharacterDetailData) =
         CharacterDetailDomain(
-            id = from.id,
+            id = from.characterDetailId,
             name = from.name,
             status = from.status,
             species = from.species,

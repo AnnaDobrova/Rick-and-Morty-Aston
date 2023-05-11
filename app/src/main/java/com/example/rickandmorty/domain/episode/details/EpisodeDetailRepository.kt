@@ -5,5 +5,6 @@ import com.example.rickandmorty.utils.AnnaResponse
 import kotlinx.coroutines.flow.Flow
 
 interface EpisodeDetailRepository {
-    fun loadEpisodeById (id: Int): Flow<AnnaResponse<EpisodeDetailsDomain>>
+    fun loadEpisodeById(id: Int): Flow<AnnaResponse<EpisodeDetailsDomain>>
+    fun loadEpisodeByIdLocal(id: Int): Flow<AnnaResponse<EpisodeDetailsDomain>>
 }

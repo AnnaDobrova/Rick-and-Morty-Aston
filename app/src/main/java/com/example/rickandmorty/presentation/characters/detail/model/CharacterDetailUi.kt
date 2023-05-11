@@ -10,7 +10,7 @@ data class CharacterDetailUi(
     val id: Int,
     val image: String,
     val name: String,
-    val species: String,
+    val species: String?,
     val gender: String,
     val status: String,
     val location: CharacterDetailLocationUi,

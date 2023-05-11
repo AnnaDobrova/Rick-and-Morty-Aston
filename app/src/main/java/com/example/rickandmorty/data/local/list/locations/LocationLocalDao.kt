@@ -1,4 +1,4 @@
-package com.example.rickandmorty.data.local.locations
+package com.example.rickandmorty.data.local.list.locations
 
 import androidx.room.Dao
 import androidx.room.Delete

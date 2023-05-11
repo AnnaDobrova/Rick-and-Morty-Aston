@@ -1,11 +1,16 @@
 package com.example.rickandmorty.data.characters.detail.model
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
+@Entity (tableName = "CharacterDetailEntity")
 data class CharacterDetailData(
+    @SerializedName("id")
     @Expose
-    val id: Long,
+    @PrimaryKey(autoGenerate = true)
+    val characterDetailId: Long,
     @Expose
     val name: String,
     @Expose

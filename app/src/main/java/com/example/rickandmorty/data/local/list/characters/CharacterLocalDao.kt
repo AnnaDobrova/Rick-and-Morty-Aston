@@ -1,7 +1,6 @@
-package com.example.rickandmorty.data.local.characters
+package com.example.rickandmorty.data.local.list.characters
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -20,6 +19,6 @@ interface CharacterLocalDao {
     @Update
     suspend fun updateCharacterList(characterList: List<SingleCharacterData>)
 
-    @Delete
-    suspend fun deleteCharacterList(characterList: List<SingleCharacterData>)
+    @Query("DELETE FROM CharacterListEntity")
+    suspend fun deleteCharacterList()
 }

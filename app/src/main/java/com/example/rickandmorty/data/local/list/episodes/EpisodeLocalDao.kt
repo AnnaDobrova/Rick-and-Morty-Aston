@@ -1,4 +1,4 @@
-package com.example.rickandmorty.data.local.episodes
+package com.example.rickandmorty.data.local.list.episodes
 
 import androidx.room.Dao
 import androidx.room.Delete

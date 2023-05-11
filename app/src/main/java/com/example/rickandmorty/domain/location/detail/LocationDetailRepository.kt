@@ -6,4 +6,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface LocationDetailRepository {
      fun loadLocationsById(id: Int): Flow<AnnaResponse<LocationDetailsDomain>>
+     fun loadLocationsByIdFromLocal(id: Int): Flow<AnnaResponse<LocationDetailsDomain>>
 }
