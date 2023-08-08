@@ -27,27 +27,42 @@ class CharactersViewModel @Inject constructor(
 
     fun loadAllCharacters() {
         viewModelScope.launch(Dispatchers.IO) {
-            when (val response = charactersUseCase.getAllCharacters()) {
-                is AnnaResponse.Success -> characters.postValue(mapperFromDomainToUi.map(response.data))
-                is AnnaResponse.Failure -> {
-                    error.postValue(response.error.message)
-                    loadAllCharactersFromLocal()
-                }
-            }
-        }
-    }
+            charactersUseCase.getAllCharacters().collect { annaResponse ->
+                when (annaResponse) {
+                    is AnnaResponse.Success -> (characters.postValue(
+                        mapperFromDomainToUi.map(
+                            annaResponse.data
+                        )
+                    )
+                            )
 
-    private fun loadAllCharactersFromLocal() {
-        viewModelScope.launch(Dispatchers.IO) {
-            when (val response = charactersUseCase.getAllCharactersFromLocal()) {
-                is AnnaResponse.Success -> characters.postValue(mapperFromDomainToUi.map(response.data))
-                is AnnaResponse.Failure -> {
-                    error.postValue(response.error.message)
+                    is AnnaResponse.Failure -> (
+                            loadAllCharactersFromLocal()
+                            )
                 }
+
             }
         }
     }
 
     fun getAllCharacters(): LiveData<List<SingleCharacterUi>> = characters
     fun getError(): LiveData<String> = error
+
+    private fun loadAllCharactersFromLocal() {
+        viewModelScope.launch(Dispatchers.IO) {
+            charactersUseCase.getAllCharactersFromLocal().collect { annaResponse ->
+                when (annaResponse) {
+                    is AnnaResponse.Success -> characters.postValue(
+                        mapperFromDomainToUi.map(
+                            annaResponse.data
+                        )
+                    )
+
+                    is AnnaResponse.Failure -> error.postValue(annaResponse.error.message)
+                }
+            }
+        }
+
+    }
+
 }

@@ -6,6 +6,8 @@ import com.example.rickandmorty.data.local.list.characters.CharacterLocalDao
 import com.example.rickandmorty.domain.character.list.CharactersRepository
 import com.example.rickandmorty.domain.character.list.model.SingleCharacterDomain
 import com.example.rickandmorty.utils.AnnaResponse
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class CharactersRepositoryImpl @Inject constructor(
@@ -14,29 +16,38 @@ class CharactersRepositoryImpl @Inject constructor(
     private val characterLocalDao: CharacterLocalDao,
 ) : CharactersRepository {
 
-    override suspend fun getAllCharacters(): AnnaResponse<List<SingleCharacterDomain>> {
-        return try {
-            val response = charactersNetworkDataSource.getAllCharacters()
-            characterLocalDao.deleteCharacterList()
-            characterLocalDao.setCharacterList(response.body()?.characters ?: emptyList())
-            AnnaResponse.Success(
-                mapperFromDataToDomain.map(
-                    response.body()?.characters ?: emptyList()
-                )
+    override fun getAllCharacters(): Flow<AnnaResponse<List<SingleCharacterDomain>>> {
+        return flow {
+            emit(
+                try {
+                    val response = charactersNetworkDataSource.getAllCharacters()
+                    characterLocalDao.deleteCharacterList()
+                    characterLocalDao.setCharacterList(response.body()?.characters ?: emptyList())
+                    AnnaResponse.Success(
+                        mapperFromDataToDomain.map(
+                            response.body()?.characters ?: emptyList()
+                        )
+                    )
+                } catch (e: Throwable) {
+                    AnnaResponse.Failure(e)
+                }
             )
-        } catch (e: Throwable) {
-            AnnaResponse.Failure(e)
+
         }
     }
 
-    override suspend fun getAllCharactersFromLocal(): AnnaResponse<List<SingleCharacterDomain>> {
-        return try {
-            val response = characterLocalDao.getCharacterList()
-            AnnaResponse.Success(
-                mapperFromDataToDomain.map(response)
+    override fun getAllCharactersFromLocal(): Flow<AnnaResponse<List<SingleCharacterDomain>>> {
+        return flow {
+            emit(
+                try {
+                    val response = characterLocalDao.getCharacterList()
+                    AnnaResponse.Success(
+                        mapperFromDataToDomain.map(response)
+                    )
+                } catch (e: Throwable) {
+                    AnnaResponse.Failure(e)
+                }
             )
-        } catch (e: Throwable) {
-            AnnaResponse.Failure(e)
         }
     }
 }
