@@ -11,5 +11,5 @@ interface CharactersNetworkDataSource {
      * В обертку Call мы засовываем результат преобразования нашего json'а
      */
     @GET("character")
-    fun getAllCharacters(): Response<CharactersData>
+   suspend fun getAllCharacters(): Response<CharactersData>
 }

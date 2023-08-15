@@ -21,11 +21,11 @@ class CharactersRepositoryImpl @Inject constructor(
             emit(
                 try {
                     val response = charactersNetworkDataSource.getAllCharacters()
-                    characterLocalDao.deleteCharacterList()
                     characterLocalDao.setCharacterList(response.body()?.characters ?: emptyList())
                     AnnaResponse.Success(
                         mapperFromDataToDomain.map(
-                            response.body()?.characters ?: emptyList()
+                            response.body()?.characters
+                                ?: emptyList()
                         )
                     )
                 } catch (e: Throwable) {
@@ -36,17 +36,13 @@ class CharactersRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getAllCharactersFromLocal(): Flow<AnnaResponse<List<SingleCharacterDomain>>> {
+    override fun getAllCharactersFromLocal(): Flow<List<SingleCharacterDomain>> {
         return flow {
             emit(
-                try {
+                kotlin.runCatching {
                     val response = characterLocalDao.getCharacterList()
-                    AnnaResponse.Success(
-                        mapperFromDataToDomain.map(response)
-                    )
-                } catch (e: Throwable) {
-                    AnnaResponse.Failure(e)
-                }
+                    mapperFromDataToDomain.map(response)
+                }.getOrDefault(emptyList())
             )
         }
     }

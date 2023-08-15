@@ -1,37 +1,40 @@
 package com.example.rickandmorty.presentation.episodes.list
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.rickandmorty.domain.episode.list.EpisodeUseCase
 import com.example.rickandmorty.presentation.episodes.list.mapper.SingleEpisodeDomainToSingleEpisodeUiMapper
 import com.example.rickandmorty.presentation.episodes.list.model.SingleEpisodeUI
 import com.example.rickandmorty.utils.AnnaResponse
+import com.example.rickandmorty.utils.Connectivity
+import com.example.rickandmorty.utils.ViewState
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class EpisodesViewModel @Inject constructor(
     private val episodesUseCase: EpisodeUseCase,
-    private val mapperFromDomainToUi: SingleEpisodeDomainToSingleEpisodeUiMapper
+    private val mapperFromDomainToUi: SingleEpisodeDomainToSingleEpisodeUiMapper,
+    private val connectivity: Connectivity
 ) : ViewModel() {
 
-    private val episodes = MutableLiveData<List<SingleEpisodeUI>>(emptyList())
-
-    private val error = MutableLiveData<String>()
+    private val episodes = MutableStateFlow<ViewState<List<SingleEpisodeUI>>>(ViewState.Loading)
 
     init {
-        loadAllEpisodes()
+        load()
     }
 
-    fun loadAllEpisodes() {
+    private fun loadAllEpisodes() {
         viewModelScope.launch(Dispatchers.IO) {
-            when (val response = episodesUseCase.getAllEpisodes()) {
-                is AnnaResponse.Success -> episodes.postValue(mapperFromDomainToUi.map(response.data))
-                is AnnaResponse.Failure -> {
-                    error.postValue(response.error.message)
-                    loadAllEpisodeFromLocal()
+            episodesUseCase.getAllEpisodes().collect { annaResponse ->
+                episodes.value = when (annaResponse) {
+                    is AnnaResponse.Success ->
+                        ViewState.Data(mapperFromDomainToUi.map(annaResponse.data))
+
+                    is AnnaResponse.Failure -> {
+                        ViewState.Error(annaResponse.error)
+                    }
                 }
             }
         }
@@ -39,15 +42,20 @@ class EpisodesViewModel @Inject constructor(
 
     private fun loadAllEpisodeFromLocal() {
         viewModelScope.launch(Dispatchers.IO) {
-            when (val response = episodesUseCase.getAllEpisodeFromLocal()) {
-                is AnnaResponse.Success -> episodes.postValue(mapperFromDomainToUi.map(response.data))
-                is AnnaResponse.Failure -> {
-                    error.postValue(response.error.message)
-                }
+            episodesUseCase.getAllEpisodeFromLocal().collect { data ->
+                episodes.value = ViewState.Data(mapperFromDomainToUi.map(data))
             }
         }
     }
 
-    fun getAllEpisodes(): LiveData<List<SingleEpisodeUI>> = episodes
-    fun getError(): LiveData<String> = error
+    fun load() {
+        if (connectivity.isNetworkAvailable()) {
+            loadAllEpisodes()
+        } else {
+            episodes.value = ViewState.Error(Throwable("Отсутствует интернет соединение"))
+            loadAllEpisodeFromLocal()
+        }
+    }
+
+    fun getAllEpisodes(): MutableStateFlow<ViewState<List<SingleEpisodeUI>>> = episodes
 }

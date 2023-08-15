@@ -20,6 +20,7 @@ import com.example.rickandmorty.presentation.locations.detail.LocationDetailView
 import com.example.rickandmorty.presentation.locations.detail.mapper.LocationDetailsDomainToLocationDetailsUIMapper
 import com.example.rickandmorty.presentation.locations.list.LocationsViewModel
 import com.example.rickandmorty.presentation.locations.list.mapper.SingleLocationDomainToSingleLocationUiMapper
+import com.example.rickandmorty.utils.Connectivity
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoMap
@@ -32,11 +33,13 @@ class ViewModelModule {
     @Provides
     fun provideCharactersViewModel(
         charactersUseCase: CharactersUseCase,
-        singleCharacterDomainToSingleCharacterUiMapper: SingleCharacterDomainToSingleCharacterUiMapper
+        singleCharacterDomainToSingleCharacterUiMapper: SingleCharacterDomainToSingleCharacterUiMapper,
+        connectivity: Connectivity
     ): ViewModel {
         return CharactersViewModel(
             charactersUseCase,
-            singleCharacterDomainToSingleCharacterUiMapper
+            singleCharacterDomainToSingleCharacterUiMapper,
+            connectivity
         )
     }
 
@@ -62,11 +65,13 @@ class ViewModelModule {
     @Provides
     fun provideEpisodesViewModel(
         episodeUseCase: EpisodeUseCase,
-        singleEpisodeDomainToSingleEpisodeUiMapper: SingleEpisodeDomainToSingleEpisodeUiMapper
+        singleEpisodeDomainToSingleEpisodeUiMapper: SingleEpisodeDomainToSingleEpisodeUiMapper,
+        connectivity: Connectivity
     ): ViewModel {
         return EpisodesViewModel(
             episodeUseCase,
-            singleEpisodeDomainToSingleEpisodeUiMapper
+            singleEpisodeDomainToSingleEpisodeUiMapper,
+            connectivity
         )
     }
 

@@ -9,6 +9,7 @@ import com.example.rickandmorty.presentation.locations.list.mapper.SingleLocatio
 import com.example.rickandmorty.presentation.locations.list.model.SingleLocationUI
 import com.example.rickandmorty.utils.AnnaResponse
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,11 +28,18 @@ class LocationsViewModel @Inject constructor(
 
     fun loadAllLocations() {
         viewModelScope.launch(Dispatchers.IO) {
-            when (val response = locationsUseCase.getAllLocations()) {
-                is AnnaResponse.Success -> locations.postValue(mapperFromDomainToUi.map(response.data))
-                is AnnaResponse.Failure -> {
-                    error.postValue(response.error.message)
-                    loadAllEpisodeFromLocal()
+            locationsUseCase.getAllLocations().collect { annaResponse ->
+                when (annaResponse) {
+                    is AnnaResponse.Success -> locations.postValue(
+                        mapperFromDomainToUi.map(
+                            annaResponse.data
+                        )
+                    )
+
+                    is AnnaResponse.Failure -> {
+                        error.postValue(annaResponse.error.message)
+                        loadAllEpisodeFromLocal()
+                    }
                 }
             }
         }
@@ -39,12 +47,20 @@ class LocationsViewModel @Inject constructor(
 
     private fun loadAllEpisodeFromLocal() {
         viewModelScope.launch(Dispatchers.IO) {
-            when (val response = locationsUseCase.getAllLocationFromLocal()) {
-                is AnnaResponse.Success -> locations.postValue(mapperFromDomainToUi.map(response.data))
-                is AnnaResponse.Failure -> {
-                    error.postValue(response.error.message)
+            locationsUseCase.getAllLocationFromLocal().collect { annaResponse ->
+                when (annaResponse) {
+                    is AnnaResponse.Success -> locations.postValue(
+                        mapperFromDomainToUi.map(
+                            annaResponse.data
+                        )
+                    )
+
+                    is AnnaResponse.Failure -> {
+                        error.postValue(annaResponse.error.message)
+                    }
                 }
             }
+
         }
     }
 

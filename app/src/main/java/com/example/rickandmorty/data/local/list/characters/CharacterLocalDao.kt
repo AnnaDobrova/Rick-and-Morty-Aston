@@ -14,11 +14,11 @@ interface CharacterLocalDao {
     suspend fun getCharacterList(): List<SingleCharacterData>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun setCharacterList(characterList: List<SingleCharacterData>)
+    suspend fun setCharacterList(characterList: List<SingleCharacterData>)
 
     @Update
     suspend fun updateCharacterList(characterList: List<SingleCharacterData>)
 
     @Query("DELETE FROM CharacterListEntity")
-    fun deleteCharacterList()
+    suspend fun deleteCharacterList()
 }

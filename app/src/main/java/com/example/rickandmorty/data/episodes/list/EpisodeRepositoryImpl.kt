@@ -6,6 +6,8 @@ import com.example.rickandmorty.data.local.list.episodes.EpisodeLocalDao
 import com.example.rickandmorty.domain.episode.list.EpisodesRepository
 import com.example.rickandmorty.domain.episode.list.model.SingleEpisodeListDomain
 import com.example.rickandmorty.utils.AnnaResponse
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class EpisodeRepositoryImpl @Inject constructor(
@@ -14,28 +16,34 @@ class EpisodeRepositoryImpl @Inject constructor(
     private val episodeLocalDao: EpisodeLocalDao
 ) : EpisodesRepository {
 
-    override suspend fun getAllEpisodes(): AnnaResponse<List<SingleEpisodeListDomain>> {
-        return try {
-            val response = episodeDetailsNetworkDataSours.getAllEpisodes()
-            episodeLocalDao.setEpisodeListData(response.body()?.episodes ?: emptyList())
-            AnnaResponse.Success(
-                mapperFromDataToDomain.map(
-                    episodeDetailsNetworkDataSours.getAllEpisodes().body()?.episodes ?: emptyList()
-                )
+    override fun getAllEpisodes(): Flow<AnnaResponse<List<SingleEpisodeListDomain>>> {
+        return flow {
+            emit(
+                try {
+                    val response = episodeDetailsNetworkDataSours.getAllEpisodes()
+                    episodeLocalDao.setEpisodeListData(response.body()?.episodes ?: emptyList())
+                    AnnaResponse.Success(
+                        mapperFromDataToDomain.map(
+                            response.body()?.episodes
+                                ?: emptyList()
+                        )
+                    )
+                } catch (e: Throwable) {
+                    AnnaResponse.Failure(e)
+                }
             )
-        } catch (e: Throwable) {
-            AnnaResponse.Failure(e)
         }
+
     }
 
-    override suspend fun getEpisodeFromLocal(): AnnaResponse<List<SingleEpisodeListDomain>> {
-        return try {
-            val response = episodeLocalDao.getEpisodeListData()
-            AnnaResponse.Success(
-                mapperFromDataToDomain.map(response)
+    override fun getEpisodeFromLocal(): Flow<List<SingleEpisodeListDomain>> {
+        return flow {
+            emit(
+                kotlin.runCatching {
+                    val response = episodeLocalDao.getEpisodeListData()
+                    mapperFromDataToDomain.map(response)
+                }.getOrDefault(emptyList())
             )
-        } catch (e: Throwable) {
-            AnnaResponse.Failure(e)
         }
     }
 }

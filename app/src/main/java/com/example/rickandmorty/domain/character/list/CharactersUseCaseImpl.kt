@@ -13,7 +13,7 @@ class CharactersUseCaseImpl @Inject constructor(
         return charactersRepository.getAllCharacters()
     }
 
-    override fun getAllCharactersFromLocal(): Flow<AnnaResponse<List<SingleCharacterDomain>>> {
+    override fun getAllCharactersFromLocal(): Flow<List<SingleCharacterDomain>> {
         return charactersRepository.getAllCharactersFromLocal()
     }
 }

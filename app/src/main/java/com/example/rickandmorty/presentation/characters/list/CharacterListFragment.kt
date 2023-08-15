@@ -5,13 +5,17 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Bundle
+import android.os.Message
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.rickandmorty.CallBackForFragments
 import com.example.rickandmorty.MainActivity
@@ -22,6 +26,9 @@ import com.example.rickandmorty.presentation.characters.CharacterListDetailsList
 import com.example.rickandmorty.presentation.characters.list.adapter.CharactersAdapter
 import com.example.rickandmorty.presentation.characters.list.model.SingleCharacterUi
 import com.example.rickandmorty.utils.ViewModelFactory
+import com.example.rickandmorty.utils.ViewState
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import java.util.Locale
 import javax.inject.Inject
 
@@ -34,10 +41,12 @@ class CharacterListFragment : Fragment(R.layout.fragment_characters) {
     private val charactersAdapter: CharactersAdapter by lazy {
         CharactersAdapter(requireActivity() as CharacterListDetailsListener)
     }
-    var rickAndMortyComponent: RickAndMortyComponent? = null
+
+    private var rickAndMortyComponent: RickAndMortyComponent? = null
 
     @Inject
     lateinit var viewModel: CharactersViewModel
+
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
 
@@ -53,7 +62,11 @@ class CharacterListFragment : Fragment(R.layout.fragment_characters) {
         viewModelFactory = rickAndMortyComponent!!.getViewModelFactory()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentCharactersBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -72,14 +85,40 @@ class CharacterListFragment : Fragment(R.layout.fragment_characters) {
     }
 
     private fun observeVM() {
-        viewModel.getAllCharacters().observe(viewLifecycleOwner) { newCharacterList ->
-            charactersAdapter.updateListCharacters(newCharacterList)
-            binding.charactersPb.hideProgress()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.getAllCharacters().collect { viewState ->
+                    updateCharactersState(viewState)
+                }
+            }
         }
-        viewModel.getError().observe(viewLifecycleOwner) { error ->
-            binding.charactersPb.hideProgress()
-            Toast.makeText(requireContext(), R.string.error_connectivity, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun updateCharactersState(state: ViewState<List<SingleCharacterUi>>) {
+        when (state) {
+            is ViewState.Loading -> updateLoadingState()
+            is ViewState.Error -> updateErrorState(state.error.message.orEmpty())
+            is ViewState.Data -> updateDataState(state.data)
         }
+
+    }
+
+    private fun updateDataState(list: List<SingleCharacterUi>) {
+        charactersAdapter.updateListCharacters(list)
+        binding.charactersPb.hideProgress()
+    }
+
+    private fun updateErrorState(message: String) {
+        binding.charactersPb.hideProgress()
+        Toast.makeText(
+            requireContext(),
+            message,
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+
+    private fun updateLoadingState() {
+        binding.charactersPb.showProgress()
     }
 
     private fun initRecycler() {
@@ -92,7 +131,7 @@ class CharacterListFragment : Fragment(R.layout.fragment_characters) {
     private fun updateNetwork() {
         with(binding.swipeCharacters) {
             setOnRefreshListener {
-                viewModel.loadAllCharacters()
+                viewModel.loadCharacters()
                 this.isRefreshing = false
             }
         }
@@ -116,8 +155,17 @@ class CharacterListFragment : Fragment(R.layout.fragment_characters) {
         if (query != null) {
             val list = mutableListOf<SingleCharacterUi>()
             val filterList = mutableListOf<SingleCharacterUi>()
-            viewModel.getAllCharacters().observe(viewLifecycleOwner) { newCharacterList ->
-                list.addAll(newCharacterList)
+            lifecycleScope.launch {
+                repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    viewModel.getAllCharacters().collect { viewState ->
+                        when (viewState) {
+                            is ViewState.Loading -> updateLoadingState()
+                            is ViewState.Data -> list.addAll(viewState.data)
+                            is ViewState.Error -> viewState.error
+                        }
+                    }
+                }
+
             }
             for (i in list) {
                 if (i.name.lowercase(Locale.ROOT).contains(query)) {

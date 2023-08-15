@@ -1,68 +1,58 @@
 package com.example.rickandmorty.presentation.characters.list
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.rickandmorty.domain.character.list.CharactersUseCase
 import com.example.rickandmorty.presentation.characters.list.mapper.SingleCharacterDomainToSingleCharacterUiMapper
 import com.example.rickandmorty.presentation.characters.list.model.SingleCharacterUi
 import com.example.rickandmorty.utils.AnnaResponse
+import com.example.rickandmorty.utils.Connectivity
+import com.example.rickandmorty.utils.ViewState
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class CharactersViewModel @Inject constructor(
     private val charactersUseCase: CharactersUseCase,
-    private val mapperFromDomainToUi: SingleCharacterDomainToSingleCharacterUiMapper
+    private val mapperFromDomainToUi: SingleCharacterDomainToSingleCharacterUiMapper,
+    private val connectivity: Connectivity
 ) : ViewModel() {
 
-    private var characters = MutableLiveData<List<SingleCharacterUi>>(emptyList())
+    private var characters = MutableStateFlow<ViewState<List<SingleCharacterUi>>>(ViewState.Loading)
 
-    private val error = MutableLiveData<String>()
 
     init {
-        loadAllCharacters()
+        loadCharacters()
     }
 
-    fun loadAllCharacters() {
+    private fun loadAllCharacters() {
         viewModelScope.launch(Dispatchers.IO) {
             charactersUseCase.getAllCharacters().collect { annaResponse ->
-                when (annaResponse) {
-                    is AnnaResponse.Success -> (characters.postValue(
-                        mapperFromDomainToUi.map(
-                            annaResponse.data
-                        )
-                    )
-                            )
-
-                    is AnnaResponse.Failure -> (
-                            loadAllCharactersFromLocal()
-                            )
+                characters.value = when (annaResponse) {
+                    is AnnaResponse.Success -> ViewState.Data(mapperFromDomainToUi.map(annaResponse.data))
+                    is AnnaResponse.Failure -> ViewState.Error(annaResponse.error)
                 }
-
             }
         }
     }
-
-    fun getAllCharacters(): LiveData<List<SingleCharacterUi>> = characters
-    fun getError(): LiveData<String> = error
 
     private fun loadAllCharactersFromLocal() {
         viewModelScope.launch(Dispatchers.IO) {
-            charactersUseCase.getAllCharactersFromLocal().collect { annaResponse ->
-                when (annaResponse) {
-                    is AnnaResponse.Success -> characters.postValue(
-                        mapperFromDomainToUi.map(
-                            annaResponse.data
-                        )
-                    )
-
-                    is AnnaResponse.Failure -> error.postValue(annaResponse.error.message)
-                }
+            charactersUseCase.getAllCharactersFromLocal().collect { data ->
+                characters.value = ViewState.Data(mapperFromDomainToUi.map(data))
             }
         }
-
     }
 
+    fun loadCharacters() {
+        if (connectivity.isNetworkAvailable()) {
+            loadAllCharacters()
+        } else {
+            characters.value = ViewState.Error(Throwable("Отсутствует интернет соединение"))
+            loadAllCharactersFromLocal()
+        }
+    }
+
+    fun getAllCharacters(): MutableStateFlow<ViewState<List<SingleCharacterUi>>> = characters
 }
