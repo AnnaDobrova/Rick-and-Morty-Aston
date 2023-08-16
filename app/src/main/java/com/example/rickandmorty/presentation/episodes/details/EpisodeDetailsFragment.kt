@@ -6,9 +6,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.rickandmorty.CallBackForFragments
 import com.example.rickandmorty.MainActivity
@@ -16,9 +20,13 @@ import com.example.rickandmorty.R
 import com.example.rickandmorty.databinding.FragmentEpisodeDetailsBinding
 import com.example.rickandmorty.di.RickAndMortyComponent
 import com.example.rickandmorty.presentation.characters.CharacterListDetailsListener
+import com.example.rickandmorty.presentation.characters.detail.model.CharacterDetailUi
 import com.example.rickandmorty.presentation.episodes.details.adapter.CharacterListInEpisodeAdapter
 import com.example.rickandmorty.presentation.episodes.details.model.EpisodeDetailUi
 import com.example.rickandmorty.utils.ViewModelFactory
+import com.example.rickandmorty.utils.ViewState
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class EpisodeDetailsFragment : Fragment(R.layout.fragment_episode_details) {
@@ -30,7 +38,7 @@ class EpisodeDetailsFragment : Fragment(R.layout.fragment_episode_details) {
     private val characterListInEpisodeAdapter: CharacterListInEpisodeAdapter by lazy {
         CharacterListInEpisodeAdapter(requireActivity() as CharacterListDetailsListener)
     }
-    var rickAndMortyComponent: RickAndMortyComponent? = null
+    private var rickAndMortyComponent: RickAndMortyComponent? = null
 
     @Inject
     lateinit var viewModel: EpisodeDetailViewModel
@@ -50,7 +58,11 @@ class EpisodeDetailsFragment : Fragment(R.layout.fragment_episode_details) {
         viewModelFactory = rickAndMortyComponent!!.getViewModelFactory()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentEpisodeDetailsBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -58,30 +70,71 @@ class EpisodeDetailsFragment : Fragment(R.layout.fragment_episode_details) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val episodeId = requireArguments().getInt(EPISODE_ID)
         viewModel = ViewModelProvider(this, viewModelFactory)[EpisodeDetailViewModel::class.java]
-        viewModel.loadEpisodeById(episodeId)
+        viewModel.loadEpisodeDetail(episodeId)
         observeVM()
         initRecycler()
         visibilityToolBar()
     }
 
     private fun observeVM() {
-        viewModel.getEpisode().observe(viewLifecycleOwner) { episodeDetail ->
-            fillEpisodeDetail(episodeDetail)
-        }
-        viewModel.getCharacterList().observe(viewLifecycleOwner) { characters ->
-            characterListInEpisodeAdapter.updateCharacterList(characters)
-            binding.progressBar.hideProgress()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.getEpisode().collect { viewState ->
+                    updateCharactersDetailsState(viewState)
+                }
+            }
         }
     }
 
-    private fun fillEpisodeDetail(episodeDetail: EpisodeDetailUi) {
-        with(binding) {
-            nameEpisodeDetails.text = episodeDetail.nameEpisode
-            numberEpisodeDetails.text = episodeDetail.numberEpisode
-            airDataEpisodeDetails.text = episodeDetail.airDataEpisode
+    private fun updateCharactersDetailsState(state: ViewState<EpisodeDetailUi>) {
+        when (state) {
+            is ViewState.Loading -> updateLoadingState()
+            is ViewState.Error -> updateErrorState(state.error.message.orEmpty())
+            is ViewState.Data -> updateDataState(state.data)
+        }
+    }
 
-            viewModel.loadCharacterById(episodeDetail.characters)
-            progressBar.showProgress()
+    private fun updateDataState(data: EpisodeDetailUi) {
+        binding.progressBar.hideProgress()
+        fillEpisodeDetail(data)
+    }
+
+    private fun updateErrorState(message: String) {
+        binding.progressBar.hideProgress()
+        Toast.makeText(
+            requireActivity(),
+            message,
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+
+    private fun updateLoadingState() {
+        binding.progressBar.showProgress()
+    }
+
+    private fun fillEpisodeDetail(episodeDetail: EpisodeDetailUi) {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                with(binding) {
+                    nameEpisodeDetails.text = episodeDetail.nameEpisode
+                    numberEpisodeDetails.text = episodeDetail.numberEpisode
+                    airDataEpisodeDetails.text = episodeDetail.airDataEpisode
+
+                    viewModel.loadCharacterById(episodeDetail.characters)
+                    progressBar.showProgress()
+                }
+                viewModel.getCharacterList().collect { viewState ->
+                    when (viewState) {
+                        is ViewState.Loading -> updateLoadingState()
+                        is ViewState.Error -> updateErrorState(viewState.error.message.orEmpty())
+                        is ViewState.Data -> {
+                            characterListInEpisodeAdapter.updateCharacterList(viewState.data)
+                            binding.progressBar.hideProgress()
+                        }
+                    }
+                }
+
+            }
         }
     }
 

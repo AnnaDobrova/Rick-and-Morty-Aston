@@ -5,8 +5,9 @@ import com.example.rickandmorty.data.characters.detail.mapper.CharacterDetailDat
 import com.example.rickandmorty.data.local.detail.character.CharacterDetailDao
 import com.example.rickandmorty.domain.character.detail.CharacterDetailRepository
 import com.example.rickandmorty.domain.character.detail.model.CharacterDetailDomain
+import com.example.rickandmorty.domain.character.detail.model.CharacterDetailOriginDomain
 import com.example.rickandmorty.utils.AnnaResponse
-import com.example.rickandmorty.utils.tryMapSuspended
+import com.example.rickandmorty.utils.Connectivity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -14,7 +15,8 @@ import javax.inject.Inject
 class CharacterDetailsRepositoryImpl @Inject constructor(
     private val characterDetailsNetworkDataSource: CharacterDetailsNetworkDataSource,
     private val mapperFromDataToDomain: CharacterDetailDataToCharacterDetailDomainMapper,
-    private val characterDetailDao: CharacterDetailDao
+    private val characterDetailDao: CharacterDetailDao,
+    private val connectivity: Connectivity
 ) : CharacterDetailRepository {
 
     override fun loadCharacterById(id: Int): Flow<AnnaResponse<CharacterDetailDomain>> {
@@ -49,4 +51,5 @@ class CharacterDetailsRepositoryImpl @Inject constructor(
             )
         }
     }
+
 }

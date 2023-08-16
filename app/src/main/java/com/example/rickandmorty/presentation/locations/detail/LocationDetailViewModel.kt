@@ -1,19 +1,18 @@
 package com.example.rickandmorty.presentation.locations.detail
 
 import androidx.core.text.isDigitsOnly
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.rickandmorty.domain.character.detail.CharacterDetailUseCase
 import com.example.rickandmorty.domain.location.detail.LocationDetailUseCase
-import com.example.rickandmorty.domain.location.detail.model.LocationDetailsDomain
 import com.example.rickandmorty.presentation.characters.detail.mapper.CharacterDetailDomainToCharacterDetailUiMapper
 import com.example.rickandmorty.presentation.characters.detail.model.CharacterDetailUi
 import com.example.rickandmorty.presentation.locations.detail.mapper.LocationDetailsDomainToLocationDetailsUIMapper
 import com.example.rickandmorty.presentation.locations.detail.model.LocationDetailUi
 import com.example.rickandmorty.utils.AnnaResponse
-import kotlinx.coroutines.flow.collect
+import com.example.rickandmorty.utils.Connectivity
+import com.example.rickandmorty.utils.ViewState
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,23 +21,21 @@ class LocationDetailViewModel @Inject constructor(
     private val characterDetailUseCase: CharacterDetailUseCase,
     private val mapperFromDomainToUi: LocationDetailsDomainToLocationDetailsUIMapper,
     private val mapperFromDomainToUiForCharacters: CharacterDetailDomainToCharacterDetailUiMapper,
+    private val connectivity: Connectivity
 ) : ViewModel() {
 
-    private var locations = MutableLiveData<LocationDetailUi>()
-    private var characterList = MutableLiveData<List<CharacterDetailUi>>(emptyList())
+    private var locations = MutableStateFlow<ViewState<LocationDetailUi>>(ViewState.Loading)
+    private var characterList =
+        MutableStateFlow<ViewState<List<CharacterDetailUi>>>(ViewState.Loading)
 
-    fun loadLocationById(id: Int) {
+    private fun loadLocationById(id: Int) {
         viewModelScope.launch {
-            locationDetailUseCase.loadLocationById(id).collect() { annaResponse ->
-                when (annaResponse) {
-                    is AnnaResponse.Success -> {
-                        locations.postValue(mapperFromDomainToUi.map(annaResponse.data))
-                    }
+            locationDetailUseCase.loadLocationById(id).collect { annaResponse ->
+                locations.value = when (annaResponse) {
+                    is AnnaResponse.Success ->
+                        ViewState.Data(mapperFromDomainToUi.map(annaResponse.data))
 
-                    is AnnaResponse.Failure -> {
-                        Throwable(annaResponse.error)
-                        loadLocationByIdFromLocal(id)
-                    }
+                    is AnnaResponse.Failure -> ViewState.Error(annaResponse.error)
                 }
             }
         }
@@ -47,22 +44,37 @@ class LocationDetailViewModel @Inject constructor(
     private fun loadLocationByIdFromLocal(id: Int) {
         viewModelScope.launch {
             locationDetailUseCase.loadLocationByIdFromLocal(id).collect() { annaResponse ->
-                when (annaResponse) {
-                    is AnnaResponse.Success -> {
-                        locations.postValue(mapperFromDomainToUi.map(annaResponse.data))
-                    }
+                locations.value = when (annaResponse) {
+                    is AnnaResponse.Success ->
+                        ViewState.Data(mapperFromDomainToUi.map(annaResponse.data))
 
-                    is AnnaResponse.Failure -> {
-                        Throwable(annaResponse.error)
-                    }
+                    is AnnaResponse.Failure -> ViewState.Error(annaResponse.error)
                 }
             }
         }
     }
 
-    fun getLocation(): LiveData<LocationDetailUi> = locations
-
-    fun getCharacterList(): LiveData<List<CharacterDetailUi>> = characterList
+    private fun String.checkLastLetters(): Int {
+        val lastThree = takeLast(3)
+        if (lastThree.isDigitsOnly().not()) {
+            println("Last three letters are not digits.")
+            val lastTwo = takeLast(2)
+            if (lastTwo.isDigitsOnly().not()) {
+                println("Last two letters are not digits.")
+                val lastOne = takeLast(1)
+                if (lastOne.isDigitsOnly().not()) {
+                    println("Last letter is not a digit.")
+                } else {
+                    return lastOne.toInt()
+                }
+            } else {
+                return lastTwo.toInt()
+            }
+        } else {
+            return lastThree.toInt()
+        }
+        return 0
+    }
 
     fun loadCharacterById(characterStringList: List<String>) {
         viewModelScope.launch {
@@ -89,29 +101,20 @@ class LocationDetailViewModel @Inject constructor(
                     }
                 }
             }.join()
-            characterList.postValue(list)
+            characterList.value = ViewState.Data(list)
         }
     }
 
-    private fun String.checkLastLetters(): Int {
-        val lastThree = takeLast(3)
-        if (lastThree.isDigitsOnly().not()) {
-            println("Last three letters are not digits.")
-            val lastTwo = takeLast(2)
-            if (lastTwo.isDigitsOnly().not()) {
-                println("Last two letters are not digits.")
-                val lastOne = takeLast(1)
-                if (lastOne.isDigitsOnly().not()) {
-                    println("Last letter is not a digit.")
-                } else {
-                    return lastOne.toInt()
-                }
-            } else {
-                return lastTwo.toInt()
-            }
+    fun loadLocationDetail(id: Int) {
+        if (connectivity.isNetworkAvailable()) {
+            loadLocationById(id)
         } else {
-            return lastThree.toInt()
+            loadLocationByIdFromLocal(id)
+            locations.value = ViewState.Error(Throwable("Отсутствует интернет соединение"))
         }
-        return 0
     }
+
+    fun getLocation(): MutableStateFlow<ViewState<LocationDetailUi>> = locations
+
+    fun getCharacterList(): MutableStateFlow<ViewState<List<CharacterDetailUi>>> = characterList
 }

@@ -21,7 +21,6 @@ class CharactersViewModel @Inject constructor(
 
     private var characters = MutableStateFlow<ViewState<List<SingleCharacterUi>>>(ViewState.Loading)
 
-
     init {
         loadCharacters()
     }

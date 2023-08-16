@@ -1,8 +1,6 @@
 package com.example.rickandmorty.presentation.characters.detail
 
 import androidx.core.text.isDigitsOnly
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.rickandmorty.domain.character.detail.CharacterDetailUseCase
@@ -12,7 +10,10 @@ import com.example.rickandmorty.presentation.characters.detail.model.CharacterDe
 import com.example.rickandmorty.presentation.episodes.details.mapper.EpisodeDetailDomainToEpisodeDetailUiMapper
 import com.example.rickandmorty.presentation.episodes.details.model.EpisodeDetailUi
 import com.example.rickandmorty.utils.AnnaResponse
+import com.example.rickandmorty.utils.Connectivity
+import com.example.rickandmorty.utils.ViewState
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,78 +21,40 @@ class CharactersDetailViewModel @Inject constructor(
     private val characterDetailUseCase: CharacterDetailUseCase,
     private val episodeDetailUseCase: EpisodeDetailUseCase,
     private val mapperFromDomainToUi: CharacterDetailDomainToCharacterDetailUiMapper,
-    private val mapperFromDomainToUiForEpisodes: EpisodeDetailDomainToEpisodeDetailUiMapper
+    private val mapperFromDomainToUiForEpisodes: EpisodeDetailDomainToEpisodeDetailUiMapper,
+    private val connectivity: Connectivity
 ) : ViewModel() {
 
-    private var character = MutableLiveData<CharacterDetailUi>()
+    private var character = MutableStateFlow<ViewState<CharacterDetailUi>>(ViewState.Loading)
 
-    private var episodeList = MutableLiveData<List<EpisodeDetailUi>>(emptyList())
+    private var episodeList = MutableStateFlow<ViewState<List<EpisodeDetailUi>>>(ViewState.Loading)
 
-    private var error = MutableLiveData<String>()
 
-    fun getCharacterById(id: Int) {
-        viewModelScope.launch {
+    private fun getCharacterById(id: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
             characterDetailUseCase.loadCharacterById(id).collect { annaResponse ->
-                when (annaResponse) {
-                    is AnnaResponse.Success -> {
-                        character.postValue(mapperFromDomainToUi.map(annaResponse.data))
-                    }
+                character.value = when (annaResponse) {
+                    is AnnaResponse.Success ->
+                        ViewState.Data(mapperFromDomainToUi.map(annaResponse.data))
 
-                    is AnnaResponse.Failure -> {
-                        error.postValue(Throwable(annaResponse.error).message)
-                        getCharacterByIdFromLocal(id)
-                    }
+                    is AnnaResponse.Failure ->
+                        ViewState.Error(annaResponse.error)
                 }
             }
         }
     }
 
-    private suspend fun getCharacterByIdFromLocal(id: Int) {
-        characterDetailUseCase.loadCharacterByIdFromLocal(id).collect { annaResponse ->
-            when (annaResponse) {
-                is AnnaResponse.Success -> {
-                    character.postValue(mapperFromDomainToUi.map(annaResponse.data))
-                }
+    private fun getCharacterByIdFromLocal(id: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            characterDetailUseCase.loadCharacterByIdFromLocal(id).collect { annaResponse ->
+                character.value =   when (annaResponse) {
+                    is AnnaResponse.Success ->
+                        ViewState.Data(mapperFromDomainToUi.map(annaResponse.data))
 
-                is AnnaResponse.Failure -> {
-                    error.postValue(Throwable(annaResponse.error).message)
+                    is AnnaResponse.Failure ->
+                       ViewState.Error(annaResponse.error)
                 }
             }
-        }
-    }
-
-    fun getCharacter(): LiveData<CharacterDetailUi> = character
-
-    fun getEpisodeList(): LiveData<List<EpisodeDetailUi>> = episodeList
-
-    fun getError(): LiveData<String> = error
-
-    fun loadEpisodeById(episodeStringList: List<String>) {
-        viewModelScope.launch {
-            val idsList = mutableListOf<Int>()
-            val list = mutableListOf<EpisodeDetailUi>()
-            launch {
-                episodeStringList.map { episode ->
-                    if (episode.checkLastLetters() != 0) idsList.add(episode.checkLastLetters())
-                }
-            }.join()
-
-            launch {
-                idsList.map { id ->
-                    episodeDetailUseCase.loadEpisodeById(id).collect { annaResponse ->
-                        when (annaResponse) {
-                            is AnnaResponse.Success -> {
-                                list.add(mapperFromDomainToUiForEpisodes.map(annaResponse.data))
-                            }
-
-                            is AnnaResponse.Failure -> {
-                                Throwable(annaResponse.error)
-                            }
-                        }
-                    }
-                }
-            }.join()
-            episodeList.postValue(list)
         }
     }
 
@@ -116,4 +79,47 @@ class CharactersDetailViewModel @Inject constructor(
         }
         return 0
     }
+
+    fun loadCharacterDetail(id: Int) {
+        if (connectivity.isNetworkAvailable()) {
+            getCharacterById(id)
+        } else {
+            getCharacterByIdFromLocal(id)
+            character.value = ViewState.Error(Throwable("Отсутствует интернет соединение"))
+        }
+    }
+
+    fun loadEpisodeById(episodeStringList: List<String>) {
+        viewModelScope.launch {
+            val idsList = mutableListOf<Int>()
+            val list = mutableListOf<EpisodeDetailUi>()
+            launch {
+                episodeStringList.map { episode ->
+                    if (episode.checkLastLetters() != 0) idsList.add(episode.checkLastLetters())
+                }
+            }.join()
+
+            launch {
+                idsList.map { id ->
+                    episodeDetailUseCase.loadEpisodeById(id).collect { annaResponse ->
+                        when (annaResponse) {
+                            is AnnaResponse.Success -> {
+                                list.add(mapperFromDomainToUiForEpisodes.map(annaResponse.data))
+
+                            }
+
+                            is AnnaResponse.Failure -> {
+                                Throwable(annaResponse.error.message)
+                            }
+                        }
+                    }
+                }
+            }.join()
+            episodeList.value = ViewState.Data(list)
+        }
+    }
+
+    fun getCharacter(): MutableStateFlow<ViewState<CharacterDetailUi>> = character
+
+    fun getEpisodeList(): MutableStateFlow<ViewState<List<EpisodeDetailUi>>> = episodeList
 }

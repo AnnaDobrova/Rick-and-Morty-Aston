@@ -70,7 +70,6 @@ class EpisodeListFragment : Fragment(R.layout.fragment_episodes) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         viewModel = ViewModelProvider(this, viewModelFactory)[EpisodesViewModel::class.java]
 
         binding.episodesPb.showProgress()

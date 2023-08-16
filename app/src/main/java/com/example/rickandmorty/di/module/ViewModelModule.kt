@@ -50,13 +50,15 @@ class ViewModelModule {
         characterDetailUseCase: CharacterDetailUseCase,
         episodeDetailUseCase: EpisodeDetailUseCase,
         characterDetailDomainToCharacterDetailUiMapper: CharacterDetailDomainToCharacterDetailUiMapper,
-        episodeDetailDomainToEpisodeDetailUiMapper: EpisodeDetailDomainToEpisodeDetailUiMapper
+        episodeDetailDomainToEpisodeDetailUiMapper: EpisodeDetailDomainToEpisodeDetailUiMapper,
+        connectivity: Connectivity
     ): ViewModel {
         return CharactersDetailViewModel(
             characterDetailUseCase,
             episodeDetailUseCase = episodeDetailUseCase,
             characterDetailDomainToCharacterDetailUiMapper,
-            mapperFromDomainToUiForEpisodes = episodeDetailDomainToEpisodeDetailUiMapper
+            mapperFromDomainToUiForEpisodes = episodeDetailDomainToEpisodeDetailUiMapper,
+            connectivity
         )
     }
 
@@ -82,13 +84,15 @@ class ViewModelModule {
         episodeDetailUseCase: EpisodeDetailUseCase,
         characterDetailUseCase: CharacterDetailUseCase,
         episodeDetailDomainToCharacterDetailUiMapper: EpisodeDetailDomainToEpisodeDetailUiMapper,
-        characterDetailDomainToCharacterDetailUiMapper: CharacterDetailDomainToCharacterDetailUiMapper
+        characterDetailDomainToCharacterDetailUiMapper: CharacterDetailDomainToCharacterDetailUiMapper,
+        connectivity: Connectivity
     ): ViewModel {
         return EpisodeDetailViewModel(
             episodeDetailUseCase,
             characterDetailUseCase,
             episodeDetailDomainToCharacterDetailUiMapper,
-            characterDetailDomainToCharacterDetailUiMapper
+            characterDetailDomainToCharacterDetailUiMapper,
+            connectivity
         )
     }
 
@@ -97,11 +101,13 @@ class ViewModelModule {
     @Provides
     fun provideLocationsViewModel(
         locationUseCase: LocationUseCase,
-        singleLocationDomainToSingleLocationUiMapper: SingleLocationDomainToSingleLocationUiMapper
+        singleLocationDomainToSingleLocationUiMapper: SingleLocationDomainToSingleLocationUiMapper,
+        connectivity: Connectivity
     ): ViewModel {
         return LocationsViewModel(
             locationUseCase,
-            singleLocationDomainToSingleLocationUiMapper
+            singleLocationDomainToSingleLocationUiMapper,
+            connectivity
         )
     }
 
@@ -112,13 +118,15 @@ class ViewModelModule {
         locationDetailUseCase: LocationDetailUseCase,
         characterDetailUseCase: CharacterDetailUseCase,
         locationDetailsDomainToLocationDetailsUIMapper: LocationDetailsDomainToLocationDetailsUIMapper,
-        characterDetailDomainToCharacterDetailUiMapper: CharacterDetailDomainToCharacterDetailUiMapper
+        characterDetailDomainToCharacterDetailUiMapper: CharacterDetailDomainToCharacterDetailUiMapper,
+        connectivity: Connectivity
     ): ViewModel {
         return LocationDetailViewModel(
             locationDetailUseCase,
             characterDetailUseCase,
             locationDetailsDomainToLocationDetailsUIMapper,
-            characterDetailDomainToCharacterDetailUiMapper
+            characterDetailDomainToCharacterDetailUiMapper,
+            connectivity
         )
     }
 }

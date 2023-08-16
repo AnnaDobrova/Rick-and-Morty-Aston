@@ -5,6 +5,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Bundle
+import android.os.Message
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +13,10 @@ import android.view.ViewGroup
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.rickandmorty.CallBackForFragments
 import com.example.rickandmorty.MainActivity
@@ -20,9 +24,13 @@ import com.example.rickandmorty.R
 import com.example.rickandmorty.databinding.FragmentLocationsBinding
 import com.example.rickandmorty.di.RickAndMortyComponent
 import com.example.rickandmorty.domain.location.LocationListDetailsListener
+import com.example.rickandmorty.presentation.locations.detail.model.LocationDetailUi
 import com.example.rickandmorty.presentation.locations.list.adapter.LocationAdapter
 import com.example.rickandmorty.presentation.locations.list.model.SingleLocationUI
 import com.example.rickandmorty.utils.ViewModelFactory
+import com.example.rickandmorty.utils.ViewState
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import java.util.Locale
 import javax.inject.Inject
 
@@ -31,15 +39,16 @@ class LocationListFragment : Fragment(R.layout.fragment_locations) {
     private var _binding: FragmentLocationsBinding? = null
     private val binding get() = _binding!!
     private var callBackForFragments: CallBackForFragments? = null
-
+    private var rickAnMortyComponent: RickAndMortyComponent? = null
     private val locationAdapter: LocationAdapter by lazy {
         LocationAdapter(requireActivity() as LocationListDetailsListener)
     }
 
-    var rickAnMortyComponent: RickAndMortyComponent? = null
+    @Inject
+    lateinit var viewModel: LocationsViewModel
 
-    @Inject lateinit var viewModel: LocationsViewModel
-    @Inject lateinit var viewModelFactory: ViewModelFactory
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -53,7 +62,11 @@ class LocationListFragment : Fragment(R.layout.fragment_locations) {
         viewModelFactory = rickAnMortyComponent!!.getViewModelFactory()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentLocationsBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -71,14 +84,39 @@ class LocationListFragment : Fragment(R.layout.fragment_locations) {
     }
 
     private fun observerVM() {
-        viewModel.getLocations().observe(viewLifecycleOwner) { newLocationList ->
-            locationAdapter.updateLocations(newLocationList)
-            binding.locationsPb.hideProgress()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.getLocations().collect { viewState ->
+                    updateCharactersDetailsState(viewState)
+                }
+            }
         }
-        viewModel.getError().observe(viewLifecycleOwner) { error ->
-            binding.locationsPb.hideProgress()
-            Toast.makeText(requireContext(), R.string.error_connectivity, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun updateCharactersDetailsState(state: ViewState<List<SingleLocationUI>>) {
+        when (state) {
+            is ViewState.Loading -> updateLoadingState()
+            is ViewState.Error -> updateErrorState(state.error.message.orEmpty())
+            is ViewState.Data -> updateDataState(state.data)
         }
+    }
+
+    private fun updateDataState(locations: List<SingleLocationUI>) {
+        locationAdapter.updateLocations(locations)
+        binding.locationsPb.hideProgress()
+    }
+
+    private fun updateErrorState(message: String) {
+        binding.locationsPb.hideProgress()
+        Toast.makeText(
+            requireContext(),
+            message,
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+
+    private fun updateLoadingState() {
+        binding.locationsPb.showProgress()
     }
 
     private fun initRecycler() {
@@ -93,7 +131,7 @@ class LocationListFragment : Fragment(R.layout.fragment_locations) {
     private fun updateNetwork() {
         with(binding.swipeLocations) {
             setOnRefreshListener {
-                viewModel.loadAllLocations()
+                viewModel.loadLocations()
                 this.isRefreshing = false
             }
         }
@@ -117,8 +155,15 @@ class LocationListFragment : Fragment(R.layout.fragment_locations) {
         if (query != null) {
             val list = mutableListOf<SingleLocationUI>()
             val filterList = mutableListOf<SingleLocationUI>()
-            viewModel.getLocations().observe(viewLifecycleOwner) { newCharacterList ->
-                list.addAll(newCharacterList)
+            lifecycleScope.launch {
+                viewModel.getLocations().collect { viewState ->
+                    when (viewState) {
+                        is ViewState.Loading -> updateLoadingState()
+                        is ViewState.Error -> updateErrorState(viewState.error.message.orEmpty())
+                        is ViewState.Data -> list.addAll(viewState.data)
+                    }
+
+                }
             }
             for (i in list) {
                 if (i.name.lowercase(Locale.ROOT).contains(query)) {

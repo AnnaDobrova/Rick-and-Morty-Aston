@@ -1,5 +1,6 @@
 package com.example.rickandmorty.presentation.episodes.details
 
+import android.view.View
 import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -13,7 +14,10 @@ import com.example.rickandmorty.presentation.characters.detail.model.CharacterDe
 import com.example.rickandmorty.presentation.episodes.details.mapper.EpisodeDetailDomainToEpisodeDetailUiMapper
 import com.example.rickandmorty.presentation.episodes.details.model.EpisodeDetailUi
 import com.example.rickandmorty.utils.AnnaResponse
+import com.example.rickandmorty.utils.Connectivity
+import com.example.rickandmorty.utils.ViewState
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -23,23 +27,21 @@ class EpisodeDetailViewModel @Inject constructor(
     private val characterDetailUseCase: CharacterDetailUseCase,
     private val mapperFromDomainToUi: EpisodeDetailDomainToEpisodeDetailUiMapper,
     private val mapperFromDomainToUiForCharacters: CharacterDetailDomainToCharacterDetailUiMapper,
+    private val connectivity: Connectivity
 ) : ViewModel() {
 
-    private var episodes = MutableLiveData<EpisodeDetailUi>()
-    private var characterList = MutableLiveData<List<CharacterDetailUi>>(emptyList())
+    private var episodes = MutableStateFlow<ViewState<EpisodeDetailUi>>(ViewState.Loading)
+    private var characterList =
+        MutableStateFlow<ViewState<List<CharacterDetailUi>>>(ViewState.Loading)
 
-    fun loadEpisodeById(id: Int) {
+    private fun loadEpisodeById(id: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             episodeDetailUseCase.loadEpisodeById(id).collect() { annaResponse ->
-                when (annaResponse) {
-                    is AnnaResponse.Success -> {
-                        episodes.postValue(mapperFromDomainToUi.map(annaResponse.data))
-                    }
+                episodes.value = when (annaResponse) {
+                    is AnnaResponse.Success ->
+                        ViewState.Data(mapperFromDomainToUi.map(annaResponse.data))
 
-                    is AnnaResponse.Failure -> {
-                        Throwable(annaResponse.error)
-                        loadEpisodeByIdLocal(id)
-                    }
+                    is AnnaResponse.Failure -> ViewState.Error(annaResponse.error)
                 }
             }
         }
@@ -48,22 +50,37 @@ class EpisodeDetailViewModel @Inject constructor(
     private fun loadEpisodeByIdLocal(id: Int) {
         viewModelScope.launch {
             episodeDetailUseCase.loadEpisodeByIdFromLocal(id).collect() { annaResponse ->
-                when (annaResponse) {
-                    is AnnaResponse.Success -> {
-                        episodes.postValue(mapperFromDomainToUi.map(annaResponse.data))
-                    }
+                episodes.value = when (annaResponse) {
+                    is AnnaResponse.Success ->
+                        ViewState.Data(mapperFromDomainToUi.map(annaResponse.data))
 
-                    is AnnaResponse.Failure -> {
-                        Throwable(annaResponse.error)
-                    }
+                    is AnnaResponse.Failure -> ViewState.Error(annaResponse.error)
                 }
             }
         }
     }
 
-    fun getEpisode(): LiveData<EpisodeDetailUi> = episodes
-
-    fun getCharacterList(): LiveData<List<CharacterDetailUi>> = characterList
+    private fun String.checkLastLetters(): Int {
+        val lastThree = takeLast(3)
+        if (lastThree.isDigitsOnly().not()) {
+            println("Last three letters are not digits.")
+            val lastTwo = takeLast(2)
+            if (lastTwo.isDigitsOnly().not()) {
+                println("Last two letters are not digits.")
+                val lastOne = takeLast(1)
+                if (lastOne.isDigitsOnly().not()) {
+                    println("Last letter is not a digit.")
+                } else {
+                    return lastOne.toInt()
+                }
+            } else {
+                return lastTwo.toInt()
+            }
+        } else {
+            return lastThree.toInt()
+        }
+        return 0
+    }
 
     fun loadCharacterById(characterStringList: List<String>) {
         viewModelScope.launch {
@@ -90,29 +107,20 @@ class EpisodeDetailViewModel @Inject constructor(
                     }
                 }
             }.join()
-            characterList.postValue(list)
+            characterList.value = ViewState.Data(list)
         }
     }
 
-    private fun String.checkLastLetters(): Int {
-        val lastThree = takeLast(3)
-        if (lastThree.isDigitsOnly().not()) {
-            println("Last three letters are not digits.")
-            val lastTwo = takeLast(2)
-            if (lastTwo.isDigitsOnly().not()) {
-                println("Last two letters are not digits.")
-                val lastOne = takeLast(1)
-                if (lastOne.isDigitsOnly().not()) {
-                    println("Last letter is not a digit.")
-                } else {
-                    return lastOne.toInt()
-                }
-            } else {
-                return lastTwo.toInt()
-            }
+    fun loadEpisodeDetail(id: Int) {
+        if (connectivity.isNetworkAvailable()) {
+            loadEpisodeById(id)
         } else {
-            return lastThree.toInt()
+            loadEpisodeByIdLocal(id)
+            episodes.value = ViewState.Error(Throwable("Отсутствует интернет соединение"))
         }
-        return 0
     }
+
+    fun getEpisode(): MutableStateFlow<ViewState<EpisodeDetailUi>> = episodes
+
+    fun getCharacterList(): MutableStateFlow<ViewState<List<CharacterDetailUi>>> = characterList
 }

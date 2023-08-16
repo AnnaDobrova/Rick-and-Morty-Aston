@@ -1,5 +1,6 @@
 package com.example.rickandmorty.presentation.locations.list
 
+import android.app.assist.AssistStructure.ViewNode
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,38 +9,34 @@ import com.example.rickandmorty.domain.location.list.LocationUseCase
 import com.example.rickandmorty.presentation.locations.list.mapper.SingleLocationDomainToSingleLocationUiMapper
 import com.example.rickandmorty.presentation.locations.list.model.SingleLocationUI
 import com.example.rickandmorty.utils.AnnaResponse
+import com.example.rickandmorty.utils.Connectivity
+import com.example.rickandmorty.utils.ViewState
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class LocationsViewModel @Inject constructor(
     private val locationsUseCase: LocationUseCase,
-    private val mapperFromDomainToUi: SingleLocationDomainToSingleLocationUiMapper
+    private val mapperFromDomainToUi: SingleLocationDomainToSingleLocationUiMapper,
+    private val connectivity: Connectivity
 ) : ViewModel() {
 
-    private var locations = MutableLiveData<List<SingleLocationUI>>(emptyList())
-
-    private val error = MutableLiveData<String>()
+    private var locations = MutableStateFlow<ViewState<List<SingleLocationUI>>>(ViewState.Loading)
 
     init {
-        loadAllLocations()
+        loadLocations()
     }
 
-    fun loadAllLocations() {
+    private fun loadAllLocations() {
         viewModelScope.launch(Dispatchers.IO) {
             locationsUseCase.getAllLocations().collect { annaResponse ->
-                when (annaResponse) {
-                    is AnnaResponse.Success -> locations.postValue(
-                        mapperFromDomainToUi.map(
-                            annaResponse.data
-                        )
-                    )
+                locations.value = when (annaResponse) {
+                    is AnnaResponse.Success ->
+                        ViewState.Data(mapperFromDomainToUi.map(annaResponse.data))
 
-                    is AnnaResponse.Failure -> {
-                        error.postValue(annaResponse.error.message)
-                        loadAllEpisodeFromLocal()
-                    }
+                    is AnnaResponse.Failure -> ViewState.Error(annaResponse.error)
                 }
             }
         }
@@ -48,23 +45,24 @@ class LocationsViewModel @Inject constructor(
     private fun loadAllEpisodeFromLocal() {
         viewModelScope.launch(Dispatchers.IO) {
             locationsUseCase.getAllLocationFromLocal().collect { annaResponse ->
-                when (annaResponse) {
-                    is AnnaResponse.Success -> locations.postValue(
-                        mapperFromDomainToUi.map(
-                            annaResponse.data
-                        )
-                    )
+                locations.value = when (annaResponse) {
+                    is AnnaResponse.Success ->
+                        ViewState.Data(mapperFromDomainToUi.map(annaResponse.data))
 
-                    is AnnaResponse.Failure -> {
-                        error.postValue(annaResponse.error.message)
-                    }
+                    is AnnaResponse.Failure -> ViewState.Error(annaResponse.error)
                 }
             }
-
         }
     }
 
-    fun getLocations(): LiveData<List<SingleLocationUI>> = locations
-    fun getError(): LiveData<String> = error
+    fun loadLocations() {
+        if (connectivity.isNetworkAvailable()) {
+            loadAllLocations()
+        } else {
+            loadAllEpisodeFromLocal()
+            locations.value = ViewState.Error(Throwable("Отсутствует интернет соединение"))
+        }
+    }
 
+    fun getLocations(): MutableStateFlow<ViewState<List<SingleLocationUI>>> = locations
 }
