@@ -4,28 +4,15 @@ plugins {
     id 'kotlin-parcelize'
     id 'kotlin-kapt'
 }
-
 android {
-    namespace 'com.example.rickandmorty'
+    namespace 'com.example.characters.impl'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.rickandmorty"
-        minSdk 26
-        targetSdk 33
-        versionCode 1
-        versionName "1.0"
+        minSdk 24
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments += [
-                        "room.schemaLocation":"$projectDir/schemas".toString(),
-                        "room.incremental":"true"
-                ]
-            }
-        }
+        consumerProguardFiles "consumer-rules.pro"
     }
 
     buildTypes {
@@ -35,11 +22,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
+        jvmTarget = '1.8'
     }
 
     viewBinding {
@@ -50,6 +37,7 @@ android {
 dependencies {
     implementation project(':characters:api')
     implementation project(':core_ui')
+
     implementation 'androidx.core:core-ktx:1.10.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'

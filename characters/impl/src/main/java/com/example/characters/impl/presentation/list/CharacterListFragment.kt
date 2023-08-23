@@ -1,4 +1,4 @@
-package com.example.rickandmorty.presentation.episodes.list
+package com.example.characters.impl.presentation.list
 
 import android.content.Context
 import android.os.Bundle
@@ -13,44 +13,46 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.characters.api.di.CharactersDependencies
 import com.example.core_ui.ViewModelFactory
 import com.example.core_ui.ViewState
 import com.example.rickandmorty.CallBackForFragments
 import com.example.rickandmorty.MainActivity
 import com.example.rickandmorty.R
-import com.example.rickandmorty.databinding.FragmentEpisodesBinding
+import com.example.rickandmorty.databinding.FragmentCharactersBinding
 import com.example.rickandmorty.di.RickAndMortyComponent
-import com.example.rickandmorty.domain.episode.EpisodeListDetailsListener
-import com.example.rickandmorty.presentation.episodes.list.adapter.EpisodeAdapter
-import com.example.rickandmorty.presentation.episodes.list.model.SingleEpisodeUI
-import com.example.rickandmorty.utils.Connectivity
+import com.example.rickandmorty.presentation.characters.CharacterListDetailsListener
+import com.example.rickandmorty.presentation.characters.list.DialogFragmentCharacters
+import com.example.rickandmorty.presentation.characters.list.adapter.CharactersAdapter
+import com.example.rickandmorty.presentation.characters.list.model.SingleCharacterUi
 import com.example.rickandmorty.utils.ViewModelFactory
-import com.example.rickandmorty.utils.ViewState
 import kotlinx.coroutines.launch
 import java.util.Locale
 import javax.inject.Inject
 
+class CharacterListFragment : Fragment(R.layout.fragment_characters) {
 
-class EpisodeListFragment : Fragment(R.layout.fragment_episodes) {
-
-    private var _binding: FragmentEpisodesBinding? = null
+    private var _binding: FragmentCharactersBinding? = null
     private val binding get() = _binding!!
     private var callBackForFragments: CallBackForFragments? = null
 
-    private val episodeAdapter: EpisodeAdapter by lazy {
-        EpisodeAdapter(requireActivity() as EpisodeListDetailsListener)
+    private val charactersAdapter: CharactersAdapter by lazy {
+        CharactersAdapter(requireActivity() as CharacterListDetailsListener)
     }
 
     private var rickAndMortyComponent: RickAndMortyComponent? = null
 
     @Inject
-    lateinit var viewModel: EpisodesViewModel
+    lateinit var viewModel: CharactersViewModel
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        (context.applicationContext as CharactersDependencies).
+
+    }
         rickAndMortyComponent = (activity as MainActivity).rickAndMortyComponent
         rickAndMortyComponent?.inject(this)
         callBackForFragments = requireActivity() as CallBackForFragments
@@ -66,46 +68,49 @@ class EpisodeListFragment : Fragment(R.layout.fragment_episodes) {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentEpisodesBinding.inflate(inflater, container, false)
+        _binding = FragmentCharactersBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this, viewModelFactory)[EpisodesViewModel::class.java]
 
-        binding.episodesPb.showProgress()
+        viewModel = ViewModelProvider(this, viewModelFactory)[CharactersViewModel::class.java]
+
+        binding.charactersPb.showProgress()
         observeVM()
         initRecycler()
         updateNetwork()
-        searchEpisodes()
+        searchCharacters()
+        filter()
     }
 
     private fun observeVM() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.getAllEpisodes().collect { viewState ->
-                    updateEpisodeState(viewState)
+                viewModel.getAllCharacters().collect { viewState ->
+                    updateCharactersState(viewState)
                 }
             }
         }
     }
 
-    private fun updateEpisodeState(state: ViewState<List<SingleEpisodeUI>>) {
+    private fun updateCharactersState(state: ViewState<List<SingleCharacterUi>>) {
         when (state) {
             is ViewState.Loading -> updateLoadingState()
             is ViewState.Error -> updateErrorState(state.error.message.orEmpty())
             is ViewState.Data -> updateDataState(state.data)
         }
+
     }
 
-    private fun updateDataState(list: List<SingleEpisodeUI>) {
-        episodeAdapter.updateEpisodes(list)
-        binding.episodesPb.hideProgress()
+    private fun updateDataState(list: List<SingleCharacterUi>) {
+        charactersAdapter.updateListCharacters(list)
+        binding.charactersPb.hideProgress()
     }
 
     private fun updateErrorState(message: String) {
-        binding.episodesPb.hideProgress()
+        binding.charactersPb.hideProgress()
         Toast.makeText(
             requireContext(),
             message,
@@ -114,27 +119,26 @@ class EpisodeListFragment : Fragment(R.layout.fragment_episodes) {
     }
 
     private fun updateLoadingState() {
-        binding.episodesPb.showProgress()
+        binding.charactersPb.showProgress()
     }
 
     private fun initRecycler() {
-        with(binding.recyclerViewEpisode) {
+        with(binding.recyclerViewCharacters) {
             layoutManager = GridLayoutManager(requireActivity(), 2)
-            adapter = episodeAdapter
+            adapter = charactersAdapter
         }
     }
 
     private fun updateNetwork() {
-        with(binding.swipeEpisodes) {
+        with(binding.swipeCharacters) {
             setOnRefreshListener {
-                viewModel.load()
+                viewModel.loadCharacters()
                 this.isRefreshing = false
             }
         }
     }
 
-
-    private fun searchEpisodes() {
+    private fun searchCharacters() {
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
             androidx.appcompat.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -150,34 +154,41 @@ class EpisodeListFragment : Fragment(R.layout.fragment_episodes) {
 
     private fun filterList(query: String?) {
         if (query != null) {
-            val list = mutableListOf<SingleEpisodeUI>()
-            val filterList = mutableListOf<SingleEpisodeUI>()
+            val list = mutableListOf<SingleCharacterUi>()
+            val filterList = mutableListOf<SingleCharacterUi>()
             lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    viewModel.getAllEpisodes().collect { newCharacterList ->
-                        when (newCharacterList) {
+                    viewModel.getAllCharacters().collect { viewState ->
+                        when (viewState) {
                             is ViewState.Loading -> updateLoadingState()
-                            is ViewState.Data -> list.addAll(newCharacterList.data)
-                            is ViewState.Error -> newCharacterList.error
+                            is ViewState.Data -> list.addAll(viewState.data)
+                            is ViewState.Error -> viewState.error
                         }
                     }
                 }
+
             }
             for (i in list) {
-                if (i.nameEpisode.lowercase(Locale.ROOT).contains(query)) {
+                if (i.name.lowercase(Locale.ROOT).contains(query)) {
                     filterList.add(i)
                 }
             }
             if (filterList.isNotEmpty()) {
-                episodeAdapter.updateEpisodes(filterList)
+                charactersAdapter.updateListCharacters(filterList)
             }
         }
     }
 
-    companion object {
-        const val TAG_EPISODES_FRAGMENT = "TAG_EPISODES_FRAGMENT"
-
-        fun newInstance() = EpisodeListFragment()
+    private fun filter() {
+        binding.filterIcon.setOnClickListener {
+            val dialog = DialogFragmentCharacters()
+            dialog.show(parentFragmentManager, DialogFragmentCharacters.TAG)
+        }
     }
 
+    companion object {
+        const val TAG_CHARACTERS_FRAGMENT = "TAG_CHARACTERS_FRAGMENT"
+
+        fun newInstance() = CharacterListFragment()
+    }
 }
